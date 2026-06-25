@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #012d1d;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #1b4332;
+  --color-on-primary-container: #86af99;
+  --color-on-primary-fixed-variant: #274e3d;
+  
+  --color-secondary: #4c6452;
+  --color-secondary-fixed: #cee9d3;
+  --color-on-secondary-fixed: #092012;
+  --color-secondary-fixed-dim: #b3cdb7;
+
+  --color-tertiary: #342300;
+  --color-tertiary-fixed: #ffdea9;
+  --color-tertiary-fixed-dim: #ffba27;
+  --color-on-tertiary-fixed: #271900;
+
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  
+  --color-surface: #f6f9ff;
+  --color-on-surface: #151c22;
+  --color-surface-variant: #dce3ec;
+  --color-surface-tint: #3f6653;
+  --color-on-surface-variant: #414844;
+  
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #eef4fd;
+  --color-surface-container: #e8eef7;
+  --color-surface-container-high: #e2e9f1;
+  --color-surface-bright: #f6f9ff;
+
+  --color-background: #f6f9ff;
+  --color-on-background: #151c22;
+  
+  --spacing-container-margin: 20px;
+  --spacing-gutter: 16px;
+  --spacing-sm: 12px;
+  --spacing-md: 20px;
+  --spacing-lg: 32px;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  font-family: var(--font-sans);
+  min-height: max(884px, 100dvh);
+}

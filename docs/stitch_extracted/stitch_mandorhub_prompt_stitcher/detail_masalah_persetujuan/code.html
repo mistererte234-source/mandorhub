@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Issue Detail - MandorHub</title>
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-fixed": "#cee9d3",
+                        "surface-bright": "#f6f9ff",
+                        "tertiary": "#342300",
+                        "surface-container-low": "#eef4fd",
+                        "tertiary-fixed-dim": "#ffba27",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#ffdea9",
+                        "surface-container": "#e8eef7",
+                        "primary-container": "#1b4332",
+                        "surface-dim": "#d4dbe3",
+                        "secondary-container": "#cce6d0",
+                        "inverse-surface": "#2a3138",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#092012",
+                        "on-surface": "#151c22",
+                        "surface": "#f6f9ff",
+                        "primary-fixed-dim": "#a5d0b9",
+                        "on-primary-fixed-variant": "#274e3d",
+                        "on-tertiary-fixed": "#271900",
+                        "surface-tint": "#3f6653",
+                        "surface-variant": "#dce3ec",
+                        "secondary": "#4c6452",
+                        "on-primary-container": "#86af99",
+                        "tertiary-container": "#503700",
+                        "on-tertiary-container": "#d89b00",
+                        "on-secondary-fixed-variant": "#354c3b",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#dce3ec",
+                        "surface-container-high": "#e2e9f1",
+                        "outline": "#717973",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "primary": "#012d1d",
+                        "on-secondary-container": "#506856",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#b3cdb7",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#c1ecd4",
+                        "on-primary-fixed": "#002114",
+                        "inverse-primary": "#a5d0b9",
+                        "on-background": "#151c22",
+                        "on-tertiary-fixed-variant": "#5e4100",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#ebf1fa",
+                        "background": "#f6f9ff",
+                        "outline-variant": "#c1c8c2",
+                        "on-surface-variant": "#414844"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "container-margin": "20px",
+                        "sm": "12px",
+                        "gutter": "16px",
+                        "lg": "32px",
+                        "md": "20px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "xl": "48px"
+                    },
+                    fontFamily: {
+                        "label-md": ["Inter"],
+                        "display": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-lg": ["Inter"]
+                    },
+                    fontSize: {
+                        "label-md": ["14px", { "lineHeight": "18px", "fontWeight": "500" }],
+                        "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["22px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-lg": ["16px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar (From JSON) -->
+<header class="bg-surface shadow-sm docked full-width top-0 z-40 sticky">
+<div class="flex justify-between items-center px-container-margin py-md w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-4">
+<button aria-label="Back" class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors text-on-surface-variant active:scale-95 duration-150">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant flex-shrink-0">
+<img alt="Profile photo of foreman" class="w-full h-full object-cover" data-alt="A close-up portrait of a middle-aged Indonesian construction foreman wearing a yellow hard hat. He has a warm, experienced expression. The background is a slightly blurred, bright construction site under clear daylight. The image has high contrast and a professional, trustworthy aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQkP3ktWoEYIgtjDxYNbVskom4iU7nhlaVDahCgMp4H2bvBIMNDfmf9ZVmJUpAFWKO9R19UYRzwZCXalXWnSvV7OJfbUu9koEIfi05Vw3k7g8IVzrahNoYHD8gyZzAhSXEerce3ZXC-qWMZJE3owbEf8BgFNvTgJiXHexN-pVMwJZNsCXBEnh2XUtEo6MlQQgx5Yv3tPYriqtySU9MOD7Xe4h7naJZW-H7YGxHB3h8QYRaACd7id5slXwhs7LuGVescjrBaTjSz0Y"/>
+</div>
+<span class="font-headline-lg font-bold text-primary tracking-tight">MandorHub</span>
+</div>
+</div>
+<button class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors text-primary active:scale-95 duration-150">
+<span class="material-symbols-outlined icon-fill">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="container mx-auto max-w-7xl px-container-margin md:px-lg py-lg md:py-xl">
+<!-- Breadcrumb / Context -->
+<div class="mb-md flex items-center gap-2 text-on-surface-variant font-label-md">
+<span>Proyek</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span>Ruko Pak Budi</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-primary font-bold">Detail Laporan</span>
+</div>
+<!-- Bento Grid Layout for Desktop -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg items-start">
+<!-- Left Column: Issue Details (Span 8) -->
+<div class="lg:col-span-8 flex flex-col gap-lg">
+<!-- Main Info Card -->
+<article class="bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(27,67,50,0.08)] overflow-hidden border border-surface-variant/50">
+<div class="p-lg border-b border-surface-variant flex flex-col md:flex-row md:items-start justify-between gap-md">
+<div class="space-y-sm">
+<h1 class="font-display text-display text-on-surface">Besi kurang 30 batang</h1>
+<div class="flex items-center gap-2 text-on-surface-variant font-body-lg">
+<span class="material-symbols-outlined">domain</span>
+<span>Ruko Pak Budi — Titik D</span>
+</div>
+</div>
+<!-- Urgency Badge -->
+<div class="inline-flex items-center gap-2 bg-error text-on-error px-md py-sm rounded-full font-label-lg whitespace-nowrap shadow-sm h-fit">
+<span class="material-symbols-outlined icon-fill text-[20px]">warning</span>
+                            Perlu Tindakan Hari Ini
+                        </div>
+</div>
+<div class="p-lg bg-surface-bright flex flex-wrap gap-xl border-b border-surface-variant">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<p class="font-label-md text-on-surface-variant mb-xs">Dilaporkan oleh</p>
+<p class="font-headline-md text-on-surface">Pak Slamet</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<div>
+<p class="font-label-md text-on-surface-variant mb-xs">Waktu Laporan</p>
+<p class="font-headline-md text-on-surface">Hari ini, 10:42</p>
+</div>
+</div>
+</div>
+<!-- Photos Section -->
+<div class="p-lg">
+<h2 class="font-headline-lg text-on-surface mb-md">Bukti Foto</h2>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-md">
+<div class="group relative rounded-lg overflow-hidden aspect-square border border-outline-variant shadow-sm cursor-zoom-in">
+<img alt="Foto bukti 1" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="A medium shot of a partially constructed concrete pillar at a building site in daylight. The steel rebar protruding from the top is noticeably sparse, indicating a shortage of materials. The concrete looks rough and tactile. The overall scene is practical, industrial, and brightly lit under a clear sky, fitting a realistic construction monitoring app context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDureOcgAkWOqezik4Q863MdqXMee5IOsl-5IqbaBk-RAI1LjEbRpL2zb6KqUApeJ5BmX_QmKqwUjtWmOc9fOB0zWrUaHEN-RBdmyno2aCtK11Vfh7GFPqKOsYUygRB7mptGFrT_E1-3P189oNeVhPjfhPtoUhT4JvaaVfxwupvKu-K6IVaLd18u6nOX_CjTwcgtuS9oGEiY6uPAAAVHN8WBwW-LVjhUpv2GEc4474nIvxvCWa8nYmk_Pjs_suT-et7Ld8IlmkALAc"/>
+<div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
+</div>
+<div class="group relative rounded-lg overflow-hidden aspect-square border border-outline-variant shadow-sm cursor-zoom-in">
+<img alt="Foto bukti 2" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="A close-up shot of a stack of steel rebar on a dusty construction site floor. The pile is unusually small, highlighting a lack of inventory. The rusted texture of the steel contrasts with the grey concrete background. The lighting is natural and slightly diffused, creating a realistic, grounded atmosphere for a construction management digital tool." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2Sa3nQ6sD24DuoZzi8odWhVyAQt1itphbdOjJZ9osTbc00sGNE5O7yDNfQpgLpuPqc-VctnP1KYwvcGRbbFCdHtiDkw3ICkyuWrw8x7fhYcizE-Mvfoi-T94dsf8sVEZSOImupco3sREPi_Jl6JQkA-gBPnlQWPLbOLzdLLlwoAzKgohgx38kP3w_EwKMwPOydiwMVy6dEcUbSUl9hvcjI9L982dxY4LvMeG1BV8DDYLzMQKCkZitMU0qjohV7F2H22uF19EzGO8"/>
+<div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
+</div>
+</div>
+</div>
+</article>
+</div>
+<!-- Right Column: Actions (Span 4) -->
+<div class="lg:col-span-4 flex flex-col gap-md">
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(27,67,50,0.08)] p-lg border border-surface-variant/50 sticky top-[100px]">
+<h3 class="font-headline-md text-on-surface mb-lg">Tindakan</h3>
+<div class="flex flex-col gap-sm">
+<button class="w-full min-h-[56px] bg-primary text-on-primary rounded-xl font-label-lg flex items-center justify-center gap-2 hover:bg-surface-tint hover:shadow-md active:scale-[0.98] transition-all duration-200">
+<span class="material-symbols-outlined">check_circle</span>
+                            Setujui Pembelian
+                        </button>
+<button class="w-full min-h-[56px] bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-xl font-label-lg flex items-center justify-center gap-2 hover:bg-tertiary-fixed-dim active:scale-[0.98] transition-all duration-200 mt-sm">
+<span class="material-symbols-outlined">hourglass_empty</span>
+                            Tunda Dulu
+                        </button>
+<div class="h-px bg-surface-variant w-full my-sm"></div>
+<button class="w-full min-h-[56px] border-2 border-outline-variant text-on-surface rounded-xl font-label-lg flex items-center justify-center gap-2 hover:bg-surface-container-low active:scale-[0.98] transition-all duration-200">
+<span class="material-symbols-outlined">call</span>
+                            Telepon Mandor
+                        </button>
+<button class="w-full min-h-[56px] border-2 border-outline-variant text-on-surface rounded-xl font-label-lg flex items-center justify-center gap-2 hover:bg-surface-container-low active:scale-[0.98] transition-all duration-200">
+<span class="material-symbols-outlined">edit_note</span>
+                            Tambahkan Catatan
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

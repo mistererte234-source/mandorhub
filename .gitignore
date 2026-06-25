@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Node / Next
+node_modules/
+.next/
+out/
+dist/
+build/
+
+# Env & secrets
+.env
+.env.local
+*.local
+
+# Capacitor / native
+frontend/android/
+frontend/ios/
+.gradle/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Postgres dumps
+*.dump

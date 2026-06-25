@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MandorHub — MVP Product Blueprint</title>
+<style>
+  :root{
+    --ink:#15211c;
+    --muted:#5e6c65;
+    --paper:#f5f7f5;
+    --card:#ffffff;
+    --line:#dfe7e2;
+    --forest:#1f5f46;
+    --forest-2:#174a36;
+    --lime:#c7ef77;
+    --amber:#f8c957;
+    --red:#ea6b61;
+    --blue:#dceee9;
+    --shadow:0 16px 44px rgba(22, 41, 31, .09);
+    --radius:22px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; color:var(--ink); background:
+      radial-gradient(circle at 88% 3%, rgba(199,239,119,.34), transparent 23rem),
+      linear-gradient(180deg,#eef4ef 0,#f7f9f7 46%,#eef4ef 100%);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height:1.52;
+  }
+  .wrap{width:min(1240px, calc(100% - 34px)); margin:auto}
+  .hero{padding:58px 0 28px}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px; border:1px solid rgba(31,95,70,.18);
+    color:var(--forest); background:rgba(255,255,255,.68); border-radius:999px; padding:7px 12px;
+    font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+  }
+  .dot{width:8px;height:8px;background:var(--lime);border-radius:50%;box-shadow:0 0 0 4px rgba(199,239,119,.28)}
+  h1{font-size:clamp(38px,6vw,76px);line-height:.99;letter-spacing:-.055em;margin:17px 0 18px;max-width:980px}
+  h1 span{color:var(--forest)}
+  .lead{font-size:clamp(17px,2vw,22px);max-width:840px;color:var(--muted);margin:0}
+  .top-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+  .pill{padding:9px 12px;background:#fff;border:1px solid var(--line);border-radius:999px;font-size:13px;font-weight:700;color:#435149}
+  .nav{
+    position:sticky;top:0;z-index:5;background:rgba(245,247,245,.84);backdrop-filter:blur(13px);
+    border-top:1px solid rgba(223,231,226,.75);border-bottom:1px solid rgba(223,231,226,.75);
+  }
+  .nav-inner{display:flex;gap:8px;overflow:auto;padding:10px 0}
+  .nav a{white-space:nowrap;text-decoration:none;color:#496056;font-size:13px;font-weight:750;border-radius:10px;padding:8px 10px}
+  .nav a:hover{background:#fff;color:var(--forest)}
+  section{padding:56px 0 8px}
+  .section-kicker{color:var(--forest);font-size:12px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+  h2{font-size:clamp(28px,3.8vw,45px);line-height:1.06;letter-spacing:-.04em;margin:8px 0 12px}
+  .intro{max-width:780px;color:var(--muted);font-size:17px}
+  .grid{display:grid;gap:18px}
+  .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .card{
+    background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px;box-shadow:var(--shadow)
+  }
+  .card h3{margin:0 0 9px;font-size:18px;letter-spacing:-.02em}
+  .card p{margin:0;color:var(--muted);font-size:15px}
+  .number{
+    width:35px;height:35px;border-radius:12px;background:var(--blue);color:var(--forest);display:grid;place-items:center;
+    font-size:14px;font-weight:900;margin-bottom:14px;
+  }
+  .quote{border-left:5px solid var(--lime);padding:16px 19px;background:#fbfdf9;border-radius:0 16px 16px 0;color:#2d4138;font-size:18px;font-weight:700}
+  .callout{background:linear-gradient(135deg,var(--forest),var(--forest-2));color:white;border-radius:28px;padding:28px;box-shadow:var(--shadow)}
+  .callout h3{margin:0 0 10px;font-size:25px;letter-spacing:-.03em}
+  .callout p{margin:0;color:rgba(255,255,255,.82)}
+  .callout .mini{margin-top:16px;display:flex;flex-wrap:wrap;gap:9px}
+  .callout .mini span{border:1px solid rgba(255,255,255,.2);padding:7px 10px;border-radius:999px;font-size:13px;font-weight:700}
+  .persona .tag{color:var(--forest);font-size:12px;font-weight:850;text-transform:uppercase;letter-spacing:.09em;margin-bottom:8px}
+  .persona ul,.checklist,.avoid ul,.roadmap ul{padding-left:19px;margin:12px 0 0;color:var(--muted)}
+  .persona li,.checklist li,.avoid li,.roadmap li{margin:6px 0}
+  .flow{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:stretch;margin-top:20px
+  }
+  .flow-step{background:#fff;border:1px solid var(--line);border-radius:17px;padding:16px;position:relative}
+  .flow-step:not(:last-child):after{
+    content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);z-index:1;
+    width:24px;height:24px;border-radius:50%;background:var(--lime);display:grid;place-items:center;font-weight:900;color:var(--forest)
+  }
+  .flow-step b{display:block;font-size:15px;margin-bottom:5px}
+  .flow-step span{font-size:13px;color:var(--muted)}
+  .phone-wrap{display:grid;grid-template-columns:390px 1fr;gap:34px;align-items:center;margin-top:22px}
+  .phone{
+    width:360px;max-width:100%;margin:auto;background:#1c2520;border:9px solid #172019;border-radius:42px;padding:12px;
+    box-shadow:0 28px 55px rgba(17,31,24,.23)
+  }
+  .screen{background:#f7faf7;border-radius:31px;min-height:637px;padding:18px 16px;overflow:hidden}
+  .phone-head{display:flex;justify-content:space-between;align-items:center;padding:4px 4px 17px}
+  .brand{font-weight:900;letter-spacing:-.04em;font-size:21px;color:var(--forest)}
+  .avatar{width:32px;height:32px;border-radius:50%;background:#dfeee9;display:grid;place-items:center;font-size:14px}
+  .hello{font-size:13px;color:var(--muted)}
+  .today{font-size:24px;font-weight:900;letter-spacing:-.04em;margin:2px 0 17px}
+  .project-row{background:#fff;border:1px solid var(--line);border-radius:18px;padding:13px;margin:9px 0}
+  .row-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+  .project-row b{font-size:14px}
+  .sub{font-size:12px;color:var(--muted);margin-top:4px}
+  .status{font-size:11px;font-weight:900;border-radius:999px;padding:5px 8px;white-space:nowrap}
+  .green{background:#daf3d6;color:#297641}.yellow{background:#fff0c1;color:#926a00}.red{background:#ffd9d6;color:#af332d}
+  .cta{display:block;width:100%;margin:14px 0 0;background:var(--forest);color:#fff;text-align:center;font-weight:900;text-decoration:none;padding:14px;border-radius:16px}
+  .action-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
+  .action{background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px;font-size:13px;font-weight:850}
+  .ico{display:block;font-size:20px;margin-bottom:6px}
+  .ui-notes h3{font-size:22px;margin:0 0 10px;letter-spacing:-.03em}
+  .ui-notes p{color:var(--muted)}
+  .req{
+    border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff;margin-top:14px
+  }
+  .req div{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:flex-start;font-size:14px}
+  .req div:last-child{border-bottom:0}
+  .ok{color:var(--forest);font-weight:1000}
+  .no{color:#a84740;font-weight:1000}
+  .table-wrap{overflow:auto;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:810px}
+  th,td{padding:15px 16px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#f3f7f4;color:#456055;font-size:12px;letter-spacing:.07em;text-transform:uppercase}
+  td{font-size:14px;color:#46564d}
+  td:first-child{font-weight:850;color:var(--ink)}
+  tr:last-child td{border-bottom:0}
+  .mvp-card{position:relative;overflow:hidden}
+  .mvp-card:before{content:"";position:absolute;left:0;top:0;height:5px;width:100%;background:var(--lime)}
+  .mvp-card h3{font-size:20px}
+  .badge{display:inline-block;background:#eaf5ee;color:var(--forest);padding:5px 8px;border-radius:999px;font-size:11px;font-weight:900;margin:0 0 11px}
+  .roles{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:18px}
+  .role{padding:18px;border:1px dashed #b8c9bf;border-radius:18px;background:#fbfdfb}
+  .role h4{margin:0 0 8px;font-size:17px}
+  .role p{margin:0;color:var(--muted);font-size:14px}
+  .footer{margin-top:60px;padding:28px 0 54px;color:#5a6b61;font-size:13px}
+  .footer-box{background:#e9f3ec;border:1px solid #d6e5da;padding:18px;border-radius:18px}
+  @media(max-width:900px){
+    .g2,.g3,.g4{grid-template-columns:1fr}
+    .phone-wrap{grid-template-columns:1fr}
+    .flow{grid-template-columns:1fr}
+    .flow-step:not(:last-child):after{content:"↓";right:auto;left:50%;top:auto;bottom:-12px;transform:translateX(-50%)}
+    .roles{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+  <header class="hero wrap">
+    <div class="eyebrow"><span class="dot"></span> Product Direction · MandorHub</div>
+    <h1>Kontrol banyak proyek, <span>tanpa bikin kontraktor pusing.</span></h1>
+    <p class="lead">MandorHub adalah platform pengawasan proyek bangunan untuk kontraktor tradisional yang punya banyak titik kerja, tetapi tidak mungkin hadir setiap hari di semua lokasi.</p>
+    <div class="top-meta">
+      <span class="pill">Target utama: kontraktor & mandor gaptek</span>
+      <span class="pill">Bahasa: Indonesia sangat sederhana</span>
+      <span class="pill">Interaksi utama: foto, tombol besar, suara</span>
+      <span class="pill">Fokus MVP: bukti lapangan + keputusan cepat</span>
+    </div>
+  </header>
+
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <a href="#why">Masalah</a>
+      <a href="#people">Pengguna</a>
+      <a href="#principles">Prinsip Produk</a>
+      <a href="#workflow">Alur</a>
+      <a href="#mvp">MVP</a>
+      <a href="#ui">Arah UX/UI</a>
+      <a href="#data">Data & Keamanan</a>
+      <a href="#handoff">Brief untuk Lody & Eva</a>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <section id="why">
+      <div class="section-kicker">01 / Masalah yang diselesaikan</div>
+      <h2>Kontraktor menolak pekerjaan bukan karena tidak mampu membangun, tetapi karena tidak mampu mengawasi banyak lokasi sekaligus.</h2>
+      <p class="intro">Saat proyek tersebar di Gresik, Surabaya, Sidoarjo, atau kota lain, kontrol sering berubah menjadi WhatsApp yang berserakan: foto tanpa konteks, laporan tidak lengkap, material terlambat diketahui, dan masalah baru muncul ketika sudah mahal untuk diperbaiki.</p>
+      <div class="grid g3" style="margin-top:22px">
+        <article class="card"><div class="number">01</div><h3>Informasi terlambat</h3><p>Kontraktor tahu pekerjaan macet setelah target lewat, bukan saat masalah masih bisa dicegah.</p></article>
+        <article class="card"><div class="number">02</div><h3>Laporan tidak rapi</h3><p>Foto, chat, voice note, dan kuitansi tercecer di banyak grup; sulit ditelusuri kembali.</p></article>
+        <article class="card"><div class="number">03</div><h3>Terlalu bergantung pada orang</h3><p>Semua kontrol bertumpu pada satu mandor terpercaya. Ketika lokasi bertambah, sistemnya kolaps.</p></article>
+      </div>
+      <div class="quote" style="margin-top:20px">MandorHub tidak dirancang untuk “menggantikan mandor”. Ia membuat mandor lebih mudah dipantau, lebih mudah melapor, dan lebih sulit membuat masalah tersembunyi.</div>
+    </section>
+
+    <section id="people">
+      <div class="section-kicker">02 / Siapa yang memakai</div>
+      <h2>Dua pengguna utama. Dua pengalaman yang berbeda.</h2>
+      <div class="grid g2" style="margin-top:20px">
+        <article class="card persona">
+          <div class="tag">Pengguna 1 — Kontraktor / pemilik usaha</div>
+          <h3>“Pak Hadi” — usia 40–65 tahun</h3>
+          <p>Punya beberapa proyek dan pengalaman konstruksi tinggi, namun tidak suka aplikasi rumit. Ia ingin melihat mana yang aman dan mana yang perlu ditangani sekarang.</p>
+          <ul>
+            <li>Membuka dashboard 2–4 kali sehari.</li>
+            <li>Butuh status visual: hijau, kuning, merah.</li>
+            <li>Ingin bukti foto nyata sebelum memberi persetujuan.</li>
+            <li>Tidak ingin istilah teknis aplikasi proyek.</li>
+          </ul>
+        </article>
+        <article class="card persona">
+          <div class="tag">Pengguna 2 — Mandor / pengawas lapangan</div>
+          <h3>“Pak Slamet” — usia 35–60 tahun</h3>
+          <p>Paham pekerjaan lapangan, tetapi tidak selalu nyaman mengetik panjang atau berpindah-pindah menu. Ia harus bisa melapor sambil bekerja.</p>
+          <ul>
+            <li>Melapor dalam ≤ 2 menit.</li>
+            <li>Lebih nyaman foto, pilihan tombol, dan voice note.</li>
+            <li>Harus tahu persis apa yang ditargetkan hari ini.</li>
+            <li>Perlu tetap berguna di koneksi internet tidak stabil.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="principles">
+      <div class="section-kicker">03 / Prinsip produk yang tidak boleh dilanggar</div>
+      <h2>Lebih sedikit menu, lebih sedikit teks, lebih banyak kepastian.</h2>
+      <div class="grid g4" style="margin-top:20px">
+        <article class="card"><div class="number">A</div><h3>Tiga klik maksimum</h3><p>Pekerjaan penting harus bisa dimulai dari layar utama dan selesai tanpa form panjang.</p></article>
+        <article class="card"><div class="number">B</div><h3>Foto dulu, teks belakangan</h3><p>Kondisi lapangan lebih mudah dibuktikan oleh foto/video daripada laporan panjang.</p></article>
+        <article class="card"><div class="number">C</div><h3>Bahasa manusia</h3><p>Gunakan “Ada Masalah” dan “Minta Persetujuan”, bukan “Issue Log” atau “Approval Workflow”.</p></article>
+        <article class="card"><div class="number">D</div><h3>Kontraktor hanya lihat yang penting</h3><p>Dashboard menonjolkan pengecualian: terlambat, belum lapor, kurang material, atau butuh keputusan.</p></article>
+      </div>
+      <div class="callout" style="margin-top:20px">
+        <h3>Aturan Emas UX</h3>
+        <p>Jangan membuat pengguna merasa sedang “mengoperasikan software”. Mereka harus merasa hanya sedang mengirim laporan lapangan seperti biasa—tetapi sekarang hasilnya otomatis rapi dan bisa dikontrol.</p>
+        <div class="mini"><span>Font besar</span><span>Kontras tinggi</span><span>Ikon selalu disertai teks</span><span>Tombol lebar</span><span>Tidak ada jargon</span><span>Voice note opsional</span></div>
+      </div>
+    </section>
+
+    <section id="workflow">
+      <div class="section-kicker">04 / Alur kerja inti</div>
+      <h2>Satu siklus harian yang mudah diulang.</h2>
+      <p class="intro">MVP tidak perlu mencoba mengelola seluruh dunia konstruksi. Cukup memastikan bahwa setiap titik proyek memiliki target, bukti, kendala, dan keputusan yang tercatat jelas setiap hari.</p>
+      <div class="flow">
+        <div class="flow-step"><b>1. Tentukan target</b><span>Admin/kontraktor menetapkan pekerjaan hari ini.</span></div>
+        <div class="flow-step"><b>2. Mandor bekerja</b><span>Mandor melihat target yang sederhana.</span></div>
+        <div class="flow-step"><b>3. Lapor cepat</b><span>Foto + status + jumlah pekerja + kendala.</span></div>
+        <div class="flow-step"><b>4. Sistem menandai risiko</b><span>Belum lapor, target gagal, atau masalah muncul.</span></div>
+        <div class="flow-step"><b>5. Kontraktor putuskan</b><span>Setuju, tunda, telepon, atau minta klarifikasi.</span></div>
+      </div>
+    </section>
+
+    <section id="mvp">
+      <div class="section-kicker">05 / MVP — fitur yang harus dibangun dulu</div>
+      <h2>Bangun produk inti, bukan “aplikasi konstruksi lengkap”.</h2>
+      <div class="grid g2" style="margin-top:20px">
+        <article class="card mvp-card">
+          <span class="badge">P0 · WAJIB</span>
+          <h3>1. Dashboard semua proyek</h3>
+          <p>Daftar proyek dan titik kerja dengan status visual. Kontraktor langsung tahu: aman, perlu perhatian, atau darurat.</p>
+          <ul class="checklist">
+            <li>Status harian: <b>Hijau / Kuning / Merah</b></li>
+            <li>Jumlah lokasi yang belum melapor</li>
+            <li>Masalah yang menunggu keputusan</li>
+            <li>Ringkasan progres hari ini</li>
+          </ul>
+        </article>
+        <article class="card mvp-card">
+          <span class="badge">P0 · WAJIB</span>
+          <h3>2. Laporan harian 2 menit</h3>
+          <p>Form sangat singkat, berbasis foto dan pilihan sederhana. Tidak memaksa mandor membuat narasi panjang.</p>
+          <ul class="checklist">
+            <li>Foto kondisi lokasi</li>
+            <li>Jumlah pekerja hari ini</li>
+            <li>Pekerjaan yang dilakukan</li>
+            <li>Target tercapai / belum</li>
+            <li>Kendala dan voice note opsional</li>
+          </ul>
+        </article>
+        <article class="card mvp-card">
+          <span class="badge">P0 · WAJIB</span>
+          <h3>3. “Ada Masalah” + persetujuan</h3>
+          <p>Mandor mengirim masalah dalam bentuk jelas. Kontraktor tinggal mengambil keputusan tanpa mencari chat lama.</p>
+          <ul class="checklist">
+            <li>Pilih jenis masalah: material, pekerja, cuaca, desain, biaya, lain-lain</li>
+            <li>Lampirkan foto/video singkat</li>
+            <li>Tombol: <b>Setuju / Tunda / Hubungi Saya</b></li>
+            <li>Catatan keputusan otomatis tersimpan</li>
+          </ul>
+        </article>
+        <article class="card mvp-card">
+          <span class="badge">P0 · WAJIB</span>
+          <h3>4. Riwayat bukti proyek</h3>
+          <p>Foto dan laporan tersusun menurut proyek, titik, tanggal, dan jenis pekerjaan. Ini adalah aset kepercayaan paling penting.</p>
+          <ul class="checklist">
+            <li>Cap waktu otomatis</li>
+            <li>Lokasi GPS bila izin diberikan</li>
+            <li>Filter per tanggal dan titik</li>
+            <li>Album perkembangan proyek</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="grid g3" style="margin-top:18px">
+        <article class="card">
+          <span class="badge">P1 · SETELAH MVP</span>
+          <h3>Material sederhana</h3><p>Catat material masuk, kurang, dan permintaan pembelian—bukan inventori gudang kompleks.</p>
+        </article>
+        <article class="card">
+          <span class="badge">P1 · SETELAH MVP</span>
+          <h3>Tugas mingguan</h3><p>Target per minggu dengan status belum, dikerjakan, selesai, atau tertunda.</p>
+        </article>
+        <article class="card">
+          <span class="badge">P2 · NANTI</span>
+          <h3>Laporan pemilik proyek</h3><p>Versi rapi dan terbatas untuk klien agar kontraktor terlihat transparan serta profesional.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="ui">
+      <div class="section-kicker">06 / Arah UX & UI</div>
+      <h2>Contoh layar mandor: sederhana, besar, dan jelas.</h2>
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="screen">
+            <div class="phone-head"><div class="brand">MandorHub</div><div class="avatar">👷</div></div>
+            <div class="hello">Selamat pagi, Pak Slamet</div>
+            <div class="today">Laporan hari ini</div>
+
+            <div class="project-row">
+              <div class="row-top">
+                <div><b>Ruko Pak Budi — Titik C</b><div class="sub">Surabaya · Target: pasang keramik</div></div>
+                <span class="status yellow">Perlu laporan</span>
+              </div>
+            </div>
+
+            <a class="cta" href="javascript:void(0)">📷 LAPOR HARI INI</a>
+
+            <div class="action-grid">
+              <div class="action"><span class="ico">⚠️</span>Ada Masalah</div>
+              <div class="action"><span class="ico">✅</span>Lihat Target</div>
+              <div class="action"><span class="ico">🎙️</span>Rekam Suara</div>
+              <div class="action"><span class="ico">📦</span>Material Kurang</div>
+            </div>
+
+            <div class="today" style="font-size:17px;margin-top:22px;margin-bottom:9px">Status lokasi lain</div>
+            <div class="project-row">
+              <div class="row-top"><div><b>Rumah Gresik</b><div class="sub">Laporan masuk 08:42</div></div><span class="status green">Aman</span></div>
+            </div>
+            <div class="project-row">
+              <div class="row-top"><div><b>Ruko Pak Budi — Titik D</b><div class="sub">Target belum tercapai</div></div><span class="status red">Butuh perhatian</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ui-notes">
+          <h3>Hal yang perlu dipertahankan Lody dalam desain</h3>
+          <p>UI tidak boleh tampil seperti aplikasi enterprise. Orang lapangan harus berani menekan tombol tanpa takut “salah input”.</p>
+          <div class="req">
+            <div><span class="ok">✓</span><span><b>Gunakan label eksplisit.</b><br>“Lapor Hari Ini”, “Ada Masalah”, “Material Kurang”.</span></div>
+            <div><span class="ok">✓</span><span><b>Selalu tampilkan satu tindakan utama.</b><br>Untuk mandor, tindakan utama harian adalah laporan hari ini.</span></div>
+            <div><span class="ok">✓</span><span><b>Visual status harus redundan.</b><br>Jangan hanya warna. Sertakan kata: Aman, Perlu Laporan, Butuh Perhatian.</span></div>
+            <div><span class="ok">✓</span><span><b>Fokus mobile-first.</b><br>Mandor hampir pasti menggunakan Android dengan layar kecil dan koneksi tidak selalu stabil.</span></div>
+            <div><span class="no">×</span><span><b>Hindari:</b> tabel kecil, sidebar penuh menu, istilah “WBS”, “NCR”, “Gantt”, “workflow”, dan form panjang.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="data">
+      <div class="section-kicker">07 / Struktur data dan pengamanan kepercayaan</div>
+      <h2>Kepercayaan pada laporan harus dirancang dari awal.</h2>
+      <p class="intro">Foto saja belum tentu cukup. Sistem perlu menyimpan konteks dasar supaya kontraktor percaya laporan berasal dari lokasi dan waktu yang benar—tanpa membuat pengguna merasa diawasi secara berlebihan.</p>
+      <div class="table-wrap" style="margin-top:20px">
+        <table>
+          <thead><tr><th>Entitas</th><th>Field minimum</th><th>Fungsi bisnis</th></tr></thead>
+          <tbody>
+            <tr><td>Project</td><td>Nama, klien, alamat ringkas, status, mulai, target selesai</td><td>Mengelompokkan seluruh aktivitas pembangunan.</td></tr>
+            <tr><td>Site / Titik</td><td>Nama titik, alamat, koordinat opsional, mandor penanggung jawab</td><td>Satu proyek bisa memiliki banyak titik lokasi.</td></tr>
+            <tr><td>Daily Report</td><td>Tanggal, pekerja hadir, pekerjaan, status target, catatan, voice note</td><td>Menjadi bukti aktivitas harian.</td></tr>
+            <tr><td>Evidence</td><td>Foto/video, waktu unggah, metadata lokasi jika tersedia, caption</td><td>Membuat laporan dapat diverifikasi dan ditelusuri.</td></tr>
+            <tr><td>Issue</td><td>Jenis masalah, tingkat urgensi, bukti, status, keputusan kontraktor</td><td>Mencegah masalah hilang di WhatsApp.</td></tr>
+            <tr><td>Approval</td><td>Keputusan, catatan, waktu keputusan, pembuat keputusan</td><td>Membentuk jejak keputusan yang jelas.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="grid g3" style="margin-top:18px">
+        <article class="card"><h3>Anti-laporan asal</h3><p>Prioritaskan pengambilan foto langsung dari kamera, bukan unggah sembarang foto lama. Tetap sediakan fallback bila koneksi lemah.</p></article>
+        <article class="card"><h3>Mode offline ringan</h3><p>Data laporan bisa disimpan sementara di perangkat lalu dikirim saat jaringan kembali tersedia.</p></article>
+        <article class="card"><h3>Hak akses sederhana</h3><p>Kontraktor melihat semua. Mandor hanya melihat proyek/titik yang menjadi tanggung jawabnya.</p></article>
+      </div>
+    </section>
+
+    <section id="handoff">
+      <div class="section-kicker">08 / Handoff untuk Lody & Eva</div>
+      <h2>Dua peran, satu definisi sukses.</h2>
+      <div class="roles">
+        <article class="role">
+          <h4>Untuk Lody — Product & UI/UX</h4>
+          <p>Rancang pengalaman yang membuat kontraktor usia 40–65 tahun dan mandor lapangan tidak takut memakai sistem. Utamakan flow <b>“Lapor Hari Ini”</b>, dashboard status visual, dan halaman masalah/persetujuan. Buat prototipe mobile-first untuk mandor serta dashboard tablet/desktop yang sangat ringkas untuk kontraktor.</p>
+        </article>
+        <article class="role">
+          <h4>Untuk Eva — Claude Code / Engineering</h4>
+          <p>Bangun fondasi MVP modular: role-based access, project → site → daily report → evidence → issue → approval. Prioritaskan upload media, status workflow sederhana, offline draft queue, dan audit trail. Jangan membangun modul finansial, Gantt penuh, procurement kompleks, atau AI otomatis pada fase pertama.</p>
+        </article>
+      </div>
+
+      <div class="grid g2" style="margin-top:18px">
+        <article class="card avoid">
+          <h3>Yang sengaja TIDAK masuk MVP</h3>
+          <ul>
+            <li>Manajemen RAB/akuntansi lengkap</li>
+            <li>Gantt chart berat dan WBS detail</li>
+            <li>Payroll pekerja</li>
+            <li>Manajemen kontrak legal</li>
+            <li>Marketplace material</li>
+            <li>Analitik AI yang belum punya data lapangan cukup</li>
+          </ul>
+        </article>
+        <article class="card roadmap">
+          <h3>Definisi MVP berhasil</h3>
+          <ul>
+            <li>Mandor berhasil mengirim laporan harian tanpa pendampingan.</li>
+            <li>Kontraktor dapat mendeteksi titik bermasalah tanpa membuka grup WhatsApp.</li>
+            <li>Setiap masalah punya bukti, status, dan keputusan tercatat.</li>
+            <li>Kontraktor mampu memantau beberapa proyek dari satu dashboard.</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="callout" style="margin-top:20px">
+        <h3>Kalimat produk yang harus terasa di setiap layar</h3>
+        <p>“Saya tidak perlu datang ke semua tempat untuk tahu proyek saya aman atau bermasalah.”</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap footer">
+    <div class="footer-box">
+      <b>MandorHub — MVP Product Blueprint</b><br>
+      Dokumen ini adalah arah awal produk untuk diskusi bersama Lody (UI/UX) dan Eva (engineering). Prinsip utamanya: sederhana bagi pengguna tradisional, tetapi cukup kuat untuk memberi kontraktor kontrol nyata atas banyak titik proyek.
+    </div>
+  </footer>
+</body>
+</html>

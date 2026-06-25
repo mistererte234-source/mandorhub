@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MandorHub - Project Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#cee9d3",
+                        "surface-bright": "#f6f9ff",
+                        "tertiary": "#342300",
+                        "surface-container-low": "#eef4fd",
+                        "tertiary-fixed-dim": "#ffba27",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#ffdea9",
+                        "surface-container": "#e8eef7",
+                        "primary-container": "#1b4332",
+                        "surface-dim": "#d4dbe3",
+                        "secondary-container": "#cce6d0",
+                        "inverse-surface": "#2a3138",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#092012",
+                        "on-surface": "#151c22",
+                        "surface": "#f6f9ff",
+                        "primary-fixed-dim": "#a5d0b9",
+                        "on-primary-fixed-variant": "#274e3d",
+                        "on-tertiary-fixed": "#271900",
+                        "surface-tint": "#3f6653",
+                        "surface-variant": "#dce3ec",
+                        "secondary": "#4c6452",
+                        "on-primary-container": "#86af99",
+                        "tertiary-container": "#503700",
+                        "on-tertiary-container": "#d89b00",
+                        "on-secondary-fixed-variant": "#354c3b",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#dce3ec",
+                        "surface-container-high": "#e2e9f1",
+                        "outline": "#717973",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "primary": "#012d1d",
+                        "on-secondary-container": "#506856",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#b3cdb7",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#c1ecd4",
+                        "on-primary-fixed": "#002114",
+                        "inverse-primary": "#a5d0b9",
+                        "on-background": "#151c22",
+                        "on-tertiary-fixed-variant": "#5e4100",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#ebf1fa",
+                        "background": "#f6f9ff",
+                        "outline-variant": "#c1c8c2",
+                        "on-surface-variant": "#414844"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-margin": "20px",
+                        "sm": "12px",
+                        "gutter": "16px",
+                        "lg": "32px",
+                        "md": "20px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "xl": "48px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "display": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "18px", "fontWeight": "500" }],
+                        "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["22px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-lg": ["16px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-24 md:pb-8 flex flex-col md:items-center">
+<!-- Top Navigation (Contextual Back/Detail Header) -->
+<header class="bg-surface dark:bg-surface-dim shadow-sm flex justify-between items-center px-container-margin py-md w-full sticky top-0 z-40 max-w-4xl">
+<button class="text-primary p-2 -ml-2 rounded-full hover:bg-surface-container-low transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex-1 text-center">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed truncate px-4">Rumah Pak Ahmad — Gresik</h1>
+</div>
+<button class="text-primary p-2 -mr-2 rounded-full hover:bg-surface-container-low transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</header>
+<main class="w-full max-w-4xl flex-1 flex flex-col pt-base">
+<!-- Tabs Navigation -->
+<nav class="w-full px-container-margin mb-gutter overflow-x-auto hide-scrollbar sticky top-[76px] z-30 bg-background/90 backdrop-blur-md py-2">
+<ul class="flex space-x-2 min-w-max">
+<li>
+<button class="font-label-md text-label-md px-4 py-2 rounded-full bg-primary-container text-on-primary-container transition-colors">
+                        Ringkasan
+                    </button>
+</li>
+<li>
+<button class="font-label-md text-label-md px-4 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-variant transition-colors">
+                        Laporan
+                    </button>
+</li>
+<li>
+<button class="font-label-md text-label-md px-4 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-variant transition-colors">
+                        Masalah
+                    </button>
+</li>
+<li>
+<button class="font-label-md text-label-md px-4 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-variant transition-colors">
+                        Foto
+                    </button>
+</li>
+</ul>
+</nav>
+<div class="px-container-margin flex flex-col gap-gutter">
+<!-- Project Status & Progress Card -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(27,67,50,0.08)] overflow-hidden">
+<div class="p-5 border-b border-surface-variant flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md text-on-surface">Status Proyek</h2>
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary font-label-md text-label-md">
+<span class="w-2 h-2 rounded-full bg-primary mr-2"></span> Proses
+                    </span>
+</div>
+<div class="p-5 flex flex-col gap-4">
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="font-body-md text-body-md text-on-surface-variant">Target Mingguan</span>
+<span class="font-headline-md text-headline-md text-primary">65%</span>
+</div>
+<div class="w-full h-3 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[65%] rounded-full"></div>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant mt-2">Pemasangan Rangka Atap</p>
+</div>
+<div class="flex items-center gap-3 pt-4 border-t border-surface-variant/50">
+<div class="w-12 h-12 rounded-full bg-surface-variant overflow-hidden">
+<img alt="Foreman" class="w-full h-full object-cover" data-alt="A close-up portrait of an Indonesian construction foreman wearing a yellow safety helmet and high-visibility vest. He has a warm, experienced expression, reflecting a pragmatic and reliable demeanor. The lighting is natural outdoor daylight, typical of a bustling construction site, emphasizing the tactile, grounded nature of the profession. The image style is realistic and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZMrAYC7oYkP_-BsnlVsTpKPlvp65WEszzuOeeH7EsDssQkF-8HZADWHm-Nou2oD3ac2nuq6OlDHCkt8J77vNsiU_ZIYQnsHDl2dr8pCru_-bbzrotjrfO7UcjBAm6cdtq5-r6kU0GVm3z0ch21tEUCrJIFkamvar4sJhT4Bsp8CQPhj78qMTC1B0iJD98XsjBfV1LMmMp_h4nB55oHdobNb9NrNv5eYhqK6rGSsy2qYSpbiZfyJvQYkf-PwN8AEaLT1xPYh4AB7g"/>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant">Mandor Utama</p>
+<p class="font-body-lg text-body-lg font-medium text-on-surface">Budi Santoso</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Latest Photo Evidence -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(27,67,50,0.08)] overflow-hidden">
+<div class="p-5 border-b border-surface-variant flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md text-on-surface">Foto Terbaru</h2>
+<button class="text-primary font-label-md text-label-md flex items-center">
+                        Lihat Semua <span class="material-symbols-outlined text-[18px] ml-1" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<div class="p-5">
+<div class="relative w-full h-48 rounded-lg overflow-hidden bg-surface-variant shadow-sm mb-3">
+<img alt="Latest construction progress" class="w-full h-full object-cover" data-alt="A wide-angle photograph of an Indonesian residential house construction site. The wooden roof frame is partially installed under a bright blue sky. Stacks of red bricks and cement bags are neatly organized in the foreground, reflecting a well-managed site. The sunlight creates distinct shadows, highlighting the tactile materials. The overall aesthetic is practical, modern, and documented clearly." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6B8Ay-OxVftkVlQJtHOG__wSTJBN6EyBOjgHrhnrcDFSM0EHRQQBKKV5DCzMddd_r57VCBOCB7Gqrj70QFsOP8oouphiTuJPa6ebU5QzQFtaQ17B5BdYviLLLAKt4dmFuej8cWtehQhYzy_GVCIoVudYWfe0dzBsTXJUyl9q6xcGZEtjWGVCD-20CjgvIW2HUtUaLTPy1WYuoTh17r7kmd1kmFkdR6SSXZny7qUErvyaHoyHprkmXIQp6jZ6CWd_AcdBVWvwcbg0"/>
+<div class="absolute bottom-2 left-2 bg-surface-container-lowest/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-label-md text-on-surface flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px]" data-icon="schedule">schedule</span> Hari ini, 14:30
+                        </div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Pemasangan kuda-kuda atap baja ringan area utama.</p>
+</div>
+</section>
+<!-- Latest Daily Report -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(27,67,50,0.08)] overflow-hidden">
+<div class="p-5 border-b border-surface-variant">
+<h2 class="font-headline-md text-headline-md text-on-surface">Laporan Harian Terakhir</h2>
+</div>
+<div class="p-0">
+<div class="flex items-start gap-4 p-5 hover:bg-surface-container-low transition-colors min-h-[72px] cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+</div>
+<div class="flex-1">
+<h3 class="font-body-lg text-body-lg font-medium text-on-surface">Laporan 12 Okt 2023</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-1">15 Pekerja hadir. Cuaca cerah. Material kayu tiba.</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant self-center" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Active Issues -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(27,67,50,0.08)] overflow-hidden mb-8">
+<div class="p-5 border-b border-surface-variant flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md text-on-surface">Masalah Aktif</h2>
+<span class="bg-tertiary-fixed-dim text-on-tertiary-fixed-variant px-2 py-0.5 rounded-full font-label-md text-label-md text-xs">1 Tertunda</span>
+</div>
+<div class="p-5">
+<div class="bg-surface-container rounded-lg p-4 flex gap-3 border-l-4 border-tertiary-fixed-dim">
+<span class="material-symbols-outlined text-tertiary-fixed-dim mt-0.5" data-icon="warning">warning</span>
+<div>
+<h3 class="font-body-md text-body-md font-medium text-on-surface">Keterlambatan Semen</h3>
+<p class="font-label-md text-label-md text-on-surface-variant mt-1">Pengiriman semen dari supplier terlambat 2 hari. Stok menipis.</p>
+</div>
+</div>
+</div>
+</section>
+<button class="w-full bg-primary text-on-primary font-headline-md text-headline-md py-4 rounded-xl shadow-md active:scale-95 transition-transform duration-150 flex items-center justify-center gap-2 mb-lg min-h-[56px]">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                Buat Laporan Baru
+            </button>
+</div>
+</main>
+<!-- BottomNavBar (Hidden on this transactional detail screen to prioritize content canvas as per semantic shell mandate) -->
+</body></html>

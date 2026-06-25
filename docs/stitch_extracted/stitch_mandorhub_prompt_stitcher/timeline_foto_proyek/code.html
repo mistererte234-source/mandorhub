@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Perkembangan Proyek - MandorHub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#cee9d3",
+                        "surface-bright": "#f6f9ff",
+                        "tertiary": "#342300",
+                        "surface-container-low": "#eef4fd",
+                        "tertiary-fixed-dim": "#ffba27",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#ffdea9",
+                        "surface-container": "#e8eef7",
+                        "primary-container": "#1b4332",
+                        "surface-dim": "#d4dbe3",
+                        "secondary-container": "#cce6d0",
+                        "inverse-surface": "#2a3138",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#092012",
+                        "on-surface": "#151c22",
+                        "surface": "#f6f9ff",
+                        "primary-fixed-dim": "#a5d0b9",
+                        "on-primary-fixed-variant": "#274e3d",
+                        "on-tertiary-fixed": "#271900",
+                        "surface-tint": "#3f6653",
+                        "surface-variant": "#dce3ec",
+                        "secondary": "#4c6452",
+                        "on-primary-container": "#86af99",
+                        "tertiary-container": "#503700",
+                        "on-tertiary-container": "#d89b00",
+                        "on-secondary-fixed-variant": "#354c3b",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#dce3ec",
+                        "surface-container-high": "#e2e9f1",
+                        "outline": "#717973",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "primary": "#012d1d",
+                        "on-secondary-container": "#506856",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#b3cdb7",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#c1ecd4",
+                        "on-primary-fixed": "#002114",
+                        "inverse-primary": "#a5d0b9",
+                        "on-background": "#151c22",
+                        "on-tertiary-fixed-variant": "#5e4100",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#ebf1fa",
+                        "background": "#f6f9ff",
+                        "outline-variant": "#c1c8c2",
+                        "on-surface-variant": "#414844"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-margin": "20px",
+                        "sm": "12px",
+                        "gutter": "16px",
+                        "lg": "32px",
+                        "md": "20px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "xl": "48px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "display": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "18px", "fontWeight": "500" }],
+                        "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["22px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-lg": ["16px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1;
+        }
+        body {
+            background-color: #f8f9fa; /* Warm gray background requested */
+        }
+    </style>
+</head>
+<body class="text-on-background min-h-screen pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-dim text-primary dark:text-primary-fixed shadow-sm sticky top-0 z-40">
+<div class="flex justify-between items-center px-container-margin py-md w-full">
+<div class="flex items-center gap-sm">
+<img alt="Profile photo of foreman" class="w-10 h-10 rounded-full object-cover border-2 border-surface-container-highest" data-alt="A professional headshot of an Indonesian construction foreman wearing a safety helmet and high-visibility vest. The lighting is bright and outdoor, conveying a sense of reliability and leadership on a construction site. Warm, earthy tones dominate the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuDJqEiN9UTiS1nwlOVjhuOJtKAdrQ6MRKe5317UhxetjORj7EF_g46HKi8cnixvxeGqhYPbEkBxPFvuiPvQj0FBSpA4MoDcMV5-OJxC9nKg3Y239zRzTc9lBs59t85_sKmyVEEeU6MFXmhVX8qe1bhvkGJCSZcrg6S8Ao7_kVhzRNgh8JlCDytgDhSspJveRZPuEJV5Wact6hh7fECru7pudAFmMnHNUxX_ZKhnGr74q3NYjrTnjJOfWNAQPTvXC6dCKL8FLoWfs"/>
+<span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed tracking-tight">MandorHub</span>
+</div>
+<button class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
+</button>
+</div>
+</header>
+<main class="max-w-3xl mx-auto px-container-margin pt-md pb-xl space-y-xl">
+<!-- Page Title -->
+<div class="space-y-xs">
+<h1 class="font-display text-display text-on-surface">Perkembangan Proyek</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Dokumentasi harian pengerjaan struktur utama.</p>
+</div>
+<!-- Timeline Container -->
+<div class="space-y-lg relative">
+<!-- Vertical Timeline Line (Hidden on very small screens, visible on md) -->
+<div class="hidden md:block absolute left-[39px] top-4 bottom-0 w-1 bg-surface-container-highest rounded-full z-0"></div>
+<!-- Timeline Entry: Today -->
+<div class="relative z-10 flex flex-col md:flex-row gap-gutter">
+<!-- Date/Timeline Marker -->
+<div class="flex items-center md:items-start md:w-24 shrink-0 gap-sm mb-2 md:mb-0">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-sm shrink-0 hidden md:flex">
+<span class="material-symbols-outlined filled text-[20px]">today</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-primary">Hari Ini</span>
+<span class="font-body-md text-body-md text-on-surface-variant text-sm">24 Okt</span>
+</div>
+</div>
+<!-- Content Card -->
+<div class="flex-grow bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(27,67,50,0.08)] overflow-hidden">
+<div class="p-md border-b border-surface-container-highest flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface">Pengecoran Lantai 2</h3>
+<div class="bg-secondary-fixed text-on-secondary-fixed font-label-md text-label-md px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined filled text-[16px]">check_circle</span>
+                            Aman
+                        </div>
+</div>
+<div class="p-md space-y-md">
+<!-- Photo Grid (Bento style) -->
+<div class="grid grid-cols-2 gap-2 rounded-lg overflow-hidden h-48">
+<div class="col-span-1 h-full bg-surface-container-high rounded-lg overflow-hidden cursor-pointer active:scale-[0.98] transition-transform">
+<img class="w-full h-full object-cover" data-alt="A wide-angle photo of a construction site showing workers actively pouring concrete on the second floor of a residential building. Bright daylight, clear blue sky. Scaffolding and rebar are visible. The image is crisp, detailed, and realistic, conveying active progress." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1weoM5ijXc--5M-3673SIUN8x4SwEsgyvndG7V3XTZbpkZ_2A3Ia7pCa3GotzIdiUMhp2qqkZ15GLPFANGE7YufE_-HNJ6TlyKgZwvXvh8k1ie4dol60gcJlG-bU06-ifCK9lrwHNHnH54gzggFgEXDdNKUnbA6W95AeA5DzlMFzbMVtX2YTprDKiGvigqDVtNd7f7wOiX7M8qmTFsYo3E5hbxR6xhUIq0gsN00hQO75cHv0RYCzL98NAfZeXyig458PaWWGqfpk"/>
+</div>
+<div class="col-span-1 grid grid-rows-2 gap-2 h-full">
+<div class="h-full bg-surface-container-high rounded-lg overflow-hidden cursor-pointer active:scale-[0.98] transition-transform">
+<img class="w-full h-full object-cover" data-alt="Close-up shot of freshly poured, wet concrete being smoothed by a worker with a trowel. Focus on the texture of the concrete and the tool. Warm sunlight highlighting the wet surface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDz1eFFDHJjq6kLUiJZ3rtLLo9nqXiKeXViVXPiwbVJl9O26NmJFc4v7Cy5K5TksR014SCmMmM-pD8Kd9C8HrH6mdEHVk9djJ4CXBoreqFSNqrJif5iwdvU37DGfoG9iUPc0zmenVzSAOZ3dKE8CKQMnmd6kNIjxywPhqfUcMrDKHroAlTxaHKvusJdOpsEWTIf7npfoQCv-0hKlPgD87zzqxJcepTJ616xfgto8RtfkvpyEhl7YyUS_Awh6WIDAK3Ej_LX21h3Qsg"/>
+</div>
+<div class="h-full bg-surface-container-high rounded-lg overflow-hidden relative cursor-pointer active:scale-[0.98] transition-transform">
+<img class="w-full h-full object-cover opacity-80" data-alt="A stack of construction materials, specifically cement bags and steel rebars, organized neatly on the ground level. Earthy tones, practical setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbH_diCZ6tQcH6j3ZqrY8NlXZMnJLRSzJLh0IHBZyY-Ef2hnRIdbbUfaZ9g_Pm8ZyBvAzpzwbExlgqMHk1EpjHFrdvA-GCndUOUmEs233lfba2gQFzzUiI3ziZ2jbUU6X1_q2r97Fqx69goMGJD0SXC6zxWTh-F1Thw4GjHjab8mYLCCnMzizFkeYxiWOOlJOLTiDQj7B2NJnkTQS2ylqzd5YClshdE6Qd4t10YOq4ix3Ghi3kUPhTA9zQ2tS1jkrua63oTfG6kQE"/>
+<div class="absolute inset-0 bg-surface-tint/20 flex items-center justify-center">
+<span class="font-headline-md text-headline-md text-on-primary font-bold">+2 Foto</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Report Text -->
+<p class="font-body-md text-body-md text-on-surface">Pengecoran area sayap barat selesai 100%. Cuaca cerah mendukung pengeringan awal. Persiapan bekisting kolom selanjutnya mulai dilakukan.</p>
+<!-- Stats -->
+<div class="flex flex-wrap gap-4 pt-2">
+<div class="flex items-center gap-2 bg-surface-container-low px-3 py-2 rounded-lg">
+<span class="material-symbols-outlined text-outline">group</span>
+<span class="font-label-md text-label-md text-on-surface-variant">12 Pekerja</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-low px-3 py-2 rounded-lg">
+<span class="material-symbols-outlined text-outline">architecture</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Volume: 45m³</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Timeline Entry: Yesterday -->
+<div class="relative z-10 flex flex-col md:flex-row gap-gutter">
+<!-- Date/Timeline Marker -->
+<div class="flex items-center md:items-start md:w-24 shrink-0 gap-sm mb-2 md:mb-0">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-outline shadow-sm shrink-0 hidden md:flex">
+<span class="material-symbols-outlined text-[20px]">history</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface">Kemarin</span>
+<span class="font-body-md text-body-md text-on-surface-variant text-sm">23 Okt</span>
+</div>
+</div>
+<!-- Content Card -->
+<div class="flex-grow bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(27,67,50,0.08)] overflow-hidden">
+<div class="p-md border-b border-surface-container-highest flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface">Pemasangan Bekisting &amp; Pembesian</h3>
+<div class="bg-primary-container text-on-primary-container font-label-md text-label-md px-3 py-1 rounded-full flex items-center gap-1 opacity-90">
+<span class="material-symbols-outlined filled text-[16px]">sync</span>
+                            Proses
+                        </div>
+</div>
+<div class="p-md space-y-md">
+<!-- Single Large Photo for older entries -->
+<div class="w-full h-40 bg-surface-container-high rounded-lg overflow-hidden cursor-pointer active:scale-[0.98] transition-transform">
+<img class="w-full h-full object-cover" data-alt="Workers tying rebar framework for the second floor. Intricate steel mesh patterns are visible. The image shows the meticulous preparation work before concrete pouring. Industrial and practical aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL3KrU-6cIrli0MhQW5xNzV6SCCwvGlCsO9iKEBAEaa5vPkt91GbxZPWwEXM8AufPGIHXK2rj0bvh-fBLdOfmYfZJyL80qSltca-T07mjdW332qx3mY0nU_lJtSr4CHQBGdh8pR1KSt_4wlJjqBuiGE0pINF4GQCLS9U6kORDOPt76Gor1EAjb8FNcjCUZMu14rxw3KnqenUfarYK1ry0uRw3hmnN9Oba_dJCpuG6eXqJ7zg5l9PY1SDqYnSOkzW5f1fxsqIMhtCM"/>
+</div>
+<!-- Report Text -->
+<p class="font-body-md text-body-md text-on-surface">Pembesian plat lantai selesai 80%. Bekisting terpasang kuat, siap untuk pengecekan level sebelum pengecoran besok.</p>
+<!-- Stats -->
+<div class="flex flex-wrap gap-4 pt-2">
+<div class="flex items-center gap-2 bg-surface-container-low px-3 py-2 rounded-lg">
+<span class="material-symbols-outlined text-outline">group</span>
+<span class="font-label-md text-label-md text-on-surface-variant">10 Pekerja</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Timeline Entry: Last Week -->
+<div class="relative z-10 flex flex-col md:flex-row gap-gutter">
+<!-- Date/Timeline Marker -->
+<div class="flex items-center md:items-start md:w-24 shrink-0 gap-sm mb-2 md:mb-0">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-outline shadow-sm shrink-0 hidden md:flex">
+<span class="material-symbols-outlined text-[20px]">calendar_month</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface">Minggu Lalu</span>
+<span class="font-body-md text-body-md text-on-surface-variant text-sm">17 Okt</span>
+</div>
+</div>
+<!-- Content Card -->
+<div class="flex-grow bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(27,67,50,0.08)] overflow-hidden">
+<div class="p-md border-b border-surface-container-highest flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface">Pengecoran Kolom Utama</h3>
+<div class="bg-secondary-fixed text-on-secondary-fixed font-label-md text-label-md px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined filled text-[16px]">check_circle</span>
+                            Selesai
+                        </div>
+</div>
+<div class="p-md space-y-md">
+<!-- Horizontal Photo List -->
+<div class="flex gap-2 overflow-x-auto pb-2 snap-x">
+<div class="w-32 h-32 shrink-0 bg-surface-container-high rounded-lg overflow-hidden snap-center cursor-pointer active:scale-95 transition-transform">
+<img class="w-full h-full object-cover" data-alt="Vertical concrete pillars newly stripped of their wooden forms. The concrete is gray and smooth. A worker is visible in the background inspecting the work. Solid construction aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKi_-ECujHNz4Pym1GEti_YHA7ZHjn1rrtEKkCsWpWRJ5f-hnZvSDHTeKcF-DQLf3zIkofG_-fLfkhjeF2eKkBDoxFvGIYFd1w2FZv_eTLiXTAZxiUKd87Pf1hyVnnNmbOeO38jGxzBPZLBXfmmHwUDeSPShVdcrGPyeMFUDw4EcOJPCOfLDnwGPqNhKXun_dvi5OgyVfo7Evl1F47GFwjv_9k-g7npirt0WmdQ-MnWh1eIePsU3MT31oSB_PhRQh7Vx-WVOHBsa8"/>
+</div>
+<div class="w-32 h-32 shrink-0 bg-surface-container-high rounded-lg overflow-hidden snap-center cursor-pointer active:scale-95 transition-transform">
+<img class="w-full h-full object-cover" data-alt="A concrete mixer truck pouring its contents into a pump mechanism on site. Industrial machinery in action. Dusty, practical environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxNDhyDf_pLDijGhRQzYYxe3M_jzc6I0nxTb36M1Z2cYWzs_UmeyowdBAKLn0V95fR75n_ORxLu1nJ_YbTWVQdFi4zkDBaoHpwUCcoZtgueQLjzQu2JXTv7HPHPBWrdT9lWRhJCbqsoJXSNbM0psBg-JLWQpC_Y5N8Yl6LzBG0n0a-KuHp0e_D0AXJj4Z025rOlijzMt2ycAsfeKZG9ypltpUm8UICdKGbpYnreeJw2L5WeZ4BYgpBW3Y1scR0W7NuMDq5hHlzX_w"/>
+</div>
+</div>
+<!-- Report Text -->
+<p class="font-body-md text-body-md text-on-surface">Seluruh kolom lantai 1 telah dicor. Bekisting sudah dibuka, hasil cetakan rapi tanpa keropos. Siap lanjut pengerjaan balok gantung.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Load More Button -->
+<div class="pt-8 pb-4 flex justify-center">
+<button class="bg-surface-container-low text-primary font-label-lg text-label-lg px-6 py-4 rounded-xl flex items-center gap-2 hover:bg-surface-variant/20 transition-colors active:scale-95 min-h-[56px]">
+<span class="material-symbols-outlined">expand_more</span>
+                Muat Lebih Lama
+            </button>
+</div>
+</main>
+<!-- BottomNavBar (Mobile only) -->
+<nav class="md:hidden fixed bottom-0 w-full rounded-t-xl z-50 bg-surface-container-lowest dark:bg-surface-container-low shadow-[0_-4px_20px_rgba(27,67,50,0.08)]">
+<div class="flex justify-around items-center px-4 pb-4 pt-2">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 h-[56px] hover:bg-surface-variant/20 active:scale-90 transition-all duration-200 rounded-lg w-full" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-label-lg text-label-lg text-[12px] leading-tight">Beranda</span>
+</a>
+<!-- Active Tab: Proyek (Project Progress fits best here) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-6 py-2 h-[56px] hover:bg-surface-variant/20 active:scale-90 transition-all duration-200 w-full max-w-[100px]" href="#">
+<span class="material-symbols-outlined filled mb-1">construction</span>
+<span class="font-label-lg text-label-lg text-[12px] leading-tight">Proyek</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 h-[56px] hover:bg-surface-variant/20 active:scale-90 transition-all duration-200 rounded-lg w-full" href="#">
+<span class="material-symbols-outlined mb-1">mail</span>
+<span class="font-label-lg text-label-lg text-[12px] leading-tight">Pesan</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 h-[56px] hover:bg-surface-variant/20 active:scale-90 transition-all duration-200 rounded-lg w-full" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-label-lg text-label-lg text-[12px] leading-tight">Profil</span>
+</a>
+</div>
+</nav>
+<!-- Bottom padding for desktop to prevent content hugging the absolute bottom -->
+<div class="hidden md:block h-12"></div>
+</body></html>

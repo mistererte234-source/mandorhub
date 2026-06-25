@@ -1,0 +1,23 @@
+# MandorHub: Platform Pemantauan Proyek Konstruksi Tradisional
+
+## Ide Produk Utama
+Platform pemantauan proyek untuk kontraktor bangunan tradisional di Indonesia. Kontraktor mengelola banyak proyek di berbagai lokasi (Surabaya, Gresik, Sidoarjo) dan menggunakan MandorHub sebagai "mata dan telinga" melalui laporan harian, foto, dan permintaan persetujuan dari mandor di lapangan.
+
+## Pengguna Utama
+1. **Kontraktor / Pemilik**: Ingin tahu proyek mana yang aman, terlambat, atau butuh keputusan. (Desktop/Mobile)
+2. **Mandor**: Bekerja di lapangan, menggunakan Android, butuh input cepat (< 2 menit), lebih suka foto dan tombol besar daripada mengetik.
+
+## Prinsip Desain
+- **Mobile-First**: Untuk alur kerja mandor.
+- **Ramah Lansia (40-65 thn)**: Tombol besar, teks besar, kontras kuat, label teks pada setiap ikon.
+- **Bahasa Indonesia Awam**: Hindari istilah teknis manajemen proyek (WBS, Gantt, dll).
+- **Status Visual**: Warna + Teks (Hijau="Aman", Kuning="Perlu Perhatian", Merah="Butuh Tindakan").
+- **Tanpa Tabel Padat**: Gunakan kartu untuk tampilan mobile.
+
+## Daftar Layar
+1. **Dashboard Kontraktor**: Ringkasan status semua proyek dan daftar keputusan yang diperlukan.
+2. **Beranda Mandor (Mobile)**: Target hari ini dan tombol besar "LAPOR HARI INI".
+3. **Alur Laporan Harian**: Formulir multi-langkah (Foto -> Pekerja -> Jenis Pekerjaan -> Target -> Kendala).
+4. **Detail Masalah / Persetujuan**: Detail kendala lapangan dengan tombol tindakan kontraktor.
+5. **Detail Proyek**: Ringkasan, laporan, masalah, dan foto per proyek.
+6. **Timeline Foto**: Urutan kronologis perkembangan proyek melalui foto dan ringkasan harian.
