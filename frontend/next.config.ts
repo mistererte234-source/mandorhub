@@ -2,10 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   async rewrites() {
+    // Di Vercel, kita akan arahkan ini ke URL Backend Render via Environment Variable
+    const apiUrl = process.env.API_URL || "http://127.0.0.1:8000";
     return [
       {
         source: "/api/:path*",
-        destination: "http://127.0.0.1:8000/api/:path*", // using 127.0.0.1 to avoid ipv6 node fetch issues
+        destination: `${apiUrl}/api/:path*`, 
       },
     ];
   },
