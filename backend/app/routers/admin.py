@@ -4,8 +4,8 @@ import uuid
 
 from ..core.db import get_session
 from ..deps import get_current_user
-from ..models import AppUser, AppSetting, VisitorLog
-from ..schemas import PasswordUpdateIn, VisitorLogOut
+from ..models import AppUser, AppSetting, VisitorLog, Project, Site
+from ..schemas import PasswordUpdateIn, VisitorLogOut, AdminProjectOut, AdminProjectCreate
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
@@ -13,6 +13,102 @@ def get_admin_user(user: AppUser = Depends(get_current_user)):
     if user.role != "admin":
         raise HTTPException(status_code=403, detail="Akses ditolak. Membutuhkan role admin.")
     return user
+
+@router.get("/projects", response_model=list[AdminProjectOut])
+def get_all_projects(
+    admin: AppUser = Depends(get_admin_user),
+    session: Session = Depends(get_session)
+):
+    sql = text("""
+        SELECT 
+            p.id, 
+            p.name, 
+            p.client_name, 
+            p.status,
+            b.name AS bos_name,
+            m.name AS mandor_name
+        FROM project p
+        LEFT JOIN app_user b ON p.created_by = b.id
+        LEFT JOIN site s ON s.project_id = p.id
+        LEFT JOIN app_user m ON s.assigned_mandor_id = m.id
+        WHERE p.org_id = CAST(:org_id AS uuid) AND p.deleted_at IS NULL
+    """)
+    rows = session.execute(sql, {"org_id": str(admin.org_id)}).fetchall()
+    return [
+        AdminProjectOut(
+            id=row.id,
+            name=row.name,
+            client_name=row.client_name,
+            status=row.status,
+            bos_name=row.bos_name,
+            mandor_name=row.mandor_name
+        ) for row in rows
+    ]
+
+@router.post("/projects")
+def create_project(
+    body: AdminProjectCreate,
+    admin: AppUser = Depends(get_admin_user),
+    session: Session = Depends(get_session)
+):
+    org_id = admin.org_id
+    
+    # Validasi bos & mandor
+    bos = session.get(AppUser, body.bos_id)
+    mandor = session.get(AppUser, body.mandor_id)
+    if not bos or bos.role != "contractor" or bos.org_id != org_id:
+        raise HTTPException(status_code=400, detail="Bos tidak valid")
+    if not mandor or mandor.role != "mandor" or mandor.org_id != org_id:
+        raise HTTPException(status_code=400, detail="Mandor tidak valid")
+        
+    p_id = uuid.uuid4()
+    new_project = Project(
+        id=p_id,
+        org_id=org_id,
+        name=body.name,
+        client_name=body.client_name,
+        created_by=bos.id,
+        status="active"
+    )
+    
+    # Auto-create 1 main site
+    new_site = Site(
+        id=uuid.uuid4(),
+        org_id=org_id,
+        project_id=p_id,
+        name="Titik Utama",
+        assigned_mandor_id=mandor.id
+    )
+    
+    session.add(new_project)
+    session.add(new_site)
+    session.commit()
+    
+    return {"message": "Proyek berhasil dibuat dan Mandor telah ditugaskan"}
+
+@router.delete("/projects/{project_id}")
+def delete_project(
+    project_id: uuid.UUID,
+    admin: AppUser = Depends(get_admin_user),
+    session: Session = Depends(get_session)
+):
+    p = session.get(Project, project_id)
+    if not p or p.org_id != admin.org_id:
+        raise HTTPException(status_code=404, detail="Proyek tidak ditemukan")
+        
+    import datetime
+    now = datetime.datetime.utcnow()
+    p.deleted_at = now
+    
+    # Also delete associated sites
+    sites = session.exec(select(Site).where(Site.project_id == project_id)).all()
+    for s in sites:
+        s.deleted_at = now
+        session.add(s)
+        
+    session.add(p)
+    session.commit()
+    return {"message": "Proyek berhasil dihapus"}
 
 @router.put("/password")
 def update_admin_password(

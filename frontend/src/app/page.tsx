@@ -24,6 +24,8 @@ export default function ForemanDashboard() {
   const [data, setData] = useState<any>(null);
   const [bossPhone, setBossPhone] = useState("628110000001");
   const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState<any[]>([]);
+  const [selectedProject, setSelectedProject] = useState<string>("");
   const [isLaporOpen, setIsLaporOpen] = useState(false);
   const [workDone, setWorkDone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -153,7 +155,11 @@ Lokasi: ${mainSite.project}
       setIssueDesc("");
       setIssueType("material");
       
-      const res = await fetchApi("/dashboard");
+      let url = "/dashboard";
+      if (selectedProject) {
+        url += `?project_id=${selectedProject}`;
+      }
+      const res = await fetchApi(url);
       setData(res);
     } catch (error: any) {
       alert("Gagal melaporkan masalah: " + error.message);
@@ -165,7 +171,11 @@ Lokasi: ${mainSite.project}
   const resolveIssue = async (issueId: string) => {
     try {
       await fetchApi(`/issues/${issueId}/resolve`, { method: "PATCH" });
-      const res = await fetchApi("/dashboard");
+      let url = "/dashboard";
+      if (selectedProject) {
+        url += `?project_id=${selectedProject}`;
+      }
+      const res = await fetchApi(url);
       setData(res);
     } catch (error: any) {
       alert("Gagal menyelesaikan masalah: " + error.message);
@@ -177,8 +187,32 @@ Lokasi: ${mainSite.project}
       router.push("/login");
       return;
     }
+    fetchProjects();
+  }, [router]);
 
-    Promise.all([fetchApi("/dashboard"), fetchApi("/users")])
+  useEffect(() => {
+    if (projects.length >= 0) {
+      fetchDashboard();
+    }
+  }, [selectedProject, projects.length]);
+
+  const fetchProjects = async () => {
+    try {
+      const res = await fetchApi("/projects/my");
+      setProjects(res);
+    } catch(err) {
+      console.error(err);
+    }
+  };
+
+  const fetchDashboard = () => {
+    setLoading(true);
+    let url = "/dashboard";
+    if (selectedProject) {
+      url += `?project_id=${selectedProject}`;
+    }
+
+    Promise.all([fetchApi(url), fetchApi("/users")])
       .then(([dashRes, usersRes]) => {
         setData(dashRes);
         const boss = usersRes.find((u: any) => u.role === "contractor");
@@ -224,9 +258,22 @@ Lokasi: ${mainSite.project}
               <h1 className="font-headline-lg-mobile text-[22px] leading-[28px] font-bold text-primary tracking-tight">
                 MandorHub
               </h1>
-              <p className="font-body-md text-base text-on-surface-variant">
-                Selamat pagi, Mandor
-              </p>
+              {projects.length > 0 ? (
+                <select 
+                  value={selectedProject}
+                  onChange={(e) => setSelectedProject(e.target.value)}
+                  className="font-body-md text-sm text-on-surface-variant bg-transparent outline-none cursor-pointer border-b border-surface-variant pb-1 mt-1"
+                >
+                  <option value="">Semua Proyek</option>
+                  {projects.map(p => (
+                    <option key={p.id} value={p.id}>{p.name}</option>
+                  ))}
+                </select>
+              ) : (
+                <p className="font-body-md text-sm text-on-surface-variant">
+                  {mainSite ? mainSite.project : "Tidak ada proyek aktif"}
+                </p>
+              )}
             </div>
           </div>
           <div className="flex items-center gap-2">

@@ -32,7 +32,27 @@ class VisitorLogOut(BaseModel):
     path: Optional[str] = None
     created_at: str # formatted time
 
+class AdminProjectOut(BaseModel):
+    id: uuid.UUID
+    name: str
+    client_name: Optional[str] = None
+    status: str
+    bos_name: Optional[str] = None
+    mandor_name: Optional[str] = None
 
+class AdminProjectCreate(BaseModel):
+    name: str
+    client_name: Optional[str] = None
+    bos_id: uuid.UUID
+    mandor_id: uuid.UUID
+
+
+class ProjectOut(BaseModel):
+    id: uuid.UUID
+    name: str
+    client_name: Optional[str] = None
+    status: str
+    
 class UserOut(BaseModel):
     id: uuid.UUID
     name: str

@@ -3,18 +3,21 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchApi, logout, getToken } from "@/lib/api";
-import { LogOut, Loader2, Save, User as UserIcon, Phone, Database, Paintbrush, Activity, ShieldAlert, Trash2 } from "lucide-react";
+import { LogOut, Loader2, Save, User as UserIcon, Phone, Database, Paintbrush, Activity, ShieldAlert, Trash2, Briefcase, Plus, X } from "lucide-react";
 
 export default function AdminDashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<"akun" | "db" | "spy">("akun");
+  const [tab, setTab] = useState<"proyek" | "akun" | "db" | "spy">("proyek");
   
   const [users, setUsers] = useState<any[]>([]);
   const [editData, setEditData] = useState<{ [id: string]: { name: string; phone: string } }>({});
   
   const [newAdminPassword, setNewAdminPassword] = useState("");
   const [spyLogs, setSpyLogs] = useState<any[]>([]);
+  const [projects, setProjects] = useState<any[]>([]);
+  const [showAddProject, setShowAddProject] = useState(false);
+  const [newProject, setNewProject] = useState({name: "", client_name: "", bos_id: "", mandor_id: ""});
 
   const [toast, setToast] = useState<{msg: string, type: 'success'|'error'} | null>(null);
   const showToast = (msg: string, type: 'success'|'error' = 'success') => {
@@ -35,9 +38,10 @@ export default function AdminDashboard() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [uRes, sRes] = await Promise.all([
+      const [uRes, sRes, pRes] = await Promise.all([
         fetchApi("/users"),
-        fetchApi("/admin/spy-logs")
+        fetchApi("/admin/spy-logs"),
+        fetchApi("/admin/projects")
       ]);
       setUsers(uRes);
       const ed: any = {};
@@ -46,6 +50,7 @@ export default function AdminDashboard() {
       });
       setEditData(ed);
       setSpyLogs(sRes);
+      setProjects(pRes);
     } catch (err: any) {
       if (err.message.includes("403")) {
         logout();
@@ -67,6 +72,36 @@ export default function AdminDashboard() {
     } catch (err: any) {
       showToast("Gagal menyimpan: " + err.message, "error");
     }
+  };
+
+  const handleCreateProject = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await fetchApi("/admin/projects", {
+        method: "POST",
+        body: JSON.stringify(newProject)
+      });
+      showToast("Proyek berhasil dibuat!");
+      setShowAddProject(false);
+      setNewProject({name: "", client_name: "", bos_id: "", mandor_id: ""});
+      fetchData();
+    } catch (err: any) {
+      showToast(err.message, "error");
+    }
+  };
+
+  const handleDeleteProject = (projectId: string) => {
+    setConfirmDialog({
+      msg: "Yakin ingin menghapus proyek ini? Semua site dan target di dalamnya juga akan terhapus.",
+      action: async () => {
+        setConfirmDialog(null);
+        try {
+          await fetchApi(`/admin/projects/${projectId}`, { method: "DELETE" });
+          showToast("Proyek berhasil dihapus");
+          fetchData();
+        } catch(err:any) { showToast(err.message, "error"); }
+      }
+    });
   };
 
   const handleSavePassword = async () => {
@@ -159,10 +194,14 @@ export default function AdminDashboard() {
             <LogOut className="w-6 h-6" />
           </button>
         </div>
-        <div className="flex w-full">
+        <div className="flex w-full overflow-x-auto hide-scrollbar">
+          <button 
+            onClick={() => setTab("proyek")}
+            className={`flex-1 py-3 px-4 text-sm font-bold border-b-2 transition-colors whitespace-nowrap ${tab === 'proyek' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant'}`}
+          >Proyek</button>
           <button 
             onClick={() => setTab("akun")}
-            className={`flex-1 py-3 text-sm font-bold border-b-2 transition-colors ${tab === 'akun' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant'}`}
+            className={`flex-1 py-3 px-4 text-sm font-bold border-b-2 transition-colors whitespace-nowrap ${tab === 'akun' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant'}`}
           >Akun</button>
           <button 
             onClick={() => setTab("db")}
@@ -177,6 +216,93 @@ export default function AdminDashboard() {
 
       <main className="px-5 py-6 max-w-2xl mx-auto flex flex-col gap-8">
         
+        {tab === "proyek" && (
+          <section className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-on-surface flex items-center gap-2">
+                <Briefcase className="w-5 h-5 text-primary" /> Manajemen Proyek
+              </h2>
+              <button 
+                onClick={() => setShowAddProject(true)}
+                className="bg-primary text-on-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm"
+              >
+                <Plus className="w-4 h-4" /> Tambah
+              </button>
+            </div>
+
+            {showAddProject && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+                <div className="bg-surface p-6 rounded-3xl shadow-2xl w-full max-w-md border border-surface-variant max-h-[90vh] overflow-y-auto">
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="font-bold text-xl text-on-surface">Proyek Baru</h3>
+                    <button onClick={() => setShowAddProject(false)} className="p-2 bg-surface-variant rounded-full text-on-surface-variant">
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                  <form onSubmit={handleCreateProject} className="flex flex-col gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-on-surface mb-2">Nama Proyek</label>
+                      <input type="text" value={newProject.name} onChange={e => setNewProject({...newProject, name: e.target.value})} required className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="Contoh: Pembangunan Ruko..." />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-on-surface mb-2">Klien (Opsional)</label>
+                      <input type="text" value={newProject.client_name} onChange={e => setNewProject({...newProject, client_name: e.target.value})} className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="Contoh: PT. ABC" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-on-surface mb-2">Pilih Bos</label>
+                      <select required value={newProject.bos_id} onChange={e => setNewProject({...newProject, bos_id: e.target.value})} className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                        <option value="">-- Pilih Bos --</option>
+                        {bosUsers.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-on-surface mb-2">Pilih Mandor</label>
+                      <select required value={newProject.mandor_id} onChange={e => setNewProject({...newProject, mandor_id: e.target.value})} className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                        <option value="">-- Pilih Mandor --</option>
+                        {mandorUsers.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
+                      </select>
+                    </div>
+                    <button type="submit" className="w-full bg-primary text-on-primary font-bold py-3 rounded-xl mt-4 hover:bg-primary-container hover:text-on-primary-container transition-all">Simpan Proyek</button>
+                  </form>
+                </div>
+              </div>
+            )}
+
+            <div className="flex flex-col gap-4">
+              {projects.length === 0 ? (
+                <div className="text-center py-10 text-on-surface-variant bg-surface-container-lowest rounded-3xl border border-surface-variant">
+                  <Briefcase className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                  <p>Belum ada proyek dibuat.</p>
+                </div>
+              ) : (
+                projects.map(p => (
+                  <div key={p.id} className="bg-surface-container-lowest border border-surface-variant p-5 rounded-2xl shadow-sm flex flex-col gap-3 group">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-bold text-lg text-on-surface">{p.name}</h3>
+                        {p.client_name && <p className="text-sm text-on-surface-variant">Klien: {p.client_name}</p>}
+                      </div>
+                      <button onClick={() => handleDeleteProject(p.id)} className="p-2 text-on-surface-variant hover:text-error hover:bg-error-container rounded-lg transition-colors opacity-0 group-hover:opacity-100">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 mt-2 bg-surface-variant/30 p-3 rounded-xl text-sm">
+                      <div>
+                        <span className="text-on-surface-variant block text-xs uppercase font-bold mb-1">Bos</span>
+                        <span className="font-semibold text-on-surface">{p.bos_name || '-'}</span>
+                      </div>
+                      <div>
+                        <span className="text-on-surface-variant block text-xs uppercase font-bold mb-1">Mandor</span>
+                        <span className="font-semibold text-on-surface">{p.mandor_name || '-'}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </section>
+        )}
+
         {tab === "akun" && (
           <section className="flex flex-col gap-6">
             <div className="bg-primary-container text-on-primary-container p-4 rounded-xl text-sm font-medium">

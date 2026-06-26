@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .core.config import settings
-from .routers import auth, dashboard, report, issue, site, users, admin, spy
+from .routers import auth, dashboard, report, issue, site, users, admin, spy, project
 
 app = FastAPI(title="MandorHub API", version="0.1.0")
 
@@ -40,3 +40,4 @@ app.include_router(site.router)
 app.include_router(users.router)
 app.include_router(admin.router)
 app.include_router(spy.router)
+app.include_router(project.router)

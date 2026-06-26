@@ -17,14 +17,39 @@ export default function ContractorDashboard() {
   const router = useRouter();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState<any[]>([]);
+  const [selectedProject, setSelectedProject] = useState<string>("");
 
   useEffect(() => {
     if (!getToken()) {
       router.push("/login");
       return;
     }
+    fetchProjects();
+  }, [router]);
 
-    fetchApi("/dashboard")
+  useEffect(() => {
+    if (projects.length >= 0) {
+      fetchDashboard();
+    }
+  }, [selectedProject, projects.length]);
+
+  const fetchProjects = async () => {
+    try {
+      const res = await fetchApi("/projects/my");
+      setProjects(res);
+    } catch(err) {
+      console.error(err);
+    }
+  };
+
+  const fetchDashboard = () => {
+    setLoading(true);
+    let url = "/dashboard";
+    if (selectedProject) {
+      url += `?project_id=${selectedProject}`;
+    }
+    fetchApi(url)
       .then((res) => {
         setData(res);
       })
@@ -37,7 +62,7 @@ export default function ContractorDashboard() {
       .finally(() => {
         setLoading(false);
       });
-  }, [router]);
+  };
 
   if (loading) {
     return (
@@ -62,9 +87,22 @@ export default function ContractorDashboard() {
               <h1 className="font-headline-lg-mobile text-[22px] leading-[28px] font-bold text-primary tracking-tight">
                 Dashboard Bos
               </h1>
-              <p className="font-body-md text-base text-on-surface-variant">
-                Pantau semua proyek
-              </p>
+              {projects.length > 0 ? (
+                <select 
+                  value={selectedProject}
+                  onChange={(e) => setSelectedProject(e.target.value)}
+                  className="font-body-md text-sm text-on-surface-variant bg-transparent outline-none cursor-pointer border-b border-surface-variant pb-1"
+                >
+                  <option value="">Semua Proyek</option>
+                  {projects.map(p => (
+                    <option key={p.id} value={p.id}>{p.name}</option>
+                  ))}
+                </select>
+              ) : (
+                <p className="font-body-md text-base text-on-surface-variant">
+                  Ikhtisar seluruh proyek
+                </p>
+              )}
             </div>
           </div>
           <div className="flex gap-1">

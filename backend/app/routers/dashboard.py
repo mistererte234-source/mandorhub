@@ -35,6 +35,8 @@ _STATUS_SQL = text(
     WHERE s.org_id = CAST(:org_id AS uuid)
       AND s.deleted_at IS NULL
       AND (CAST(:mandor_id AS uuid) IS NULL OR s.assigned_mandor_id = CAST(:mandor_id AS uuid))
+      AND (CAST(:bos_id AS uuid) IS NULL OR p.created_by = CAST(:bos_id AS uuid))
+      AND (CAST(:project_id AS uuid) IS NULL OR p.id = CAST(:project_id AS uuid))
     ORDER BY p.name, s.name
     """
 )
@@ -58,19 +60,36 @@ def _classify(row) -> tuple[str, str, list[str]]:
     return "green", "Aman", ["Sudah lapor, tidak ada masalah"]
 
 
+from typing import Optional
+
 @router.get("", response_model=DashboardOut)
 def dashboard(
+    project_id: Optional[str] = None,
     user: AppUser = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
-    # Mandor hanya lihat titik yang ditugaskan; kontraktor/admin lihat semua.
     mandor_id = str(user.id) if user.role == "mandor" else None
+    bos_id = str(user.id) if user.role == "contractor" else None
+    
     rows = session.execute(
-        _STATUS_SQL, {"org_id": str(user.org_id), "mandor_id": mandor_id}
+        _STATUS_SQL, 
+        {
+            "org_id": str(user.org_id), 
+            "mandor_id": mandor_id,
+            "bos_id": bos_id,
+            "project_id": project_id
+        }
     ).mappings().all()
 
-    # Get all open issues for this org
-    open_issues = session.query(Issue).filter(Issue.org_id == user.org_id, Issue.status == 'open', Issue.deleted_at == None).all()
+    # Get all open issues for this org and filtered by projects
+    query = session.query(Issue).filter(Issue.org_id == user.org_id, Issue.status == 'open', Issue.deleted_at == None)
+    
+    # We should optimally only fetch issues for the sites returned in `rows`
+    site_ids = [row["site_id"] for row in rows]
+    if site_ids:
+        open_issues = query.filter(Issue.site_id.in_(site_ids)).all()
+    else:
+        open_issues = []
     issues_by_site = {}
     for issue in open_issues:
         site_id_str = str(issue.site_id)
