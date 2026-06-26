@@ -207,8 +207,8 @@ Lokasi: ${mainSite.project}
   return (
     <>
       <header className="bg-surface/80 backdrop-blur-md docked full-width top-0 shadow-sm sticky z-40">
-        <div className="flex justify-between items-center px-container-margin py-md w-full border-b border-surface-variant/50">
-          <div className="flex items-center gap-sm">
+        <div className="flex justify-between items-center px-5 py-4 w-full border-b border-surface-variant/50">
+          <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full shadow-sm border-2 border-surface-container-low overflow-hidden bg-surface-variant flex items-center justify-center">
               <span className="text-xl">👷</span>
             </div>
@@ -232,10 +232,10 @@ Lokasi: ${mainSite.project}
         </div>
       </header>
 
-      <main className="px-container-margin py-md flex flex-col gap-lg">
+      <main className="px-5 py-6 flex flex-col gap-6">
         {mainSite ? (
           <section className="bg-surface-container-lowest rounded-2xl shadow-[0_4px_20px_rgba(27,67,50,0.08)] border border-surface-variant overflow-hidden">
-            <div className="p-md border-b border-surface-variant flex justify-between items-start bg-surface-bright">
+            <div className="p-4 border-b border-surface-variant flex justify-between items-start bg-surface-bright">
               <div>
                 <span className="inline-flex items-center gap-1 text-sm font-medium bg-secondary-fixed text-on-secondary-fixed px-2.5 py-1 rounded-md mb-3 shadow-sm">
                   <MapPin className="w-4 h-4" />

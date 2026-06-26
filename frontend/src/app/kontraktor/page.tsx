@@ -54,8 +54,8 @@ export default function ContractorDashboard() {
   return (
     <>
       <header className="bg-surface/80 backdrop-blur-md docked full-width top-0 shadow-sm sticky z-40">
-        <div className="flex justify-between items-center px-container-margin py-md w-full border-b border-surface-variant/50">
-          <div className="flex items-center gap-sm">
+        <div className="flex justify-between items-center px-5 py-4 w-full border-b border-surface-variant/50">
+          <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full shadow-sm border-2 border-surface-container-low overflow-hidden bg-surface-variant flex items-center justify-center">
               <span className="text-xl">👔</span>
             </div>
@@ -77,7 +77,7 @@ export default function ContractorDashboard() {
         </div>
       </header>
 
-      <main className="px-container-margin py-md flex flex-col gap-lg">
+      <main className="px-5 py-6 flex flex-col gap-6">
         {/* Ringkasan */}
         <section className="grid grid-cols-2 gap-4">
            <div className="bg-surface-container-lowest border border-surface-variant p-4 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm">

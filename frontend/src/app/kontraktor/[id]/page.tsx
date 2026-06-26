@@ -53,7 +53,7 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
   return (
     <>
       <header className="bg-surface/80 backdrop-blur-md docked full-width top-0 shadow-sm sticky z-40">
-        <div className="flex items-center gap-4 px-container-margin py-md w-full border-b border-surface-variant/50">
+        <div className="flex items-center gap-4 px-5 py-4 w-full border-b border-surface-variant/50">
           <Link href="/kontraktor" className="p-2 -ml-2 rounded-full hover:bg-surface-variant active:scale-95 transition-all text-on-surface-variant">
             <ArrowLeft className="w-6 h-6" />
           </Link>
@@ -68,7 +68,7 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
         </div>
       </header>
 
-      <main className="px-container-margin py-lg max-w-2xl mx-auto">
+      <main className="px-5 py-6 max-w-2xl mx-auto">
         <h2 className="text-xl font-bold mb-6 text-on-surface flex items-center gap-2">
           <Calendar className="w-6 h-6 text-primary" />
           Riwayat Proyek
