@@ -354,19 +354,68 @@ export default function AdminDashboard() {
         )}
 
         {tab === "spy" && (
-          <section className="flex flex-col gap-4">
-             <div className="bg-error-container text-on-error-container p-4 rounded-xl text-sm font-medium">
-              Log akses seluruh pengunjung web secara diam-diam. Menampilkan 100 log terakhir.
-            </div>
-            {spyLogs.length === 0 && <p className="text-center text-on-surface-variant mt-10">Belum ada pengunjung.</p>}
-            {spyLogs.map(log => (
-              <div key={log.id} className="bg-surface-container-lowest border border-surface-variant p-4 rounded-xl text-sm font-mono flex flex-col gap-1">
-                <span className="text-primary font-bold">{log.created_at}</span>
-                <span className="text-on-surface"><span className="text-on-surface-variant">IP:</span> {log.ip_address}</span>
-                <span className="text-on-surface"><span className="text-on-surface-variant">Path:</span> {log.path}</span>
-                <span className="text-xs text-on-surface-variant mt-2 bg-surface-container p-2 rounded truncate">{log.user_agent}</span>
-              </div>
-            ))}
+          <section className="flex flex-col gap-4 font-mono animate-in fade-in duration-500">
+             <div className="bg-[#050505] border border-[#222] text-[#00ff41] p-6 rounded-2xl shadow-2xl relative overflow-hidden">
+                {/* Decorative scanning line */}
+                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#00ff41] to-transparent opacity-50 animate-pulse"></div>
+                
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="relative">
+                    <Activity className="w-7 h-7 animate-pulse" />
+                    <div className="absolute inset-0 bg-[#00ff41] blur-md opacity-30 animate-pulse"></div>
+                  </div>
+                  <h2 className="text-xl font-bold tracking-[0.2em] drop-shadow-[0_0_8px_rgba(0,255,65,0.5)]">CENTRAL INTELLIGENCE NODE</h2>
+                </div>
+                
+                <div className="flex items-center justify-between border-b border-[#00ff41]/20 pb-4 mb-6">
+                  <p className="text-xs opacity-70 tracking-widest uppercase">
+                    Status: <span className="text-[#00ff41] font-bold animate-pulse">ACTIVE</span> <br/>
+                    Clearance: <span className="text-error font-bold">LEVEL-9 (SUPER ADMIN)</span>
+                  </p>
+                  <div className="text-right text-[10px] opacity-50 uppercase">
+                    Live Feed<br/>Last 100 Packets
+                  </div>
+                </div>
+                
+                {spyLogs.length === 0 && (
+                  <div className="text-center py-20 border border-dashed border-[#00ff41]/30 rounded-xl">
+                    <Activity className="w-10 h-10 mx-auto mb-2 opacity-30" />
+                    <p className="opacity-50 tracking-widest">NO SIGNALS DETECTED IN THE SECTOR.</p>
+                  </div>
+                )}
+                
+                <div className="flex flex-col gap-4">
+                  {spyLogs.map((log, i) => (
+                    <div key={log.id} className="border-l-4 border-[#00ff41] bg-gradient-to-r from-[#00ff41]/10 to-transparent p-4 rounded-r-xl text-sm relative hover:from-[#00ff41]/20 transition-all group backdrop-blur-sm">
+                      <div className="absolute top-0 right-0 p-2 text-[10px] font-bold opacity-30 group-hover:opacity-100 transition-opacity">
+                        ID: {log.id.split('-')[0]}
+                      </div>
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">
+                        <div>
+                          <span className="text-[#00ff41]/50 text-[10px] block tracking-widest uppercase mb-1">Timestamp (UTC)</span>
+                          <span className="font-bold tracking-wider">{log.created_at}</span>
+                        </div>
+                        <div>
+                          <span className="text-[#00ff41]/50 text-[10px] block tracking-widest uppercase mb-1">Source IP / Origin</span>
+                          <span className="font-bold tracking-wider">{log.ip_address}</span>
+                        </div>
+                        <div className="sm:col-span-2">
+                          <span className="text-[#00ff41]/50 text-[10px] block tracking-widest uppercase mb-1">Target Vector (Path)</span>
+                          <span className="font-bold tracking-wider bg-[#00ff41]/20 px-2 py-1 rounded inline-block">{log.path}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-3 pt-3 border-t border-[#00ff41]/20">
+                        <span className="text-[#00ff41]/50 text-[10px] block tracking-widest uppercase mb-1">Device Footprint (User Agent)</span>
+                        <span className="text-[11px] bg-black/60 border border-[#00ff41]/30 p-2 rounded block break-all font-mono opacity-80 leading-relaxed shadow-inner">
+                          {log.user_agent}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+             </div>
           </section>
         )}
       </main>
