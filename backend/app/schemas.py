@@ -44,12 +44,15 @@ class AdminProjectOut(BaseModel):
     status: str
     bos_name: Optional[str] = None
     mandor_name: Optional[str] = None
+    bendahara_name: Optional[str] = None
+    bendahara_id: Optional[uuid.UUID] = None
 
 class AdminProjectCreate(BaseModel):
     name: str
     client_name: Optional[str] = None
     bos_id: uuid.UUID
     mandor_id: uuid.UUID
+    bendahara_id: Optional[uuid.UUID] = None
 
 
 class ProjectOut(BaseModel):

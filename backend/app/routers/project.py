@@ -37,11 +37,12 @@ def get_my_projects(
         ).all()
         return projects
 
-    # Jika bendahara, kembalikan semua proyek di organisasi
+    # Jika bendahara, kembalikan proyek dari yang ditugaskan ke dia
     if user.role == "bendahara":
         projects = session.exec(
             select(Project)
             .where(Project.org_id == user.org_id)
+            .where(Project.assigned_bendahara_id == user.id)
             .where(Project.deleted_at == None)
         ).all()
         return projects

@@ -17,7 +17,7 @@ export default function AdminDashboard() {
   const [spyLogs, setSpyLogs] = useState<any[]>([]);
   const [projects, setProjects] = useState<any[]>([]);
   const [showAddProject, setShowAddProject] = useState(false);
-  const [newProject, setNewProject] = useState({name: "", client_name: "", bos_id: "", mandor_id: ""});
+  const [newProject, setNewProject] = useState({name: "", client_name: "", bos_id: "", mandor_id: "", bendahara_id: ""});
 
   const [showAddUser, setShowAddUser] = useState(false);
   const [newUser, setNewUser] = useState({name: "", phone: "", role: "bendahara"});
@@ -104,7 +104,7 @@ export default function AdminDashboard() {
       });
       showToast("Proyek berhasil dibuat!");
       setShowAddProject(false);
-      setNewProject({name: "", client_name: "", bos_id: "", mandor_id: ""});
+      setNewProject({name: "", client_name: "", bos_id: "", mandor_id: "", bendahara_id: ""});
       fetchData();
     } catch (err: any) {
       showToast(err.message, "error");
@@ -306,6 +306,13 @@ export default function AdminDashboard() {
                         {mandorUsers.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
                       </select>
                     </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-on-surface mb-2">Pilih Bendahara</label>
+                      <select required value={newProject.bendahara_id} onChange={e => setNewProject({...newProject, bendahara_id: e.target.value})} className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                        <option value="">-- Pilih Bendahara --</option>
+                        {bendaharaUsers.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
+                      </select>
+                    </div>
                     <button type="submit" className="w-full bg-primary text-on-primary font-bold py-3 rounded-xl mt-4 hover:bg-primary-container hover:text-on-primary-container transition-all">Simpan Proyek</button>
                   </form>
                 </div>
@@ -330,7 +337,7 @@ export default function AdminDashboard() {
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
-                    <div className="grid grid-cols-2 gap-3 mt-2 bg-surface-variant/30 p-3 rounded-xl text-sm">
+                    <div className="grid grid-cols-3 gap-3 mt-2 bg-surface-variant/30 p-3 rounded-xl text-sm">
                       <div>
                         <span className="text-on-surface-variant block text-xs uppercase font-bold mb-1">Bos</span>
                         <span className="font-semibold text-on-surface">{p.bos_name || '-'}</span>
@@ -338,6 +345,10 @@ export default function AdminDashboard() {
                       <div>
                         <span className="text-on-surface-variant block text-xs uppercase font-bold mb-1">Mandor</span>
                         <span className="font-semibold text-on-surface">{p.mandor_name || '-'}</span>
+                      </div>
+                      <div>
+                        <span className="text-on-surface-variant block text-xs uppercase font-bold mb-1">Bendahara</span>
+                        <span className="font-semibold text-on-surface">{p.bendahara_name || '-'}</span>
                       </div>
                     </div>
                   </div>

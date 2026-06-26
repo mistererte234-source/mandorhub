@@ -40,6 +40,7 @@ class Project(SQLModel, table=True):
     start_date: Optional[date] = None
     target_end_date: Optional[date] = None
     deleted_at: Optional[datetime] = None
+    assigned_bendahara_id: Optional[uuid.UUID] = None
 
 
 class Site(SQLModel, table=True):

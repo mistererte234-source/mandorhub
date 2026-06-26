@@ -26,11 +26,14 @@ def get_all_projects(
             p.client_name, 
             p.status,
             b.name AS bos_name,
-            m.name AS mandor_name
+            m.name AS mandor_name,
+            f.name AS bendahara_name,
+            p.assigned_bendahara_id AS bendahara_id
         FROM project p
         LEFT JOIN app_user b ON p.created_by = b.id
         LEFT JOIN site s ON s.project_id = p.id
         LEFT JOIN app_user m ON s.assigned_mandor_id = m.id
+        LEFT JOIN app_user f ON p.assigned_bendahara_id = f.id
         WHERE p.org_id = CAST(:org_id AS uuid) AND p.deleted_at IS NULL
     """)
     rows = session.execute(sql, {"org_id": str(admin.org_id)}).fetchall()
@@ -41,7 +44,9 @@ def get_all_projects(
             client_name=row.client_name,
             status=row.status,
             bos_name=row.bos_name,
-            mandor_name=row.mandor_name
+            mandor_name=row.mandor_name,
+            bendahara_name=row.bendahara_name,
+            bendahara_id=row.bendahara_id
         ) for row in rows
     ]
 
@@ -53,13 +58,17 @@ def create_project(
 ):
     org_id = admin.org_id
     
-    # Validasi bos & mandor
+    # Validasi bos & mandor & bendahara
     bos = session.get(AppUser, body.bos_id)
     mandor = session.get(AppUser, body.mandor_id)
+    bendahara = session.get(AppUser, body.bendahara_id) if body.bendahara_id else None
+    
     if not bos or bos.role != "contractor" or bos.org_id != org_id:
         raise HTTPException(status_code=400, detail="Bos tidak valid")
     if not mandor or mandor.role != "mandor" or mandor.org_id != org_id:
         raise HTTPException(status_code=400, detail="Mandor tidak valid")
+    if bendahara and (bendahara.role != "bendahara" or bendahara.org_id != org_id):
+        raise HTTPException(status_code=400, detail="Bendahara tidak valid")
         
     p_id = uuid.uuid4()
     new_project = Project(
@@ -68,6 +77,7 @@ def create_project(
         name=body.name,
         client_name=body.client_name,
         created_by=bos.id,
+        assigned_bendahara_id=bendahara.id if bendahara else None,
         status="active"
     )
     
@@ -84,7 +94,7 @@ def create_project(
     session.add(new_site)
     session.commit()
     
-    return {"message": "Proyek berhasil dibuat dan Mandor telah ditugaskan"}
+    return {"message": "Proyek berhasil dibuat dan Mandor serta Bendahara telah ditugaskan"}
 
 @router.delete("/projects/{project_id}")
 def delete_project(
