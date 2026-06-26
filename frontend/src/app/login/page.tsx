@@ -9,9 +9,11 @@ import { HardHat, ArrowRight, Loader2 } from "lucide-react";
 export default function LoginPage() {
   const [phone, setPhone] = useState("");
   const [code, setCode] = useState("");
-  const [step, setStep] = useState<"phone" | "otp">("phone");
+  const [step, setStep] = useState<"phone" | "otp" | "admin">("phone");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [tapCount, setTapCount] = useState(0);
+  const [adminPassword, setAdminPassword] = useState("");
   const router = useRouter();
 
   const requestOtp = async (e: React.FormEvent) => {
@@ -57,11 +59,43 @@ export default function LoginPage() {
     }
   };
 
+  const loginAdmin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetchApi("/auth/login-admin", {
+        method: "POST",
+        body: JSON.stringify({ password: adminPassword }),
+      });
+      setToken(res.access_token);
+      router.push("/admin");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogoClick = () => {
+    if (step === "admin") return;
+    const newCount = tapCount + 1;
+    if (newCount >= 7) {
+      setStep("admin");
+      setTapCount(0);
+    } else {
+      setTapCount(newCount);
+    }
+  };
+
   return (
     <div className="min-h-[100dvh] flex flex-col justify-center px-6 py-12 bg-surface">
       <div className="w-full flex flex-col items-center mb-10">
-        <div className="w-24 h-24 rounded-3xl overflow-hidden flex items-center justify-center mb-6 shadow-md border border-surface-variant bg-white">
-          <Image src="/logo.png" alt="MandorHub Logo" width={96} height={96} className="object-contain" />
+        <div 
+          onClick={handleLogoClick}
+          className="w-24 h-24 rounded-3xl overflow-hidden flex items-center justify-center mb-6 shadow-md border border-surface-variant bg-white cursor-pointer select-none active:scale-95 transition-transform"
+        >
+          <Image src="/logo.png" alt="MandorHub Logo" width={96} height={96} className="object-contain pointer-events-none" />
         </div>
         <h1 className="text-[28px] font-bold text-on-surface tracking-tight">
           MandorHub
@@ -105,7 +139,7 @@ export default function LoginPage() {
               {!loading && <ArrowRight className="w-5 h-5" />}
             </button>
           </form>
-        ) : (
+        ) : step === "otp" ? (
           <form onSubmit={verifyOtp} className="flex flex-col gap-5">
             <div>
               <label className="block text-sm font-semibold text-on-surface mb-2">
@@ -133,6 +167,36 @@ export default function LoginPage() {
               className="text-on-surface-variant text-sm font-medium mt-2 active:text-primary transition-colors"
             >
               Ganti nomor HP
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={loginAdmin} className="flex flex-col gap-5">
+            <div>
+              <label className="block text-sm font-semibold text-on-surface mb-2">
+                Password Super Admin
+              </label>
+              <input
+                type="password"
+                value={adminPassword}
+                onChange={(e) => setAdminPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full bg-surface-container-low border border-surface-variant text-on-surface text-lg rounded-xl px-4 py-4 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-fixed transition-all"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-primary text-on-primary active:scale-[0.98] transition-all py-4 rounded-xl font-bold text-lg flex items-center justify-center shadow-md disabled:opacity-70"
+            >
+              {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Login Admin"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setStep("phone")}
+              className="text-on-surface-variant text-sm font-medium mt-2 active:text-primary transition-colors"
+            >
+              Batal
             </button>
           </form>
         )}

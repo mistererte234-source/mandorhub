@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   description: "B2B SaaS application for construction management.",
 };
 
+import SpyTracker from "@/components/SpyTracker";
+import ThemeProvider from "@/components/ThemeProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -22,7 +25,10 @@ export default function RootLayout({
       <body
         className={`${inter.variable} antialiased bg-background text-on-background min-h-screen pb-[80px] md:max-w-md md:mx-auto md:shadow-2xl md:border md:border-surface-variant relative`}
       >
-        {children}
+        <ThemeProvider>
+          <SpyTracker />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

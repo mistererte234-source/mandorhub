@@ -1,45 +1,124 @@
 @import "tailwindcss";
 @source "../../src/**/*.{js,ts,jsx,tsx,mdx}";
+
 @theme {
-  --color-primary: #012d1d;
-  --color-on-primary: #ffffff;
-  --color-primary-container: #1b4332;
-  --color-on-primary-container: #86af99;
-  --color-on-primary-fixed-variant: #274e3d;
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-primary-container: var(--primary-container);
+  --color-on-primary-container: var(--on-primary-container);
   
-  --color-secondary: #4c6452;
-  --color-secondary-fixed: #cee9d3;
-  --color-on-secondary-fixed: #092012;
-  --color-secondary-fixed-dim: #b3cdb7;
-
-  --color-tertiary: #342300;
-  --color-tertiary-fixed: #ffdea9;
-  --color-tertiary-fixed-dim: #ffba27;
-  --color-on-tertiary-fixed: #271900;
-
-  --color-error: #ba1a1a;
-  --color-error-container: #ffdad6;
-  --color-on-error-container: #93000a;
+  --color-surface: var(--surface);
+  --color-on-surface: var(--on-surface);
+  --color-surface-variant: var(--surface-variant);
+  --color-on-surface-variant: var(--on-surface-variant);
   
-  --color-surface: #f6f9ff;
-  --color-on-surface: #151c22;
-  --color-surface-variant: #dce3ec;
-  --color-surface-tint: #3f6653;
-  --color-on-surface-variant: #414844;
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-surface-container-low: var(--surface-container-low);
   
-  --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #eef4fd;
-  --color-surface-container: #e8eef7;
-  --color-surface-container-high: #e2e9f1;
-  --color-surface-bright: #f6f9ff;
+  --color-background: var(--background);
+  --color-on-background: var(--on-background);
+  
+  --color-error: var(--error);
+  --color-error-container: var(--error-container);
+  --color-on-error-container: var(--on-error-container);
+}
 
-  --color-background: #f6f9ff;
-  --color-on-background: #151c22;
+/* Default Theme (Dark Green) */
+:root, .theme-default {
+  --primary: #012d1d;
+  --on-primary: #ffffff;
+  --primary-container: #1b4332;
+  --on-primary-container: #86af99;
+  
+  --surface: #f6f9ff;
+  --on-surface: #151c22;
+  --surface-variant: #dce3ec;
+  --on-surface-variant: #414844;
+  
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #eef4fd;
+  
+  --background: #f6f9ff;
+  --on-background: #151c22;
+  
+  --error: #ba1a1a;
+  --error-container: #ffdad6;
+  --on-error-container: #93000a;
+}
+
+/* Hacker Theme (Dark Mode) */
+.theme-hacker {
+  --primary: #00ff41;
+  --on-primary: #000000;
+  --primary-container: #008f11;
+  --on-primary-container: #00ff41;
+  
+  --surface: #111111;
+  --on-surface: #00ff41;
+  --surface-variant: #222222;
+  --on-surface-variant: #008f11;
+  
+  --surface-container-lowest: #000000;
+  --surface-container-low: #1a1a1a;
+  
+  --background: #0d0d0d;
+  --on-background: #00ff41;
+  
+  --error: #ff003c;
+  --error-container: #4a000f;
+  --on-error-container: #ff99a8;
+}
+
+/* Baby Green Theme (Soft) */
+.theme-baby-green {
+  --primary: #6da37f;
+  --on-primary: #ffffff;
+  --primary-container: #d2ebd9;
+  --on-primary-container: #2b543b;
+  
+  --surface: #f7fdf9;
+  --on-surface: #2b4033;
+  --surface-variant: #e1efe5;
+  --on-surface-variant: #5b7364;
+  
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #ecf7f0;
+  
+  --background: #f2f9f5;
+  --on-background: #2b4033;
+  
+  --error: #e57373;
+  --error-container: #ffebee;
+  --on-error-container: #b71c1c;
+}
+
+/* Light Theme (Pure Light) */
+.theme-light {
+  --primary: #2563eb;
+  --on-primary: #ffffff;
+  --primary-container: #dbeafe;
+  --on-primary-container: #1e3a8a;
+  
+  --surface: #ffffff;
+  --on-surface: #111827;
+  --surface-variant: #f3f4f6;
+  --on-surface-variant: #4b5563;
+  
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f9fafb;
+  
+  --background: #f8fafc;
+  --on-background: #0f172a;
+  
+  --error: #ef4444;
+  --error-container: #fee2e2;
+  --on-error-container: #991b1b;
 }
 
 body {
-  background-color: var(--color-background);
-  color: var(--color-on-background);
+  background-color: var(--background);
+  color: var(--on-background);
   font-family: var(--font-sans);
   min-height: max(884px, 100dvh);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

@@ -97,3 +97,17 @@ class DailyReport(SQLModel, table=True):
     submitted_server_at: Optional[datetime] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     deleted_at: Optional[datetime] = None
+
+class AppSetting(SQLModel, table=True):
+    __tablename__ = "app_setting"
+    key: str = Field(primary_key=True)
+    value: str
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class VisitorLog(SQLModel, table=True):
+    __tablename__ = "visitor_log"
+    id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
+    ip_address: Optional[str] = None
+    user_agent: Optional[str] = None
+    path: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)

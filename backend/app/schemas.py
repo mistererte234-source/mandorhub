@@ -19,6 +19,19 @@ class VerifyOtpIn(BaseModel):
     phone: str
     code: str
 
+class LoginAdminIn(BaseModel):
+    password: str
+
+class PasswordUpdateIn(BaseModel):
+    new_password: str
+
+class VisitorLogOut(BaseModel):
+    id: uuid.UUID
+    ip_address: Optional[str] = None
+    user_agent: Optional[str] = None
+    path: Optional[str] = None
+    created_at: str # formatted time
+
 
 class UserOut(BaseModel):
     id: uuid.UUID

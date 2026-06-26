@@ -38,3 +38,31 @@ def verify_otp(body: VerifyOtpIn, session: Session = Depends(get_session)):
         access_token=token,
         user=UserOut(id=user.id, name=user.name, role=user.role, org_id=user.org_id),
     )
+
+
+from ..models import AppSetting
+from ..schemas import LoginAdminIn
+
+@router.post("/login-admin", response_model=TokenOut)
+def login_admin(body: LoginAdminIn, session: Session = Depends(get_session)):
+    # Get password from app_setting
+    setting = session.get(AppSetting, "admin_password")
+    pwd = setting.value if setting else "password123"
+    
+    if body.password != pwd:
+        raise HTTPException(status_code=401, detail="Password salah")
+        
+    admin_user = session.exec(select(AppUser).where(AppUser.role == "admin", AppUser.is_active == True)).first()
+    if not admin_user:
+        raise HTTPException(status_code=404, detail="Akun admin tidak ditemukan di database")
+        
+    token = create_access_token(str(admin_user.id), admin_user.role, str(admin_user.org_id))
+    return TokenOut(
+        access_token=token,
+        user=UserOut(
+            id=admin_user.id, 
+            name=admin_user.name, 
+            role=admin_user.role, 
+            org_id=admin_user.org_id
+        ),
+    )
