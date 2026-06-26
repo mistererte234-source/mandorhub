@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@source "../../src/**/*.{js,ts,jsx,tsx,mdx}";
 @theme {
   --color-primary: #012d1d;
   --color-on-primary: #ffffff;
@@ -35,12 +35,6 @@
 
   --color-background: #f6f9ff;
   --color-on-background: #151c22;
-  
-  --spacing-container-margin: 20px;
-  --spacing-gutter: 16px;
-  --spacing-sm: 12px;
-  --spacing-md: 20px;
-  --spacing-lg: 32px;
 }
 
 body {
