@@ -18,11 +18,19 @@ app.add_middleware(
 )
 
 
+from fastapi.responses import JSONResponse
+import traceback
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal Server Error", "traceback": traceback.format_exc()}
+    )
+
 @app.get("/api/health", tags=["meta"])
 def health():
     return {"ok": True, "service": "mandorhub-api", "version": "0.1.0"}
-
-
 app.include_router(auth.router)
 app.include_router(dashboard.router)
 app.include_router(report.router)
