@@ -27,8 +27,8 @@ def update_user(
     user: AppUser = Depends(get_current_user),
     session: Session = Depends(get_session)
 ):
-    # Hanya kontraktor (Bos) yang boleh mengubah pengaturan, atau user mengubah akunnya sendiri.
-    if user.role != "contractor" and user.id != user_id:
+    # Hanya kontraktor (Bos), admin, atau user itu sendiri yang boleh mengubah.
+    if user.role not in ["contractor", "admin"] and user.id != user_id:
         raise HTTPException(status_code=403, detail="Tidak ada akses untuk mengubah data ini")
 
     target_user = session.get(AppUser, user_id)

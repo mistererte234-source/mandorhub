@@ -12,6 +12,12 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [savingId, setSavingId] = useState<string | null>(null);
 
+  const [toast, setToast] = useState<{msg: string, type: 'success'|'error'} | null>(null);
+  const showToast = (msg: string, type: 'success'|'error' = 'success') => {
+    setToast({msg, type});
+    setTimeout(() => setToast(null), 3000);
+  };
+
   // Form states
   const [editData, setEditData] = useState<{ [id: string]: { name: string; phone: string } }>({});
 
@@ -50,10 +56,10 @@ export default function SettingsPage() {
         method: "PUT",
         body: JSON.stringify(data),
       });
-      alert("Data berhasil disimpan!");
+      showToast("Data berhasil disimpan!");
       fetchUsers();
     } catch (err: any) {
-      alert("Gagal menyimpan: " + err.message);
+      showToast("Gagal menyimpan: " + err.message, "error");
     } finally {
       setSavingId(null);
     }
@@ -131,6 +137,14 @@ export default function SettingsPage() {
 
   return (
     <>
+      {toast && (
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 animate-intro">
+          <div className={`px-6 py-3 rounded-full text-sm font-bold shadow-2xl backdrop-blur-md ${toast.type === 'success' ? 'bg-primary/90 text-on-primary' : 'bg-error/90 text-on-error'}`}>
+            {toast.msg}
+          </div>
+        </div>
+      )}
+      
       <header className="bg-surface/80 backdrop-blur-md docked full-width top-0 shadow-sm sticky z-40">
         <div className="flex items-center gap-4 px-5 py-4 w-full border-b border-surface-variant/50">
           <Link href="/kontraktor" className="p-2 -ml-2 rounded-full hover:bg-surface-variant active:scale-95 transition-all text-on-surface-variant">

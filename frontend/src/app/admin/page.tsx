@@ -16,6 +16,14 @@ export default function AdminDashboard() {
   const [newAdminPassword, setNewAdminPassword] = useState("");
   const [spyLogs, setSpyLogs] = useState<any[]>([]);
 
+  const [toast, setToast] = useState<{msg: string, type: 'success'|'error'} | null>(null);
+  const showToast = (msg: string, type: 'success'|'error' = 'success') => {
+    setToast({msg, type});
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const [confirmDialog, setConfirmDialog] = useState<{msg: string, action: () => void} | null>(null);
+
   useEffect(() => {
     if (!getToken()) {
       router.push("/login");
@@ -54,10 +62,10 @@ export default function AdminDashboard() {
         method: "PUT",
         body: JSON.stringify(data),
       });
-      alert("Data berhasil disimpan!");
+      showToast("Data berhasil disimpan!");
       fetchData();
     } catch (err: any) {
-      alert("Gagal menyimpan: " + err.message);
+      showToast("Gagal menyimpan: " + err.message, "error");
     }
   };
 
@@ -68,27 +76,37 @@ export default function AdminDashboard() {
         method: "PUT",
         body: JSON.stringify({ new_password: newAdminPassword })
       });
-      alert("Password Admin berhasil diubah!");
+      showToast("Password Admin berhasil diubah!");
       setNewAdminPassword("");
     } catch(err:any) {
-      alert(err.message);
+      showToast(err.message, "error");
     }
   };
 
-  const handleSeed = async () => {
-    if(!confirm("Yakin ingin menanam data dummy?")) return;
-    try {
-      const res = await fetchApi("/admin/seed-dummy", { method: "POST" });
-      alert(res.message);
-    } catch(err:any) { alert(err.message); }
+  const handleSeed = () => {
+    setConfirmDialog({
+      msg: "Yakin ingin menanam data dummy?",
+      action: async () => {
+        setConfirmDialog(null);
+        try {
+          const res = await fetchApi("/admin/seed-dummy", { method: "POST" });
+          showToast(res.message);
+        } catch(err:any) { showToast(err.message, "error"); }
+      }
+    });
   };
 
-  const handleClear = async () => {
-    if(!confirm("BAHAYA: Yakin ingin menghapus seluruh proyek & laporan?")) return;
-    try {
-      const res = await fetchApi("/admin/clear-dummy", { method: "POST" });
-      alert(res.message);
-    } catch(err:any) { alert(err.message); }
+  const handleClear = () => {
+    setConfirmDialog({
+      msg: "BAHAYA: Yakin ingin menghapus seluruh proyek & laporan?",
+      action: async () => {
+        setConfirmDialog(null);
+        try {
+          const res = await fetchApi("/admin/clear-dummy", { method: "POST" });
+          showToast(res.message);
+        } catch(err:any) { showToast(err.message, "error"); }
+      }
+    });
   };
 
   const handleThemeChange = (t: string) => {
@@ -109,6 +127,27 @@ export default function AdminDashboard() {
 
   return (
     <>
+      {toast && (
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 animate-intro">
+          <div className={`px-6 py-3 rounded-full text-sm font-bold shadow-2xl backdrop-blur-md ${toast.type === 'success' ? 'bg-primary/90 text-on-primary' : 'bg-error/90 text-on-error'}`}>
+            {toast.msg}
+          </div>
+        </div>
+      )}
+
+      {confirmDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-surface p-6 rounded-3xl shadow-2xl max-w-sm w-full border border-surface-variant">
+            <h3 className="font-bold text-lg text-on-surface mb-2">Konfirmasi</h3>
+            <p className="text-on-surface-variant mb-6">{confirmDialog.msg}</p>
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setConfirmDialog(null)} className="px-5 py-2 font-bold text-on-surface-variant rounded-xl hover:bg-surface-variant transition-colors">Batal</button>
+              <button onClick={confirmDialog.action} className="px-5 py-2 font-bold bg-error text-on-error rounded-xl hover:bg-error-container hover:text-error transition-colors">Ya, Lanjutkan</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <header className="bg-surface/80 backdrop-blur-md docked full-width top-0 shadow-sm sticky z-40">
         <div className="flex justify-between items-center px-5 py-4 w-full border-b border-surface-variant/50">
           <div>
