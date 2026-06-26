@@ -86,7 +86,7 @@ ${attendance.filter(a => a.count > 0).map(a => `- ${a.count} ${a.role}${a.names 
 
 [Mohon lampirkan foto di bawah ini]`;
       
-      const waUrl = `https://wa.me/628110000001?text=${encodeURIComponent(text)}`;
+      const waUrl = `https://wa.me/628123536936?text=${encodeURIComponent(text)}`;
       window.open(waUrl, "_blank");
       
       setWorkDone("");
@@ -145,7 +145,7 @@ Lokasi: ${mainSite.project}
 
 [Mohon lampirkan foto/video bukti di bawah ini]`;
       
-      const waUrl = `https://wa.me/628110000001?text=${encodeURIComponent(text)}`;
+      const waUrl = `https://wa.me/628123536936?text=${encodeURIComponent(text)}`;
       window.open(waUrl, "_blank");
       
       setIssueDesc("");
