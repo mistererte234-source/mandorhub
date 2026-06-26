@@ -77,6 +77,24 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDeleteUser = async (userId: string) => {
+    setConfirmDialog({
+      msg: "Apakah Anda yakin ingin menghapus akun ini?",
+      action: async () => {
+        setConfirmDialog(null);
+        try {
+          await fetchApi(`/users/${userId}`, {
+            method: "DELETE",
+          });
+          showToast("Akun berhasil dihapus!");
+          fetchData();
+        } catch (err: any) {
+          showToast("Gagal menghapus: " + err.message, "error");
+        }
+      }
+    });
+  };
+
   const handleCreateProject = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -350,24 +368,39 @@ export default function AdminDashboard() {
                <div key={u.id} className="bg-surface-container-lowest border border-surface-variant p-4 rounded-xl">
                  <h3 className="font-bold mb-3 text-on-surface">💼 Akun Bos</h3>
                  <input className="w-full mb-2 bg-surface-container-low p-3 rounded-lg" value={editData[u.id]?.name||""} onChange={e => setEditData({...editData, [u.id]:{...editData[u.id], name: e.target.value}})} />
-                 <input className="w-full mb-3 bg-surface-container-low p-3 rounded-lg" value={editData[u.id]?.phone||""} onChange={e => setEditData({...editData, [u.id]:{...editData[u.id], phone: e.target.value}})} />
-                 <button onClick={() => handleSaveUser(u.id)} className="w-full bg-primary text-on-primary p-3 rounded-lg font-bold">Simpan</button>
+                 <input className="w-full mb-3 bg-surface-container-low p-3 rounded-lg" placeholder="Nomor HP (WhatsApp)" value={editData[u.id]?.phone||""} onChange={e => setEditData({...editData, [u.id]:{...editData[u.id], phone: e.target.value}})} />
+                 <div className="flex gap-2">
+                   <button onClick={() => handleSaveUser(u.id)} className="flex-1 bg-primary text-on-primary p-3 rounded-lg font-bold">Simpan</button>
+                   <button onClick={() => handleDeleteUser(u.id)} className="bg-error/10 hover:bg-error/25 text-error px-4 rounded-lg font-bold flex items-center justify-center transition-colors" title="Hapus Akun">
+                     <Trash2 className="w-5 h-5" />
+                   </button>
+                 </div>
                </div>
             ))}
             {mandorUsers.map(u => (
                <div key={u.id} className="bg-surface-container-lowest border border-surface-variant p-4 rounded-xl">
                  <h3 className="font-bold mb-3 text-on-surface">👷 Akun Mandor</h3>
                  <input className="w-full mb-2 bg-surface-container-low p-3 rounded-lg" value={editData[u.id]?.name||""} onChange={e => setEditData({...editData, [u.id]:{...editData[u.id], name: e.target.value}})} />
-                 <input className="w-full mb-3 bg-surface-container-low p-3 rounded-lg" value={editData[u.id]?.phone||""} onChange={e => setEditData({...editData, [u.id]:{...editData[u.id], phone: e.target.value}})} />
-                 <button onClick={() => handleSaveUser(u.id)} className="w-full bg-primary text-on-primary p-3 rounded-lg font-bold">Simpan</button>
+                 <input className="w-full mb-3 bg-surface-container-low p-3 rounded-lg" placeholder="Nomor HP (WhatsApp)" value={editData[u.id]?.phone||""} onChange={e => setEditData({...editData, [u.id]:{...editData[u.id], phone: e.target.value}})} />
+                 <div className="flex gap-2">
+                   <button onClick={() => handleSaveUser(u.id)} className="flex-1 bg-primary text-on-primary p-3 rounded-lg font-bold">Simpan</button>
+                   <button onClick={() => handleDeleteUser(u.id)} className="bg-error/10 hover:bg-error/25 text-error px-4 rounded-lg font-bold flex items-center justify-center transition-colors" title="Hapus Akun">
+                     <Trash2 className="w-5 h-5" />
+                   </button>
+                 </div>
                </div>
             ))}
             {bendaharaUsers.map(u => (
                <div key={u.id} className="bg-surface-container-lowest border border-surface-variant p-4 rounded-xl">
                  <h3 className="font-bold mb-3 text-on-surface">💰 Akun Bendahara</h3>
                  <input className="w-full mb-2 bg-surface-container-low p-3 rounded-lg" value={editData[u.id]?.name||""} onChange={e => setEditData({...editData, [u.id]:{...editData[u.id], name: e.target.value}})} />
-                 <input className="w-full mb-3 bg-surface-container-low p-3 rounded-lg" value={editData[u.id]?.phone||""} onChange={e => setEditData({...editData, [u.id]:{...editData[u.id], phone: e.target.value}})} />
-                 <button onClick={() => handleSaveUser(u.id)} className="w-full bg-primary text-on-primary p-3 rounded-lg font-bold">Simpan</button>
+                 <input className="w-full mb-3 bg-surface-container-low p-3 rounded-lg" placeholder="Nomor HP (WhatsApp)" value={editData[u.id]?.phone||""} onChange={e => setEditData({...editData, [u.id]:{...editData[u.id], phone: e.target.value}})} />
+                 <div className="flex gap-2">
+                   <button onClick={() => handleSaveUser(u.id)} className="flex-1 bg-primary text-on-primary p-3 rounded-lg font-bold">Simpan</button>
+                   <button onClick={() => handleDeleteUser(u.id)} className="bg-error/10 hover:bg-error/25 text-error px-4 rounded-lg font-bold flex items-center justify-center transition-colors" title="Hapus Akun">
+                     <Trash2 className="w-5 h-5" />
+                   </button>
+                 </div>
                </div>
             ))}
 
@@ -474,16 +507,30 @@ export default function AdminDashboard() {
                       
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">
                         <div>
-                          <span className="text-[#00ff41]/50 text-[10px] block tracking-widest uppercase mb-1">Timestamp (UTC)</span>
+                          <span className="text-[#00ff41]/50 text-[10px] block tracking-widest uppercase mb-1">Timestamp (WIB)</span>
                           <span className="font-bold tracking-wider">{log.created_at}</span>
                         </div>
                         <div>
-                          <span className="text-[#00ff41]/50 text-[10px] block tracking-widest uppercase mb-1">Source IP / Origin</span>
+                          <span className="text-[#00ff41]/50 text-[10px] block tracking-widest uppercase mb-1">Source IP</span>
                           <span className="font-bold tracking-wider">{log.ip_address}</span>
                         </div>
-                        <div className="sm:col-span-2">
+                        <div>
+                          <span className="text-[#00ff41]/50 text-[10px] block tracking-widest uppercase mb-1">Location / City</span>
+                          <span className="font-bold tracking-wider text-white">{log.city || "Unknown"}</span>
+                        </div>
+                        <div>
+                          <span className="text-[#00ff41]/50 text-[10px] block tracking-widest uppercase mb-1">ISP / Provider</span>
+                          <span className="font-bold tracking-wider text-white">{log.isp || "Unknown"}</span>
+                        </div>
+                        <div>
+                          <span className="text-[#00ff41]/50 text-[10px] block tracking-widest uppercase mb-1">Device Platform</span>
+                          <span className="font-bold tracking-wider text-white">
+                            {log.browser && log.os ? `${log.browser} on ${log.os} (${log.device_type})` : "Analyzing..."}
+                          </span>
+                        </div>
+                        <div>
                           <span className="text-[#00ff41]/50 text-[10px] block tracking-widest uppercase mb-1">Target Vector (Path)</span>
-                          <span className="font-bold tracking-wider bg-[#00ff41]/20 px-2 py-1 rounded inline-block">{log.path}</span>
+                          <span className="font-bold tracking-wider bg-[#00ff41]/20 px-2 py-1 rounded inline-block text-white">{log.path}</span>
                         </div>
                       </div>
                       

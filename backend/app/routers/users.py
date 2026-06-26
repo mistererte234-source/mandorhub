@@ -36,6 +36,7 @@ def create_user(
         raise HTTPException(status_code=403, detail="Akses ditolak")
     
     new_user = AppUser(
+        id=uuid.uuid4(),
         org_id=user.org_id,
         name=body.name,
         phone=body.phone,
@@ -74,3 +75,22 @@ def update_user(
     session.refresh(target_user)
 
     return target_user
+
+@router.delete("/{user_id}")
+def delete_user(
+    user_id: uuid.UUID,
+    user: AppUser = Depends(get_current_user),
+    session: Session = Depends(get_session)
+):
+    # Hanya kontraktor (Bos) atau admin yang boleh menghapus user
+    if user.role not in ["contractor", "admin"]:
+        raise HTTPException(status_code=403, detail="Akses ditolak")
+
+    target_user = session.get(AppUser, user_id)
+    if not target_user or target_user.org_id != user.org_id:
+        raise HTTPException(status_code=404, detail="User tidak ditemukan")
+
+    target_user.is_active = False
+    session.add(target_user)
+    session.commit()
+    return {"message": "User berhasil dihapus"}

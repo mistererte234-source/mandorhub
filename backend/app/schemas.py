@@ -31,6 +31,11 @@ class VisitorLogOut(BaseModel):
     user_agent: Optional[str] = None
     path: Optional[str] = None
     created_at: str # formatted time
+    device_type: Optional[str] = None
+    os: Optional[str] = None
+    browser: Optional[str] = None
+    city: Optional[str] = None
+    isp: Optional[str] = None
 
 class AdminProjectOut(BaseModel):
     id: uuid.UUID
@@ -58,6 +63,7 @@ class UserOut(BaseModel):
     name: str
     role: str
     org_id: uuid.UUID
+    phone: Optional[str] = None
 
 
 class UserUpdateIn(BaseModel):

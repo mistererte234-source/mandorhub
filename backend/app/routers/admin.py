@@ -189,6 +189,74 @@ def clear_dummy_data(
     
     return {"message": "Semua data proyek (termasuk non-dummy) berhasil dibersihkan!"}
 
+from functools import lru_cache
+import urllib.request
+import json
+
+@lru_cache(maxsize=1024)
+def get_ip_info(ip: str):
+    if not ip or ip in ("127.0.0.1", "::1", "localhost") or ip.startswith("172.") or ip.startswith("192.168.") or ip.startswith("10."):
+        return {"city": "Lokal/Internal", "isp": "Docker/Localhost"}
+    try:
+        url = f"http://ip-api.com/json/{ip}?fields=status,message,country,city,isp"
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req, timeout=2) as response:
+            data = json.loads(response.read().decode())
+            if data.get("status") == "success":
+                city = data.get("city", "Tidak Diketahui")
+                country = data.get("country", "")
+                isp = data.get("isp", "Tidak Diketahui")
+                if country:
+                    city = f"{city}, {country}"
+                return {"city": city, "isp": isp}
+    except Exception as e:
+        pass
+    return {"city": "Tidak Diketahui", "isp": "Tidak Diketahui"}
+
+def parse_user_agent(ua_string: str) -> dict:
+    if not ua_string:
+        return {"device": "Unknown", "os": "Unknown", "browser": "Unknown"}
+        
+    ua = ua_string.lower()
+    
+    device = "Desktop"
+    os_name = "Unknown"
+    
+    if "android" in ua:
+        device = "Mobile"
+        if "tablet" in ua or "playbook" in ua:
+            device = "Tablet"
+        os_name = "Android"
+    elif "iphone" in ua:
+        device = "Mobile"
+        os_name = "iOS (iPhone)"
+    elif "ipad" in ua:
+        device = "Tablet"
+        os_name = "iOS (iPad)"
+    elif "windows phone" in ua:
+        device = "Mobile"
+        os_name = "Windows Phone"
+    elif "windows" in ua:
+        os_name = "Windows"
+    elif "macintosh" in ua or "mac os x" in ua:
+        os_name = "Mac OS"
+    elif "linux" in ua:
+        os_name = "Linux"
+        
+    browser = "Unknown Browser"
+    if "edg/" in ua or "edge/" in ua:
+        browser = "Edge"
+    elif "opr/" in ua or "opera/" in ua:
+        browser = "Opera"
+    elif "chrome" in ua or "crios" in ua:
+        browser = "Chrome"
+    elif "firefox" in ua or "fxios" in ua:
+        browser = "Firefox"
+    elif "safari" in ua and "chrome" not in ua and "chromium" not in ua:
+        browser = "Safari"
+        
+    return {"device": device, "os": os_name, "browser": browser}
+
 @router.get("/spy-logs", response_model=list[VisitorLogOut])
 def get_spy_logs(
     admin: AppUser = Depends(get_admin_user),
@@ -211,12 +279,20 @@ def get_spy_logs(
         except:
             time_str = str(dt)
             
+        ip_info = get_ip_info(log.ip_address)
+        ua_info = parse_user_agent(log.user_agent)
+            
         out.append(VisitorLogOut(
             id=log.id,
             ip_address=log.ip_address,
             user_agent=log.user_agent,
             path=log.path,
-            created_at=time_str
+            created_at=time_str,
+            device_type=ua_info["device"],
+            os=ua_info["os"],
+            browser=ua_info["browser"],
+            city=ip_info["city"],
+            isp=ip_info["isp"]
         ))
         
     return out

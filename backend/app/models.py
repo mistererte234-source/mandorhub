@@ -14,14 +14,14 @@ from sqlmodel import Field, SQLModel
 
 class Organization(SQLModel, table=True):
     __tablename__ = "organization"
-    id: uuid.UUID = Field(primary_key=True)
+    id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
     name: str
     owner_user_id: Optional[uuid.UUID] = None
 
 
 class AppUser(SQLModel, table=True):
     __tablename__ = "app_user"
-    id: uuid.UUID = Field(primary_key=True)
+    id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
     org_id: uuid.UUID
     name: str
     phone: str
@@ -31,7 +31,7 @@ class AppUser(SQLModel, table=True):
 
 class Project(SQLModel, table=True):
     __tablename__ = "project"
-    id: uuid.UUID = Field(primary_key=True)
+    id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
     org_id: uuid.UUID
     name: str
     client_name: Optional[str] = None
@@ -43,7 +43,7 @@ class Project(SQLModel, table=True):
 
 class Site(SQLModel, table=True):
     __tablename__ = "site"
-    id: uuid.UUID = Field(primary_key=True)
+    id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
     org_id: uuid.UUID
     project_id: uuid.UUID
     name: str
@@ -54,7 +54,7 @@ class Site(SQLModel, table=True):
 
 class Target(SQLModel, table=True):
     __tablename__ = "target"
-    id: uuid.UUID = Field(primary_key=True)
+    id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
     org_id: uuid.UUID
     site_id: uuid.UUID
     title: str
