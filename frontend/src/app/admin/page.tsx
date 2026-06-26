@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchApi, logout, getToken } from "@/lib/api";
-import { LogOut, Loader2, Save, User as UserIcon, Phone, Database, Paintbrush, Activity, ShieldAlert, Trash2, Briefcase, Plus, X } from "lucide-react";
+import { LogOut, Loader2, Save, User as UserIcon, Phone, Database, Paintbrush, Activity, ShieldAlert, Trash2, Briefcase, Plus, X, Settings } from "lucide-react";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -194,23 +194,28 @@ export default function AdminDashboard() {
             <LogOut className="w-6 h-6" />
           </button>
         </div>
-        <div className="flex w-full overflow-x-auto hide-scrollbar">
-          <button 
-            onClick={() => setTab("proyek")}
-            className={`flex-1 py-3 px-4 text-sm font-bold border-b-2 transition-colors whitespace-nowrap ${tab === 'proyek' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant'}`}
-          >Proyek</button>
-          <button 
-            onClick={() => setTab("akun")}
-            className={`flex-1 py-3 px-4 text-sm font-bold border-b-2 transition-colors whitespace-nowrap ${tab === 'akun' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant'}`}
-          >Akun</button>
-          <button 
-            onClick={() => setTab("db")}
-            className={`flex-1 py-3 text-sm font-bold border-b-2 transition-colors ${tab === 'db' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant'}`}
-          >Pengaturan</button>
-          <button 
-            onClick={() => setTab("spy")}
-            className={`flex-1 py-3 text-sm font-bold border-b-2 transition-colors flex items-center justify-center gap-1 ${tab === 'spy' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant'}`}
-          ><Activity className="w-4 h-4"/> Mata-mata</button>
+        <div className="px-4 pb-4 w-full">
+          <div className="flex w-full bg-surface-variant/30 p-1.5 rounded-2xl gap-1 shadow-inner">
+            <button 
+              onClick={() => setTab("proyek")}
+              className={`flex-1 flex flex-col items-center justify-center py-2 px-1 text-[10px] sm:text-xs font-bold rounded-xl transition-all duration-300 ${tab === 'proyek' ? 'bg-surface text-primary shadow-md transform scale-95' : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50'}`}
+            ><Briefcase className={`w-5 h-5 mb-1 transition-colors ${tab === 'proyek' ? 'text-primary' : 'text-on-surface-variant'}`}/>Proyek</button>
+            
+            <button 
+              onClick={() => setTab("akun")}
+              className={`flex-1 flex flex-col items-center justify-center py-2 px-1 text-[10px] sm:text-xs font-bold rounded-xl transition-all duration-300 ${tab === 'akun' ? 'bg-surface text-primary shadow-md transform scale-95' : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50'}`}
+            ><UserIcon className={`w-5 h-5 mb-1 transition-colors ${tab === 'akun' ? 'text-primary' : 'text-on-surface-variant'}`}/>Akun</button>
+            
+            <button 
+              onClick={() => setTab("db")}
+              className={`flex-1 flex flex-col items-center justify-center py-2 px-1 text-[10px] sm:text-xs font-bold rounded-xl transition-all duration-300 ${tab === 'db' ? 'bg-surface text-primary shadow-md transform scale-95' : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50'}`}
+            ><Settings className={`w-5 h-5 mb-1 transition-colors ${tab === 'db' ? 'text-primary' : 'text-on-surface-variant'}`}/>Pengaturan</button>
+            
+            <button 
+              onClick={() => setTab("spy")}
+              className={`flex-1 flex flex-col items-center justify-center py-2 px-1 text-[10px] sm:text-xs font-bold rounded-xl transition-all duration-300 ${tab === 'spy' ? 'bg-surface text-primary shadow-md transform scale-95' : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50'}`}
+            ><Activity className={`w-5 h-5 mb-1 transition-colors ${tab === 'spy' ? 'text-primary' : 'text-on-surface-variant'}`}/>Mata-mata</button>
+          </div>
         </div>
       </header>
 
