@@ -54,7 +54,7 @@ CREATE TABLE app_user (
     org_id      uuid NOT NULL REFERENCES organization(id),
     name        text NOT NULL,
     phone       text NOT NULL,
-    role        text NOT NULL CHECK (role IN ('contractor','mandor','admin')),
+    role        text NOT NULL CHECK (role IN ('contractor','mandor','admin','bendahara')),
     is_active   boolean NOT NULL DEFAULT true,
     created_at  timestamptz NOT NULL DEFAULT now(),
     updated_at  timestamptz NOT NULL DEFAULT now(),

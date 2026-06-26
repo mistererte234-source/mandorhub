@@ -42,3 +42,21 @@ app.include_router(admin.router)
 app.include_router(spy.router)
 app.include_router(project.router)
 app.include_router(finance.router)
+
+from sqlmodel import text
+from .core.db import get_session
+
+@app.on_event("startup")
+def on_startup():
+    session = next(get_session())
+    try:
+        session.execute(text("""
+            ALTER TABLE app_user DROP CONSTRAINT IF EXISTS app_user_role_check;
+            ALTER TABLE app_user ADD CONSTRAINT app_user_role_check CHECK (role IN ('contractor', 'mandor', 'admin', 'bendahara'));
+        """))
+        session.commit()
+        print("Successfully updated app_user role check constraint")
+    except Exception as e:
+        print("Failed to update app_user role check constraint:", e)
+    finally:
+        session.close()
