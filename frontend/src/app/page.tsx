@@ -231,7 +231,7 @@ Lokasi: ${mainSite.project}
       .finally(() => {
         setLoading(false);
       });
-  }, [router]);
+  };
 
   if (loading) {
     return (
