@@ -20,6 +20,33 @@ def get_users(
     ).all()
     return users
 
+from pydantic import BaseModel
+class UserCreateIn(BaseModel):
+    name: str
+    phone: str
+    role: str
+
+@router.post("", response_model=UserOut)
+def create_user(
+    body: UserCreateIn,
+    user: AppUser = Depends(get_current_user),
+    session: Session = Depends(get_session)
+):
+    if user.role not in ["contractor", "admin"]:
+        raise HTTPException(status_code=403, detail="Akses ditolak")
+    
+    new_user = AppUser(
+        org_id=user.org_id,
+        name=body.name,
+        phone=body.phone,
+        role=body.role,
+        is_active=True
+    )
+    session.add(new_user)
+    session.commit()
+    session.refresh(new_user)
+    return new_user
+
 @router.put("/{user_id}", response_model=UserOut)
 def update_user(
     user_id: uuid.UUID,

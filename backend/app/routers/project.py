@@ -36,5 +36,14 @@ def get_my_projects(
             .distinct()
         ).all()
         return projects
+
+    # Jika bendahara, kembalikan semua proyek di organisasi
+    if user.role == "bendahara":
+        projects = session.exec(
+            select(Project)
+            .where(Project.org_id == user.org_id)
+            .where(Project.deleted_at == None)
+        ).all()
+        return projects
         
     return []

@@ -111,3 +111,17 @@ class VisitorLog(SQLModel, table=True):
     user_agent: Optional[str] = None
     path: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
+class FinanceLog(SQLModel, table=True):
+    __tablename__ = "finance_log"
+    id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
+    org_id: uuid.UUID
+    project_id: uuid.UUID
+    type: str = "in"  # 'in' or 'out'
+    category: str
+    amount: float = 0.0
+    description: Optional[str] = None
+    date: date
+    recorded_by: uuid.UUID
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: Optional[datetime] = None
+    deleted_at: Optional[datetime] = None

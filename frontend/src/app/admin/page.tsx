@@ -19,6 +19,9 @@ export default function AdminDashboard() {
   const [showAddProject, setShowAddProject] = useState(false);
   const [newProject, setNewProject] = useState({name: "", client_name: "", bos_id: "", mandor_id: ""});
 
+  const [showAddUser, setShowAddUser] = useState(false);
+  const [newUser, setNewUser] = useState({name: "", phone: "", role: "bendahara"});
+
   const [toast, setToast] = useState<{msg: string, type: 'success'|'error'} | null>(null);
   const showToast = (msg: string, type: 'success'|'error' = 'success') => {
     setToast({msg, type});
@@ -159,6 +162,24 @@ export default function AdminDashboard() {
 
   const bosUsers = users.filter((u) => u.role === "contractor");
   const mandorUsers = users.filter((u) => u.role === "mandor");
+  const bendaharaUsers = users.filter((u) => u.role === "bendahara");
+
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await fetchApi("/users", {
+        method: "POST",
+        body: JSON.stringify(newUser)
+      });
+      setUsers([...users, res]);
+      setEditData({...editData, [res.id]: {name: res.name, phone: res.phone}});
+      setShowAddUser(false);
+      setNewUser({name: "", phone: "", role: "bendahara"});
+      showToast("Akun berhasil dibuat!");
+    } catch (err: any) {
+      showToast(err.message, "error");
+    }
+  };
 
   return (
     <>
@@ -309,9 +330,21 @@ export default function AdminDashboard() {
         )}
 
         {tab === "akun" && (
-          <section className="flex flex-col gap-6">
+          <section className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-xl font-bold text-on-surface flex items-center gap-2">
+                <UserIcon className="w-5 h-5 text-primary" /> Manajemen Akun
+              </h2>
+              <button 
+                onClick={() => setShowAddUser(true)}
+                className="bg-primary text-on-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm"
+              >
+                <Plus className="w-4 h-4" /> Tambah Akun
+              </button>
+            </div>
+            
             <div className="bg-primary-container text-on-primary-container p-4 rounded-xl text-sm font-medium">
-              Ubah Nama dan Nomor WA Bos / Mandor di sini.
+              Ubah Nama dan Nomor WA, atau tambahkan akun baru di sini.
             </div>
             {bosUsers.map(u => (
                <div key={u.id} className="bg-surface-container-lowest border border-surface-variant p-4 rounded-xl">
@@ -329,6 +362,49 @@ export default function AdminDashboard() {
                  <button onClick={() => handleSaveUser(u.id)} className="w-full bg-primary text-on-primary p-3 rounded-lg font-bold">Simpan</button>
                </div>
             ))}
+            {bendaharaUsers.map(u => (
+               <div key={u.id} className="bg-surface-container-lowest border border-surface-variant p-4 rounded-xl">
+                 <h3 className="font-bold mb-3 text-on-surface">💰 Akun Bendahara</h3>
+                 <input className="w-full mb-2 bg-surface-container-low p-3 rounded-lg" value={editData[u.id]?.name||""} onChange={e => setEditData({...editData, [u.id]:{...editData[u.id], name: e.target.value}})} />
+                 <input className="w-full mb-3 bg-surface-container-low p-3 rounded-lg" value={editData[u.id]?.phone||""} onChange={e => setEditData({...editData, [u.id]:{...editData[u.id], phone: e.target.value}})} />
+                 <button onClick={() => handleSaveUser(u.id)} className="w-full bg-primary text-on-primary p-3 rounded-lg font-bold">Simpan</button>
+               </div>
+            ))}
+
+            {showAddUser && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+                <div className="bg-surface p-6 rounded-3xl shadow-2xl w-full max-w-md border border-surface-variant max-h-[90vh] overflow-y-auto">
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="font-bold text-xl text-on-surface">Akun Baru</h3>
+                    <button onClick={() => setShowAddUser(false)} className="p-2 bg-surface-variant rounded-full text-on-surface-variant">
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                  <form onSubmit={handleCreateUser} className="flex flex-col gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-on-surface mb-2">Nama Pengguna</label>
+                      <input type="text" value={newUser.name} onChange={e => setNewUser({...newUser, name: e.target.value})} required className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface focus:border-primary outline-none" placeholder="Contoh: Budi Finance" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-on-surface mb-2">Nomor HP (WhatsApp)</label>
+                      <input type="text" value={newUser.phone} onChange={e => setNewUser({...newUser, phone: e.target.value})} required className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface focus:border-primary outline-none" placeholder="Contoh: 08123456789" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-on-surface mb-2">Role Akun</label>
+                      <select value={newUser.role} onChange={e => setNewUser({...newUser, role: e.target.value})} className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface focus:border-primary outline-none">
+                        <option value="bendahara">Bendahara</option>
+                        <option value="mandor">Mandor</option>
+                        <option value="contractor">Bos / Kontraktor</option>
+                        <option value="admin">Super Admin</option>
+                      </select>
+                    </div>
+                    <button type="submit" className="w-full py-4 rounded-xl font-bold text-lg bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container transition-all shadow-md mt-2">
+                      Simpan Akun
+                    </button>
+                  </form>
+                </div>
+              </div>
+            )}
           </section>
         )}
 

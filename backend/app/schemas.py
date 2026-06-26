@@ -143,3 +143,21 @@ class SiteDetailOut(BaseModel):
     project: str
     name: str
     timeline: list[TimelineItem]
+
+class FinanceCreate(BaseModel):
+    project_id: uuid.UUID
+    type: str  # "in" or "out"
+    category: str
+    amount: float
+    description: Optional[str] = None
+    date: datetime.date
+
+class FinanceOut(BaseModel):
+    id: uuid.UUID
+    project_id: uuid.UUID
+    type: str
+    category: str
+    amount: float
+    description: Optional[str] = None
+    date: datetime.date
+    recorded_by: uuid.UUID

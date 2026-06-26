@@ -10,7 +10,11 @@ import {
   Loader2,
   AlertTriangle,
   Activity,
-  Settings
+  Settings,
+  Briefcase,
+  Wallet,
+  ArrowDownCircle,
+  ArrowUpCircle
 } from "lucide-react";
 
 export default function ContractorDashboard() {
@@ -19,6 +23,8 @@ export default function ContractorDashboard() {
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<any[]>([]);
   const [selectedProject, setSelectedProject] = useState<string>("");
+  const [tab, setTab] = useState<"proyek" | "keuangan">("proyek");
+  const [finances, setFinances] = useState<any[]>([]);
 
   useEffect(() => {
     if (!getToken()) {
@@ -33,6 +39,12 @@ export default function ContractorDashboard() {
       fetchDashboard();
     }
   }, [selectedProject, projects.length]);
+
+  useEffect(() => {
+    if (tab === "keuangan" && selectedProject) {
+      fetchApi(`/finance?project_id=${selectedProject}`).then(setFinances).catch(console.error);
+    }
+  }, [tab, selectedProject]);
 
   const fetchProjects = async () => {
     try {
@@ -120,11 +132,29 @@ export default function ContractorDashboard() {
             </button>
           </div>
         </div>
+        
+        {/* Tabs */}
+        <div className="flex border-b border-surface-variant mt-2 px-5">
+          <button 
+            onClick={() => setTab("proyek")}
+            className={`flex-1 py-3 text-sm font-bold border-b-2 transition-colors ${tab === "proyek" ? "border-primary text-primary" : "border-transparent text-on-surface-variant hover:text-on-surface"}`}
+          >
+            <div className="flex items-center justify-center gap-2"><Briefcase className="w-4 h-4"/> Proyek</div>
+          </button>
+          <button 
+            onClick={() => setTab("keuangan")}
+            className={`flex-1 py-3 text-sm font-bold border-b-2 transition-colors ${tab === "keuangan" ? "border-primary text-primary" : "border-transparent text-on-surface-variant hover:text-on-surface"}`}
+          >
+            <div className="flex items-center justify-center gap-2"><Wallet className="w-4 h-4"/> Keuangan</div>
+          </button>
+        </div>
       </header>
 
       <main className="px-5 py-6 flex flex-col gap-6">
-        {/* Ringkasan */}
-        <section className="grid grid-cols-2 gap-4">
+        {tab === "proyek" && (
+          <>
+            {/* Ringkasan */}
+            <section className="grid grid-cols-2 gap-4">
            <div className="bg-surface-container-lowest border border-surface-variant p-4 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm">
              <Activity className="w-8 h-8 text-primary mb-2" />
              <h3 className="text-3xl font-bold text-on-surface">{summary.total}</h3>
@@ -198,7 +228,69 @@ export default function ContractorDashboard() {
               Belum ada titik proyek.
             </div>
           )}
-        </section>
+          </section>
+          </>
+        )}
+
+        {tab === "keuangan" && (
+          <section className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+            {!selectedProject ? (
+              <div className="text-center p-8 bg-surface-variant/20 rounded-2xl border border-surface-variant border-dashed">
+                <Wallet className="w-12 h-12 text-on-surface-variant/50 mx-auto mb-3" />
+                <p className="text-on-surface font-semibold mb-1">Pilih Proyek Terlebih Dahulu</p>
+                <p className="text-on-surface-variant text-sm">Gunakan dropdown di atas untuk memilih proyek dan melihat laporan keuangan.</p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-[#c3f0c3]/20 border border-[#c3f0c3] rounded-2xl p-4 shadow-sm flex flex-col justify-center">
+                    <span className="text-xs font-bold uppercase text-[#0e520e] mb-1">Total Masuk</span>
+                    <span className="text-lg font-black text-[#0e520e]">Rp {finances.filter(l => l.type==='in').reduce((s,l)=>s+l.amount, 0).toLocaleString('id-ID')}</span>
+                  </div>
+                  <div className="bg-[#ffd9d6]/20 border border-[#ffd9d6] rounded-2xl p-4 shadow-sm flex flex-col justify-center">
+                    <span className="text-xs font-bold uppercase text-[#8c1d18] mb-1">Total Keluar</span>
+                    <span className="text-lg font-black text-[#8c1d18]">Rp {finances.filter(l => l.type==='out').reduce((s,l)=>s+l.amount, 0).toLocaleString('id-ID')}</span>
+                  </div>
+                </div>
+
+                <div className="bg-surface-container-lowest border border-surface-variant rounded-2xl p-4 shadow-sm">
+                  <span className="text-xs font-bold uppercase text-on-surface-variant mb-1 block">Saldo Saat Ini</span>
+                  <span className={`text-2xl font-black ${
+                    finances.reduce((s,l)=>s+(l.type==='in'?l.amount:-l.amount), 0) >= 0 ? 'text-primary' : 'text-error'
+                  }`}>
+                    Rp {finances.reduce((s,l)=>s+(l.type==='in'?l.amount:-l.amount), 0).toLocaleString('id-ID')}
+                  </span>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  <h2 className="font-bold text-lg text-on-surface mb-1">Riwayat Transaksi</h2>
+                  {finances.length === 0 ? (
+                    <div className="text-center py-8 text-on-surface-variant bg-surface-variant/20 rounded-2xl border border-surface-variant border-dashed">
+                      Belum ada laporan dari Bendahara.
+                    </div>
+                  ) : (
+                    finances.map(log => (
+                      <div key={log.id} className="flex justify-between items-center p-4 bg-surface-container-lowest border border-surface-variant rounded-2xl shadow-sm">
+                        <div className="flex items-center gap-3">
+                          <div className={`p-2 rounded-xl ${log.type === 'in' ? 'bg-[#c3f0c3] text-[#0e520e]' : 'bg-[#ffd9d6] text-[#8c1d18]'}`}>
+                            {log.type === 'in' ? <ArrowDownCircle className="w-5 h-5"/> : <ArrowUpCircle className="w-5 h-5"/>}
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-sm text-on-surface capitalize">{log.category}</h4>
+                            <span className="text-xs text-on-surface-variant">{new Date(log.date).toLocaleDateString('id-ID')} - {log.description || '-'}</span>
+                          </div>
+                        </div>
+                        <div className={`font-bold text-sm ${log.type === 'in' ? 'text-[#0e520e]' : 'text-error'}`}>
+                          {log.type === 'in' ? '+' : '-'} Rp {log.amount.toLocaleString('id-ID')}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+          </section>
+        )}
       </main>
     </>
   );

@@ -49,6 +49,8 @@ export default function LoginPage() {
       setToken(res.access_token);
       if (res.user.role === "contractor") {
         router.push("/kontraktor");
+      } else if (res.user.role === "bendahara") {
+        router.push("/bendahara");
       } else {
         router.push("/");
       }
