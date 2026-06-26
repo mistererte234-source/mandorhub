@@ -39,6 +39,7 @@ class Project(SQLModel, table=True):
     status: str = "active"
     start_date: Optional[date] = None
     target_end_date: Optional[date] = None
+    deleted_at: Optional[datetime] = None
 
 
 class Site(SQLModel, table=True):
@@ -50,6 +51,7 @@ class Site(SQLModel, table=True):
     address: Optional[str] = None
     geo_radius_m: int = 150
     assigned_mandor_id: Optional[uuid.UUID] = None
+    deleted_at: Optional[datetime] = None
 
 
 class Target(SQLModel, table=True):
@@ -62,6 +64,7 @@ class Target(SQLModel, table=True):
     period_type: str = "daily"
     due_date: Optional[date] = None
     status: str = "pending"
+    deleted_at: Optional[datetime] = None
 
 
 class Issue(SQLModel, table=True):
