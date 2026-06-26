@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 
 import SpyTracker from "@/components/SpyTracker";
 import ThemeProvider from "@/components/ThemeProvider";
+import SplashScreen from "@/components/SplashScreen";
 
 export default function RootLayout({
   children,
@@ -26,6 +27,7 @@ export default function RootLayout({
         className={`${inter.variable} antialiased bg-background text-on-background min-h-screen pb-[80px] md:max-w-md md:mx-auto md:shadow-2xl md:border md:border-surface-variant relative`}
       >
         <ThemeProvider>
+          <SplashScreen />
           <SpyTracker />
           {children}
         </ThemeProvider>
