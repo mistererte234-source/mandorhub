@@ -93,13 +93,10 @@ export default function LoginPage() {
       <div className="w-full flex flex-col items-center mb-10">
         <div 
           onClick={handleLogoClick}
-          className="w-24 h-24 rounded-3xl overflow-hidden flex items-center justify-center mb-6 shadow-md border border-surface-variant bg-white cursor-pointer select-none active:scale-95 transition-transform"
+          className="w-48 h-48 flex items-center justify-center mb-4 cursor-pointer select-none active:scale-95 transition-transform animate-intro"
         >
-          <Image src="/logo.png" alt="MandorHub Logo" width={96} height={96} className="object-contain pointer-events-none" />
+          <Image src="/logo.png" alt="MandorHub Logo" width={192} height={192} className="object-contain pointer-events-none drop-shadow-lg" />
         </div>
-        <h1 className="text-[28px] font-bold text-on-surface tracking-tight">
-          MandorHub
-        </h1>
         <p className="text-on-surface-variant text-center mt-2 text-base max-w-[280px]">
           Sistem kontrol proyek harian untuk hasil tanpa kejutan.
         </p>
