@@ -123,9 +123,6 @@ export default function LoginPage() {
                 className="w-full bg-surface-container-low border border-surface-variant text-on-surface text-lg rounded-xl px-4 py-4 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-fixed transition-all"
                 required
               />
-              <p className="text-xs text-on-surface-variant mt-2">
-                Dev test: +628220000002 (Mandor), +628110000001 (Bos)
-              </p>
             </div>
             <button
               type="submit"
