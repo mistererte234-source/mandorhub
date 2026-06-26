@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { fetchApi, setToken } from "@/lib/api";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { HardHat, ArrowRight, Loader2 } from "lucide-react";
 
 export default function LoginPage() {
@@ -59,8 +60,8 @@ export default function LoginPage() {
   return (
     <div className="min-h-[100dvh] flex flex-col justify-center px-6 py-12 bg-surface">
       <div className="w-full flex flex-col items-center mb-10">
-        <div className="w-20 h-20 bg-primary text-on-primary rounded-3xl shadow-xl flex items-center justify-center mb-6">
-          <HardHat className="w-10 h-10" />
+        <div className="w-24 h-24 rounded-3xl overflow-hidden flex items-center justify-center mb-6 shadow-md border border-surface-variant bg-white">
+          <Image src="/logo.png" alt="MandorHub Logo" width={96} height={96} className="object-contain" />
         </div>
         <h1 className="text-[28px] font-bold text-on-surface tracking-tight">
           MandorHub

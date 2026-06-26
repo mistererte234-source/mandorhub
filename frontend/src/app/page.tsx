@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchApi, logout, getToken } from "@/lib/api";
 import BottomSheet from "@/components/BottomSheet";
+import Image from "next/image";
 import {
   Bell,
   MapPin,
@@ -21,6 +22,7 @@ import {
 export default function ForemanDashboard() {
   const router = useRouter();
   const [data, setData] = useState<any>(null);
+  const [bossPhone, setBossPhone] = useState("628110000001");
   const [loading, setLoading] = useState(true);
   const [isLaporOpen, setIsLaporOpen] = useState(false);
   const [workDone, setWorkDone] = useState("");
@@ -86,7 +88,7 @@ ${attendance.filter(a => a.count > 0).map(a => `- ${a.count} ${a.role}${a.names 
 
 [Mohon lampirkan foto di bawah ini]`;
       
-      const waUrl = `https://wa.me/628123536936?text=${encodeURIComponent(text)}`;
+      const waUrl = `https://wa.me/${bossPhone}?text=${encodeURIComponent(text)}`;
       window.open(waUrl, "_blank");
       
       setWorkDone("");
@@ -145,7 +147,7 @@ Lokasi: ${mainSite.project}
 
 [Mohon lampirkan foto/video bukti di bawah ini]`;
       
-      const waUrl = `https://wa.me/628123536936?text=${encodeURIComponent(text)}`;
+      const waUrl = `https://wa.me/${bossPhone}?text=${encodeURIComponent(text)}`;
       window.open(waUrl, "_blank");
       
       setIssueDesc("");
@@ -176,9 +178,15 @@ Lokasi: ${mainSite.project}
       return;
     }
 
-    fetchApi("/dashboard")
-      .then((res) => {
-        setData(res);
+    Promise.all([fetchApi("/dashboard"), fetchApi("/users")])
+      .then(([dashRes, usersRes]) => {
+        setData(dashRes);
+        const boss = usersRes.find((u: any) => u.role === "contractor");
+        if (boss && boss.phone) {
+          let p = boss.phone;
+          if (p.startsWith("0")) p = "62" + p.substring(1);
+          setBossPhone(p.replace(/[^0-9]/g, ""));
+        }
       })
       .catch((err) => {
         console.error("Dashboard error:", err);
@@ -209,8 +217,8 @@ Lokasi: ${mainSite.project}
       <header className="bg-surface/80 backdrop-blur-md docked full-width top-0 shadow-sm sticky z-40">
         <div className="flex justify-between items-center px-5 py-4 w-full border-b border-surface-variant/50">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full shadow-sm border-2 border-surface-container-low overflow-hidden bg-surface-variant flex items-center justify-center">
-              <span className="text-xl">👷</span>
+            <div className="w-10 h-10 rounded-full shadow-sm border border-surface-variant overflow-hidden bg-white flex items-center justify-center">
+              <Image src="/logo.png" alt="Logo" width={40} height={40} className="object-cover" />
             </div>
             <div>
               <h1 className="font-headline-lg-mobile text-[22px] leading-[28px] font-bold text-primary tracking-tight">

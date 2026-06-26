@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .core.config import settings
-from .routers import auth, dashboard, report, issue, site
+from .routers import auth, dashboard, report, issue, site, users
 
 app = FastAPI(title="MandorHub API", version="0.1.0")
 
@@ -31,8 +31,10 @@ async def global_exception_handler(request, exc):
 @app.get("/api/health", tags=["meta"])
 def health():
     return {"ok": True, "service": "mandorhub-api", "version": "0.1.0"}
+
 app.include_router(auth.router)
 app.include_router(dashboard.router)
 app.include_router(report.router)
 app.include_router(issue.router)
 app.include_router(site.router)
+app.include_router(users.router)

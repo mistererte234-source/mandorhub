@@ -4,14 +4,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { fetchApi, logout, getToken } from "@/lib/api";
+import Image from "next/image";
 import {
   LogOut,
   Loader2,
-  Building2,
   AlertTriangle,
-  Clock,
-  CheckCircle2,
-  Activity
+  Activity,
+  Settings
 } from "lucide-react";
 
 export default function ContractorDashboard() {
@@ -56,8 +55,8 @@ export default function ContractorDashboard() {
       <header className="bg-surface/80 backdrop-blur-md docked full-width top-0 shadow-sm sticky z-40">
         <div className="flex justify-between items-center px-5 py-4 w-full border-b border-surface-variant/50">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full shadow-sm border-2 border-surface-container-low overflow-hidden bg-surface-variant flex items-center justify-center">
-              <span className="text-xl">👔</span>
+            <div className="w-10 h-10 rounded-full shadow-sm border border-surface-variant overflow-hidden bg-white flex items-center justify-center">
+              <Image src="/logo.png" alt="Logo" width={40} height={40} className="object-cover" />
             </div>
             <div>
               <h1 className="font-headline-lg-mobile text-[22px] leading-[28px] font-bold text-primary tracking-tight">
@@ -68,12 +67,20 @@ export default function ContractorDashboard() {
               </p>
             </div>
           </div>
-          <button
-            onClick={logout}
-            className="p-2 rounded-full hover:bg-error-container text-error active:scale-95 transition-all"
-          >
-            <LogOut className="w-6 h-6" />
-          </button>
+          <div className="flex gap-1">
+            <Link
+              href="/kontraktor/pengaturan"
+              className="p-2 rounded-full hover:bg-surface-variant text-on-surface-variant active:scale-95 transition-all"
+            >
+              <Settings className="w-6 h-6" />
+            </Link>
+            <button
+              onClick={logout}
+              className="p-2 rounded-full hover:bg-error-container text-error active:scale-95 transition-all"
+            >
+              <LogOut className="w-6 h-6" />
+            </button>
+          </div>
         </div>
       </header>
 

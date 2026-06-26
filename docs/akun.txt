@@ -1,0 +1,5 @@
+supabase
+
+~2Wsxcv@Zandev
+
+postgresql://postgres.daetbaernswueeifairi:~2Wsxcv%40Zandev@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres

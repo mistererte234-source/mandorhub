@@ -27,6 +27,10 @@ class UserOut(BaseModel):
     org_id: uuid.UUID
 
 
+class UserUpdateIn(BaseModel):
+    phone: Optional[str] = None
+    name: Optional[str] = None
+
 class TokenOut(BaseModel):
     access_token: str
     token_type: str = "bearer"
