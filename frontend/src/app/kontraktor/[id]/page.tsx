@@ -4,7 +4,7 @@ import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { fetchApi, getToken, logout } from "@/lib/api";
-import { ArrowLeft, Loader2, Calendar, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Loader2, Calendar, AlertTriangle, CheckCircle2, Edit, X, Plus } from "lucide-react";
 
 export default function TimelinePage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
@@ -12,12 +12,14 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!getToken()) {
-      router.push("/login");
-      return;
-    }
+  // Edit Report State
+  const [editingReport, setEditingReport] = useState<any>(null);
+  const [editWorkDone, setEditWorkDone] = useState("");
+  const [editAttendance, setEditAttendance] = useState<{ role: string; count: number; names: string }[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
 
+  const fetchTimeline = () => {
+    setLoading(true);
     fetchApi(`/sites/${id}/timeline`)
       .then((res) => {
         setData(res);
@@ -31,7 +33,56 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    if (!getToken()) {
+      router.push("/login");
+      return;
+    }
+    fetchTimeline();
   }, [id, router]);
+
+  const openEdit = (item: any) => {
+    setEditingReport(item);
+    setEditWorkDone(item.data?.work_done || "");
+    const att = item.data?.attendance || [];
+    if (att.length === 0) {
+      setEditAttendance([{ role: "Tukang", count: 0, names: "" }, { role: "Kuli", count: 0, names: "" }]);
+    } else {
+      setEditAttendance(att.map((a:any) => ({role: a.role, count: a.count, names: a.names||""})));
+    }
+  };
+
+  const updateAttendance = (index: number, field: "role" | "count" | "names", value: string | number) => {
+    const newAttendance = [...editAttendance];
+    newAttendance[index] = { ...newAttendance[index], [field]: value };
+    setEditAttendance(newAttendance);
+  };
+
+  const addAttendanceRow = () => {
+    setEditAttendance([...editAttendance, { role: "", count: 0, names: "" }]);
+  };
+
+  const saveEdit = async () => {
+    setIsSaving(true);
+    try {
+      const payload = {
+        work_done: editWorkDone,
+        worker_attendance: editAttendance
+      };
+      await fetchApi(`/reports/${editingReport.id}`, {
+        method: "PUT",
+        body: JSON.stringify(payload)
+      });
+      setEditingReport(null);
+      fetchTimeline();
+    } catch (err: any) {
+      alert("Gagal menyimpan: " + err.message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -108,9 +159,16 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
                   <div className={`rounded-xl p-4 shadow-sm border flex flex-col gap-2 ${cardClass}`}>
                     <div className="flex justify-between items-start mb-1 gap-2">
                       <h3 className="font-bold text-base leading-tight">{item.title}</h3>
-                      <span className="text-xs font-semibold opacity-70 whitespace-nowrap bg-black/5 px-2 py-1 rounded-md">
-                        {dateStr} {timeStr}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        {item.type === "report" && (
+                          <button onClick={() => openEdit(item)} className="text-primary hover:bg-primary-container p-1.5 rounded-full transition-colors" title="Edit Laporan">
+                            <Edit className="w-4 h-4" />
+                          </button>
+                        )}
+                        <span className="text-xs font-semibold opacity-70 whitespace-nowrap bg-black/5 px-2 py-1 rounded-md">
+                          {dateStr} {timeStr}
+                        </span>
+                      </div>
                     </div>
                     
                     <p className="text-sm opacity-90 leading-relaxed whitespace-pre-wrap">{item.description}</p>
@@ -135,6 +193,80 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
           </div>
         )}
       </main>
+
+      {/* Edit Modal */}
+      {editingReport && (
+        <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-surface w-full rounded-t-3xl p-6 shadow-2xl animate-in slide-in-from-bottom-full duration-300 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-on-surface">Edit Laporan</h2>
+              <button onClick={() => setEditingReport(null)} className="p-2 bg-surface-variant rounded-full text-on-surface-variant">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="flex flex-col gap-5">
+              <div>
+                <label className="block text-sm font-semibold text-on-surface mb-2">Pekerjaan Selesai</label>
+                <textarea 
+                  className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface focus:border-primary outline-none"
+                  rows={3}
+                  value={editWorkDone}
+                  onChange={(e) => setEditWorkDone(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-on-surface mb-2">Absensi Pekerja</label>
+                <div className="flex flex-col gap-3">
+                  {editAttendance.map((att, idx) => (
+                    <div key={idx} className="flex flex-col gap-2 bg-surface-variant/30 p-3 rounded-xl border border-surface-variant/50">
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={att.role}
+                          onChange={(e) => updateAttendance(idx, "role", e.target.value)}
+                          placeholder="Peran (Tukang/Kuli)"
+                          className="flex-1 bg-surface border border-surface-variant rounded-lg px-3 py-2 text-sm text-on-surface outline-none focus:border-primary"
+                        />
+                        <input
+                          type="number"
+                          min="0"
+                          value={att.count}
+                          onChange={(e) => updateAttendance(idx, "count", parseInt(e.target.value) || 0)}
+                          placeholder="Jumlah"
+                          className="w-20 bg-surface border border-surface-variant rounded-lg px-3 py-2 text-sm text-center text-on-surface outline-none focus:border-primary"
+                        />
+                      </div>
+                      <input
+                        type="text"
+                        value={att.names}
+                        onChange={(e) => updateAttendance(idx, "names", e.target.value)}
+                        placeholder="Nama-nama (Opsional, pisahkan koma)"
+                        className="w-full bg-surface border border-surface-variant rounded-lg px-3 py-2 text-sm text-on-surface outline-none focus:border-primary"
+                      />
+                    </div>
+                  ))}
+                  <button 
+                    onClick={addAttendanceRow}
+                    className="flex items-center justify-center gap-2 py-2 mt-1 border-2 border-dashed border-surface-variant rounded-xl text-on-surface-variant text-sm font-bold hover:bg-surface-variant transition-colors"
+                  >
+                    <Plus className="w-4 h-4" /> Tambah Peran
+                  </button>
+                </div>
+              </div>
+
+              <button 
+                onClick={saveEdit}
+                disabled={isSaving}
+                className="w-full py-4 rounded-xl font-bold text-lg bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container transition-all shadow-md disabled:opacity-50 mt-4"
+              >
+                {isSaving ? "Menyimpan..." : "Simpan Perubahan"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

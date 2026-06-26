@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from ..deps import get_session, get_current_user
 from ..models import DailyReport, Target
-from ..schemas import ReportCreate, UserOut
+from ..schemas import ReportCreate, ReportUpdate, UserOut
 
 router = APIRouter(prefix="/api/reports", tags=["Reports"])
 
@@ -43,3 +43,31 @@ def create_report(
 
     db.commit()
     return {"message": "Laporan berhasil disimpan"}
+
+
+@router.put("/{report_id}")
+def update_report(
+    report_id: str,
+    payload: ReportUpdate,
+    db: Session = Depends(get_session),
+    current_user: UserOut = Depends(get_current_user),
+):
+    if current_user.role not in ["contractor", "admin"]:
+        raise HTTPException(status_code=403, detail="Hanya Bos/Admin yang bisa mengedit laporan")
+
+    report = db.query(DailyReport).filter(DailyReport.id == report_id).first()
+    if not report:
+        raise HTTPException(status_code=404, detail="Laporan tidak ditemukan")
+
+    if current_user.role == "contractor" and report.org_id != current_user.org_id:
+        raise HTTPException(status_code=403, detail="Bukan organisasi Anda")
+
+    if payload.work_done is not None:
+        report.work_done = payload.work_done
+
+    if payload.worker_attendance is not None:
+        attendance_data = [item.model_dump() for item in payload.worker_attendance if item.count > 0]
+        report.worker_attendance = attendance_data
+
+    db.commit()
+    return {"message": "Laporan berhasil diedit"}

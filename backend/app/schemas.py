@@ -115,6 +115,10 @@ class ReportCreate(BaseModel):
     target_status: Optional[str] = "belum"  # "tercapai" atau "belum"
     worker_attendance: list[WorkerAttendanceItem] = []
 
+class ReportUpdate(BaseModel):
+    work_done: Optional[str] = None
+    worker_attendance: list[WorkerAttendanceItem] = []
+
 # ---------- Issues ----------
 class IssueCreate(BaseModel):
     site_id: uuid.UUID
