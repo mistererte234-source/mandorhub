@@ -700,13 +700,13 @@ export default function AdminDashboard() {
                       <div key={u.id} className="bg-surface-container-lowest border border-surface-variant p-4 rounded-2xl">
                         <div className="flex flex-col sm:flex-row gap-2">
                           <input
-                            className="flex-1 bg-surface-container-low border border-surface-variant px-3 py-2.5 rounded-xl text-on-surface text-sm outline-none focus:border-primary"
+                            className="flex-1 min-w-0 bg-surface-container-low border border-surface-variant px-3 py-2.5 rounded-xl text-on-surface text-sm outline-none focus:border-primary"
                             placeholder="Nama"
                             value={editData[u.id]?.name || ""}
                             onChange={e => setEditData(prev => ({ ...prev, [u.id]: { ...prev[u.id], name: e.target.value } }))}
                           />
                           <input
-                            className="flex-1 bg-surface-container-low border border-surface-variant px-3 py-2.5 rounded-xl text-on-surface text-sm outline-none focus:border-primary"
+                            className="flex-1 min-w-0 bg-surface-container-low border border-surface-variant px-3 py-2.5 rounded-xl text-on-surface text-sm outline-none focus:border-primary"
                             placeholder="Nomor HP (WhatsApp)"
                             value={editData[u.id]?.phone || ""}
                             onChange={e => setEditData(prev => ({ ...prev, [u.id]: { ...prev[u.id], phone: e.target.value } }))}
