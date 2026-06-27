@@ -48,6 +48,7 @@
 
 /* Hacker Theme (Dark Mode) - iOS Glassmorphism Blend */
 .theme-hacker {
+  color-scheme: dark;
   --primary: #00ff41;
   --on-primary: #000000;
   --primary-container: #003b0f;

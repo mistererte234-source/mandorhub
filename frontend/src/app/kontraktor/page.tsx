@@ -103,11 +103,11 @@ export default function ContractorDashboard() {
                   <select 
                     value={selectedProject}
                     onChange={(e) => setSelectedProject(e.target.value)}
-                    className="appearance-none font-body-md text-sm text-primary font-bold bg-primary/10 rounded-lg outline-none cursor-pointer pl-3 pr-8 py-1 focus:ring-2 focus:ring-primary/50 transition-all"
+                    className="appearance-none font-body-md text-sm text-primary font-bold bg-primary/10 border border-primary/30 rounded-lg outline-none cursor-pointer pl-3 pr-8 py-1.5 focus:ring-2 focus:ring-primary/50 transition-all shadow-[0_0_10px_rgba(0,255,65,0.2)]"
                   >
-                    <option value="">Semua Proyek</option>
+                    <option value="" className="bg-surface text-on-surface">Semua Proyek</option>
                     {projects.map(p => (
-                      <option key={p.id} value={p.id}>{p.name}</option>
+                      <option key={p.id} value={p.id} className="bg-surface text-on-surface">{p.name}</option>
                     ))}
                   </select>
                   <ArrowDownCircle className="w-4 h-4 text-primary absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />

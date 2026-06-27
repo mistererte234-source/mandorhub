@@ -296,17 +296,17 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                   const timeStr = dateObj.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
                   
                   let icon = <CheckSquare className="w-4 h-4" />;
-                  let dotClass = "bg-primary text-on-primary";
-                  let cardClass = "bg-surface-container-lowest border-surface-variant/60";
+                  let dotClass = "bg-primary text-on-primary shadow-[0_0_10px_rgba(0,255,65,0.8)]";
+                  let cardClass = "glass-panel border-primary/20 text-on-surface hover:shadow-[0_0_15px_rgba(0,255,65,0.1)] transition-all";
                   
                   if (item.type === "issue_open") {
                     icon = <AlertTriangle className="w-4 h-4" />;
-                    dotClass = "bg-error text-on-error";
-                    cardClass = "bg-error-container/20 border-error-container/50 text-on-surface";
+                    dotClass = "bg-error text-on-error shadow-[0_0_10px_rgba(255,0,0,0.8)]";
+                    cardClass = "glass-panel border-error/50 text-on-surface hover:shadow-[0_0_15px_rgba(255,0,0,0.2)]";
                   } else if (item.type === "issue_resolved") {
                     icon = <CheckCircle2 className="w-4 h-4" />;
-                    dotClass = "bg-secondary text-on-secondary";
-                    cardClass = "bg-secondary-container/20 border-secondary-container/50 text-on-surface";
+                    dotClass = "bg-secondary text-on-secondary shadow-[0_0_10px_rgba(0,255,255,0.8)]";
+                    cardClass = "glass-panel border-secondary/50 text-on-surface hover:shadow-[0_0_15px_rgba(0,255,255,0.2)]";
                   }
 
                   return (
@@ -355,8 +355,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
         {tab === "target" && (
           <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 flex flex-col gap-8">
             {chartData.length > 0 ? (
-              <div className="bg-surface-container-lowest rounded-3xl p-5 shadow-sm border border-surface-variant/50">
-                <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><Target className="w-5 h-5 text-primary"/> Kurva S (Rencana vs Aktual)</h3>
+              <div className="glass-panel rounded-3xl p-5 shadow-sm border border-surface-variant/50">
+                <h3 className="font-bold text-lg mb-4 flex items-center gap-2 text-primary"><Target className="w-5 h-5"/> Kurva S (Rencana vs Aktual)</h3>
                 <div className="h-64 w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
@@ -375,8 +375,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
               <div className="bg-surface-variant/30 rounded-3xl p-6 text-center text-sm border border-dashed border-surface-variant">Belum ada data target untuk grafik.</div>
             )}
 
-            <div className="bg-surface-container-lowest rounded-3xl p-5 shadow-sm border border-surface-variant/50">
-              <h3 className="font-bold text-lg mb-4">Pengaturan Target Mingguan</h3>
+            <div className="glass-panel rounded-3xl p-5 shadow-sm border border-surface-variant/50">
+              <h3 className="font-bold text-lg mb-4 text-primary">Pengaturan Target Mingguan</h3>
               <div className="flex flex-col gap-3">
                 {newTargets.map((t, idx) => (
                   <div key={idx} className="flex items-center gap-3 bg-surface-container-low p-3 rounded-2xl">
@@ -420,48 +420,48 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
         {tab === "keuangan" && (
           <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 flex flex-col gap-5">
              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[#c3f0c3]/30 border border-[#c3f0c3] rounded-3xl p-5 shadow-sm flex flex-col justify-center">
-                  <span className="text-xs font-bold uppercase text-[#0e520e] mb-1">Total Kas Masuk</span>
-                  <span className="text-xl font-black text-[#0e520e]">Rp {finances.filter(l => l.type==='in').reduce((s,l)=>s+l.amount, 0).toLocaleString('id-ID')}</span>
+                <div className="glass-panel border-primary/50 shadow-[0_0_15px_rgba(0,255,65,0.15)] rounded-3xl p-5 flex flex-col justify-center text-center items-center">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-primary/80 mb-1">Total Kas Masuk</span>
+                  <span className="text-xl font-black text-primary font-hacker glow-text">Rp {finances.filter(l => l.type==='in').reduce((s,l)=>s+l.amount, 0).toLocaleString('id-ID')}</span>
                 </div>
-                <div className="bg-[#ffd9d6]/30 border border-[#ffd9d6] rounded-3xl p-5 shadow-sm flex flex-col justify-center">
-                  <span className="text-xs font-bold uppercase text-[#8c1d18] mb-1">Total Kas Keluar</span>
-                  <span className="text-xl font-black text-[#8c1d18]">Rp {finances.filter(l => l.type==='out').reduce((s,l)=>s+l.amount, 0).toLocaleString('id-ID')}</span>
+                <div className="glass-panel border-error/50 shadow-[0_0_15px_rgba(255,0,0,0.15)] rounded-3xl p-5 flex flex-col justify-center text-center items-center">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-error/80 mb-1">Total Kas Keluar</span>
+                  <span className="text-xl font-black text-error font-hacker glow-text">Rp {finances.filter(l => l.type==='out').reduce((s,l)=>s+l.amount, 0).toLocaleString('id-ID')}</span>
                 </div>
               </div>
               
               {weeklyWages && (
-                <div className="bg-surface-container-lowest rounded-3xl p-5 shadow-sm border border-surface-variant/50">
-                  <h3 className="font-bold text-lg mb-4">Estimasi Upah 7 Hari Terakhir</h3>
+                <div className="glass-panel rounded-3xl p-5 shadow-[0_0_15px_rgba(0,255,65,0.05)] border border-primary/20">
+                  <h3 className="font-bold text-lg mb-4 text-primary">Estimasi Upah 7 Hari Terakhir</h3>
                   <div className="flex flex-col gap-3">
                     <div className="flex justify-between text-sm">
-                      <span className="text-on-surface-variant">Tukang ({weeklyWages.total_tukang_count} HK x Rp {weeklyWages.tukang_rate?.toLocaleString('id-ID')})</span>
-                      <span className="font-bold">Rp {(weeklyWages.total_tukang_count * weeklyWages.tukang_rate).toLocaleString('id-ID')}</span>
+                      <span className="text-on-surface-variant font-hacker">Tukang ({weeklyWages.total_tukang_count} HK x Rp {weeklyWages.tukang_rate?.toLocaleString('id-ID')})</span>
+                      <span className="font-bold font-hacker text-on-surface">Rp {(weeklyWages.total_tukang_count * weeklyWages.tukang_rate).toLocaleString('id-ID')}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-on-surface-variant">Kuli ({weeklyWages.total_kuli_count} HK x Rp {weeklyWages.kuli_rate?.toLocaleString('id-ID')})</span>
-                      <span className="font-bold">Rp {(weeklyWages.total_kuli_count * weeklyWages.kuli_rate).toLocaleString('id-ID')}</span>
+                      <span className="text-on-surface-variant font-hacker">Kuli ({weeklyWages.total_kuli_count} HK x Rp {weeklyWages.kuli_rate?.toLocaleString('id-ID')})</span>
+                      <span className="font-bold font-hacker text-on-surface">Rp {(weeklyWages.total_kuli_count * weeklyWages.kuli_rate).toLocaleString('id-ID')}</span>
                     </div>
-                    <div className="border-t border-surface-variant/50 pt-2 flex justify-between font-black text-primary">
-                      <span>Total Estimasi Upah</span>
+                    <div className="border-t border-surface-variant/50 pt-4 mt-2 flex justify-between font-black text-primary font-hacker text-lg glow-text">
+                      <span className="tracking-widest uppercase text-sm flex items-center">Total Estimasi Upah</span>
                       <span>Rp {weeklyWages.total_wage?.toLocaleString('id-ID')}</span>
                     </div>
                   </div>
                 </div>
               )}
 
-              <h3 className="font-bold text-lg mt-2">Riwayat Transaksi</h3>
+              <h3 className="font-bold text-lg mt-2 text-primary">Riwayat Transaksi</h3>
               {finances.length === 0 ? (
-                <div className="bg-surface-variant/30 rounded-3xl p-8 text-center text-sm border border-dashed border-surface-variant">Belum ada riwayat keuangan.</div>
+                <div className="glass-panel rounded-3xl p-8 text-center text-sm border-dashed border-surface-variant/50 text-on-surface-variant font-hacker">Belum ada riwayat keuangan.</div>
               ) : (
                 <div className="flex flex-col gap-3">
                   {finances.map(log => (
-                    <div key={log.id} className="flex justify-between items-center p-4 bg-surface-container-lowest border border-surface-variant/60 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+                    <div key={log.id} className="flex justify-between items-center p-4 glass-panel border border-surface-variant/50 rounded-2xl shadow-sm hover:shadow-[0_0_10px_rgba(0,255,65,0.2)] transition-all">
                       <div className="flex flex-col">
                         <h4 className="font-bold text-sm text-on-surface capitalize">{log.category}</h4>
                         <span className="text-xs text-on-surface-variant mt-0.5">{new Date(log.date).toLocaleDateString('id-ID')} {log.description ? `- ${log.description}` : ''}</span>
                       </div>
-                      <div className={`font-black text-sm px-3 py-1.5 rounded-lg ${log.type === 'in' ? 'bg-[#c3f0c3]/50 text-[#0e520e]' : 'bg-[#ffd9d6]/50 text-[#8c1d18]'}`}>
+                      <div className={`font-black text-sm px-3 py-1.5 rounded-lg border font-hacker ${log.type === 'in' ? 'bg-primary/20 text-primary border-primary/30' : 'bg-error/20 text-error border-error/30'}`}>
                         {log.type === 'in' ? '+' : '-'} Rp {log.amount.toLocaleString('id-ID')}
                       </div>
                     </div>
@@ -474,8 +474,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
         {/* TAB: PENGATURAN (TARIF) */}
         {tab === "pengaturan" && (
           <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <div className="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-surface-variant/50">
-              <h3 className="font-bold text-lg mb-4 text-on-surface flex items-center gap-2">
+            <div className="glass-panel rounded-3xl p-6 shadow-sm border border-surface-variant/50">
+              <h3 className="font-bold text-lg mb-4 text-primary flex items-center gap-2">
                 <DollarSign className="w-5 h-5 text-primary"/> Tarif Upah Pekerja
               </h3>
               <p className="text-sm text-on-surface-variant mb-6">Atur upah harian standar untuk Tukang dan Kuli di proyek ini. Ini akan mempermudah kalkulasi keuangan.</p>
