@@ -1,37 +1,51 @@
 -- ============================================================================
--- MandorHub — Dev Seed
--- Jalankan SETELAH 0001_init.sql. Idempotent: TRUNCATE dulu, lalu insert ulang.
---
--- Isi: 1 kontraktor (Pak Hadi) + 2 mandor (Slamet, Joko),
---      3 proyek (Surabaya/Gresik/Sidoarjo), 4 titik, target, laporan,
---      evidence (camera_live & gallery), issue (decided & open), approval.
---
--- UUID sengaja fixed biar gampang direferensikan & re-runnable.
--- Konvensi: a0=org  b1=user  c1=project  d1=site  e1=target
---           f1=daily_report  e0=evidence  15=issue  a5=approval
+-- MandorHub — Dev Seed v2
+-- Org: CV Karya Hadi
+-- Users: Admin, 2 Bos, 3 Mandor, 1 Bendahara
+-- Projects: 3 proyek dengan bos/mandor/bendahara eksplisit
 -- ============================================================================
 
 BEGIN;
 
--- Reset (TRUNCATE bypass trigger immutable/append-only, aman untuk dev)
+-- Reset
 TRUNCATE organization, app_user, project, site, target,
-         daily_report, evidence, issue, approval, audit_log
+         daily_report, evidence, issue, approval, audit_log, finance_log
          RESTART IDENTITY CASCADE;
 
 -- ---------- Organization ----------
 INSERT INTO organization (id, name) VALUES
  ('a0000000-0000-0000-0000-000000000001', 'CV Karya Hadi');
 
--- ---------- Users: 1 contractor + 2 mandor ----------
+-- ---------- Users ----------
 INSERT INTO app_user (id, org_id, name, phone, role) VALUES
- ('b1000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'Pak Hadi',   '+628110000001', 'contractor'),
- ('b1000000-0000-0000-0000-000000000002', 'a0000000-0000-0000-0000-000000000001', 'Pak Slamet', '+628220000002', 'mandor'),
- ('b1000000-0000-0000-0000-000000000003', 'a0000000-0000-0000-0000-000000000001', 'Pak Joko',   '+628330000003', 'mandor');
+ -- Admin
+ ('a1000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'Super Admin',  '08000000000',   'admin'),
+ -- Bos (contractor)
+ ('b1000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'Pak Hadi',     '+628110000001', 'contractor'),
+ ('b2000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'Pak Hari',     '08111111001',   'contractor'),
+ -- Mandor
+ ('c1000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'Pak Slamet',   '+628220000002', 'mandor'),
+ ('c2000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'Pak Joko',     '+628330000003', 'mandor'),
+ ('c3000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'Djanky',       '08222222002',   'mandor'),
+ -- Bendahara
+ ('d1000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'Bendahara Ani','088899991111',  'bendahara');
 
-UPDATE organization
-   SET owner_user_id = 'b1000000-0000-0000-0000-000000000001'
- WHERE id = 'a0000000-0000-0000-0000-000000000001';
+-- ---------- Projects ----------
+INSERT INTO project (id, org_id, name, client_name, bos_id, mandor_id, bendahara_id, status) VALUES
+ ('e1000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001',
+  'Ruko Pak Budi',      'Budi Santoso',   'b1000000-0000-0000-0000-000000000001', 'c1000000-0000-0000-0000-000000000001', 'd1000000-0000-0000-0000-000000000001', 'active'),
+ ('e2000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001',
+  'Rumah Gresik',       'Hj. Aminah',     'b1000000-0000-0000-0000-000000000001', 'c2000000-0000-0000-0000-000000000001', NULL,                                    'active'),
+ ('e3000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001',
+  'Gapura Airlangga',   'Warga Airlangga','b2000000-0000-0000-0000-000000000001', 'c3000000-0000-0000-0000-000000000001', 'd1000000-0000-0000-0000-000000000001', 'active');
 
--- (Hanya seed user, proyek dihapus agar bisa diisi data asli)
+-- ---------- Sites (auto 1 per project) ----------
+INSERT INTO site (id, org_id, project_id, name) VALUES
+ ('f1000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'e1000000-0000-0000-0000-000000000001', 'Titik Utama'),
+ ('f2000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'e2000000-0000-0000-0000-000000000001', 'Titik Utama'),
+ ('f3000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'e3000000-0000-0000-0000-000000000001', 'Titik Utama');
+
+-- ---------- Admin password ----------
+INSERT INTO app_setting (key, value) VALUES ('admin_password', 'password123');
 
 COMMIT;

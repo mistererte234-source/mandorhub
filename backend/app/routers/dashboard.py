@@ -9,15 +9,15 @@ from ..schemas import DashboardOut, DashboardSummary, SiteStatus, IssueOut
 
 router = APIRouter(prefix="/api/dashboard", tags=["dashboard"])
 
-# Status di-derive on-the-fly (tidak disimpan). Cast eksplisit ke uuid supaya
-# Postgres tidak bingung tipe parameter saat :mandor_id bernilai NULL.
+# Gunakan project.mandor_id untuk filter mandor (tidak lagi dari site.assigned_mandor_id)
 _STATUS_SQL = text(
     """
     SELECT
-      s.id   AS site_id,
-      p.name AS project,
-      s.name AS name,
-      u.name AS mandor,
+      s.id        AS site_id,
+      p.id        AS project_id,
+      p.name      AS project,
+      s.name      AS name,
+      m.name      AS mandor,
       (SELECT count(*) FROM issue i
          WHERE i.site_id = s.id AND i.status = 'open' AND i.deleted_at IS NULL) AS open_issues,
       EXISTS (SELECT 1 FROM issue i
@@ -31,12 +31,13 @@ _STATUS_SQL = text(
                AND r.submit_status = 'submitted' AND r.deleted_at IS NULL) AS reported_today
     FROM site s
     JOIN project p ON p.id = s.project_id
-    LEFT JOIN app_user u ON u.id = s.assigned_mandor_id
+    JOIN  app_user m ON m.id = p.mandor_id
     WHERE s.org_id = CAST(:org_id AS uuid)
       AND s.deleted_at IS NULL
-      AND (CAST(:mandor_id AS uuid) IS NULL OR s.assigned_mandor_id = CAST(:mandor_id AS uuid))
-      AND (CAST(:bos_id AS uuid) IS NULL OR p.created_by = CAST(:bos_id AS uuid))
-      AND (CAST(:project_id AS uuid) IS NULL OR p.id = CAST(:project_id AS uuid))
+      AND p.deleted_at IS NULL
+      AND (CAST(:mandor_id AS uuid) IS NULL OR p.mandor_id = CAST(:mandor_id AS uuid))
+      AND (CAST(:bos_id    AS uuid) IS NULL OR p.bos_id    = CAST(:bos_id    AS uuid))
+      AND (CAST(:project_id AS uuid) IS NULL OR p.id       = CAST(:project_id AS uuid))
     ORDER BY p.name, s.name
     """
 )
@@ -62,6 +63,7 @@ def _classify(row) -> tuple[str, str, list[str]]:
 
 from typing import Optional
 
+
 @router.get("", response_model=DashboardOut)
 def dashboard(
     project_id: Optional[str] = None,
@@ -69,33 +71,32 @@ def dashboard(
     session: Session = Depends(get_session),
 ):
     mandor_id = str(user.id) if user.role == "mandor" else None
-    bos_id = str(user.id) if user.role == "contractor" else None
-    
+    bos_id    = str(user.id) if user.role == "contractor" else None
+
     rows = session.execute(
-        _STATUS_SQL, 
+        _STATUS_SQL,
         {
-            "org_id": str(user.org_id), 
-            "mandor_id": mandor_id,
-            "bos_id": bos_id,
+            "org_id":     str(user.org_id),
+            "mandor_id":  mandor_id,
+            "bos_id":     bos_id,
             "project_id": project_id
         }
     ).mappings().all()
 
-    # Get all open issues for this org and filtered by projects
-    query = session.query(Issue).filter(Issue.org_id == user.org_id, Issue.status == 'open', Issue.deleted_at == None)
-    
-    # We should optimally only fetch issues for the sites returned in `rows`
     site_ids = [row["site_id"] for row in rows]
+    open_issues = []
     if site_ids:
-        open_issues = query.filter(Issue.site_id.in_(site_ids)).all()
-    else:
-        open_issues = []
-    issues_by_site = {}
+        open_issues = session.query(Issue).filter(
+            Issue.org_id == user.org_id,
+            Issue.status == "open",
+            Issue.deleted_at == None,
+            Issue.site_id.in_(site_ids)
+        ).all()
+
+    issues_by_site: dict = {}
     for issue in open_issues:
-        site_id_str = str(issue.site_id)
-        if site_id_str not in issues_by_site:
-            issues_by_site[site_id_str] = []
-        issues_by_site[site_id_str].append(
+        key = str(issue.site_id)
+        issues_by_site.setdefault(key, []).append(
             IssueOut(
                 id=issue.id,
                 issue_type=issue.issue_type,
@@ -105,9 +106,7 @@ def dashboard(
         )
 
     sites: list[SiteStatus] = []
-    summary = DashboardSummary(
-        total=0, green=0, yellow=0, red=0, not_reported_today=0, open_issues=0
-    )
+    summary = DashboardSummary(total=0, green=0, yellow=0, red=0, not_reported_today=0, open_issues=0)
 
     for row in rows:
         status, label, reasons = _classify(row)
@@ -116,6 +115,7 @@ def dashboard(
             SiteStatus(
                 site_id=row["site_id"],
                 project=row["project"],
+                project_id=row["project_id"],
                 name=row["name"],
                 mandor=row["mandor"],
                 status=status,

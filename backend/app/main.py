@@ -2,9 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .core.config import settings
-from .routers import auth, dashboard, report, issue, site, users, admin, spy, project, finance
+from .routers import auth, dashboard, report, issue, site, users, admin, spy, project, finance, target
 
-app = FastAPI(title="MandorHub API", version="0.1.0")
+app = FastAPI(title="MandorHub API", version="2.0.0")
 
 _origins = ["*"] if settings.cors_origins == "*" else [
     o.strip() for o in settings.cors_origins.split(",")
@@ -17,9 +17,9 @@ app.add_middleware(
     allow_credentials=True,
 )
 
-
 from fastapi.responses import JSONResponse
 import traceback
+
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request, exc):
@@ -28,9 +28,11 @@ async def global_exception_handler(request, exc):
         content={"detail": "Internal Server Error", "traceback": traceback.format_exc()}
     )
 
+
 @app.get("/api/health", tags=["meta"])
 def health():
-    return {"ok": True, "service": "mandorhub-api", "version": "0.1.0"}
+    return {"ok": True, "service": "mandorhub-api", "version": "2.0.0"}
+
 
 app.include_router(auth.router)
 app.include_router(dashboard.router)
@@ -42,60 +44,49 @@ app.include_router(admin.router)
 app.include_router(spy.router)
 app.include_router(project.router)
 app.include_router(finance.router)
+app.include_router(target.router)
 
 from sqlmodel import text
 from .core.db import get_session
 
+
 def seed_gapura_timeline(session):
+    """Seed timeline Gapura Airlangga dari project.mandor_id (bukan site.assigned_mandor_id)."""
     import datetime
     import json
-    import uuid
+    import uuid as _uuid
 
-    # Find project containing 'gapura'
-    project = session.execute(text("SELECT id, org_id FROM project WHERE name ILIKE '%gapura%' AND deleted_at IS NULL LIMIT 1")).fetchone()
+    project = session.execute(
+        text("SELECT id, org_id, mandor_id FROM project WHERE name ILIKE '%gapura%' AND deleted_at IS NULL LIMIT 1")
+    ).fetchone()
     if not project:
         print("Gapura project not found for seeding timeline")
         return
-        
-    p_id = project[0]
-    org_id = project[1]
-    
-    # Find site for project
-    site = session.execute(text("SELECT id, assigned_mandor_id FROM site WHERE project_id = :p_id AND deleted_at IS NULL LIMIT 1"), {"p_id": p_id}).fetchone()
-    if not site:
-        print("Site not found for Gapura project, creating one")
-        # Create site
-        s_id = uuid.uuid4()
-        # Find any mandor in org
-        mandor_row = session.execute(text("SELECT id FROM app_user WHERE org_id = :org_id AND role = 'mandor' LIMIT 1"), {"org_id": org_id}).fetchone()
-        m_id = mandor_row[0] if mandor_row else None
-        session.execute(text("""
-            INSERT INTO site (id, org_id, project_id, name, assigned_mandor_id)
-            VALUES (:s_id, :org_id, :p_id, 'Titik Utama', :m_id)
-        """), {"s_id": s_id, "org_id": org_id, "p_id": p_id, "m_id": m_id})
-        site = (s_id, m_id)
-        
-    s_id = site[0]
-    m_id = site[1]
-    
-    # Find mandor named Djanky
-    djanky = session.execute(text("SELECT id FROM app_user WHERE name ILIKE '%djanky%' AND role = 'mandor' LIMIT 1")).fetchone()
-    if djanky:
-        m_id = djanky[0]
-        # Update site mandor assignment
-        session.execute(text("UPDATE site SET assigned_mandor_id = :m_id WHERE id = :s_id"), {"m_id": m_id, "s_id": s_id})
-    elif not m_id:
-        # Fallback to any mandor
-        mandor_row = session.execute(text("SELECT id FROM app_user WHERE org_id = :org_id AND role = 'mandor' LIMIT 1"), {"org_id": org_id}).fetchone()
-        m_id = mandor_row[0] if mandor_row else None
-        if m_id:
-            session.execute(text("UPDATE site SET assigned_mandor_id = :m_id WHERE id = :s_id"), {"m_id": m_id, "s_id": s_id})
+
+    p_id    = project[0]
+    org_id  = project[1]
+    m_id    = project[2]   # langsung dari project.mandor_id
+
+    # Ambil atau buat site untuk proyek ini
+    site_row = session.execute(
+        text("SELECT id FROM site WHERE project_id = :p_id AND deleted_at IS NULL LIMIT 1"),
+        {"p_id": p_id}
+    ).fetchone()
+
+    if not site_row:
+        s_id = _uuid.uuid4()
+        session.execute(
+            text("INSERT INTO site (id, org_id, project_id, name) VALUES (:s_id, :org_id, :p_id, 'Titik Utama')"),
+            {"s_id": s_id, "org_id": org_id, "p_id": p_id}
+        )
+    else:
+        s_id = site_row[0]
 
     if not m_id:
-        print("No mandor found in organization to assign daily reports")
+        print("Mandor belum diset di proyek Gapura")
         return
 
-    # Delete existing targets and reports to allow safe re-run
+    # Hapus data lama agar safe re-run
     session.execute(text("DELETE FROM daily_report WHERE site_id = :s_id"), {"s_id": s_id})
     session.execute(text("DELETE FROM target WHERE site_id = :s_id"), {"s_id": s_id})
 
@@ -124,49 +115,41 @@ def seed_gapura_timeline(session):
         ("2026-06-23", 3, 2, "Lanjut pos dan gapura"),
         ("2026-06-24", 3, 2, "Lanjut pos dan gapura"),
         ("2026-06-25", 3, 2, "Lanjut pos dan gapura"),
-        ("2026-06-26", 3, 2, "Lanjut pos dan gapura")
+        ("2026-06-26", 3, 2, "Lanjut pos dan gapura"),
     ]
 
     for date_str, tukang, kuli, progress in timeline:
-        t_id = uuid.uuid4()
-        dr_id = uuid.uuid4()
-        
-        # Insert target
-        status = "done" if progress != "Libur" else "pending"
+        t_id  = _uuid.uuid4()
+        dr_id = _uuid.uuid4()
+        is_libur = (progress == "Libur")
+
         session.execute(text("""
             INSERT INTO target (id, org_id, site_id, title, period_type, due_date, status)
             VALUES (:t_id, :org_id, :s_id, :title, 'daily', :due_date, :status)
         """), {
-            "t_id": t_id,
-            "org_id": org_id,
-            "s_id": s_id,
-            "title": progress,
-            "due_date": date_str,
-            "status": status
+            "t_id": t_id, "org_id": org_id, "s_id": s_id,
+            "title": progress, "due_date": date_str,
+            "status": "done" if not is_libur else "pending"
         })
-        
-        # Prepare worker attendance
+
         attendance = []
         if tukang > 0:
             attendance.append({"role": "tukang", "count": tukang, "names": ""})
         if kuli > 0:
             attendance.append({"role": "kuli", "count": kuli, "names": ""})
-            
-        target_status = "tercapai" if progress != "Libur" else "belum"
-        
-        # Insert daily report
+
         session.execute(text("""
-            INSERT INTO daily_report (id, org_id, site_id, mandor_id, report_date, target_id, work_done, target_status, worker_attendance, submit_status, submitted_server_at)
-            VALUES (:dr_id, :org_id, :s_id, :m_id, :report_date, :t_id, :work_done, :target_status, :worker_attendance, 'submitted', :sub_at)
+            INSERT INTO daily_report
+              (id, org_id, site_id, mandor_id, report_date, target_id,
+               work_done, target_status, worker_attendance, submit_status, submitted_server_at)
+            VALUES
+              (:dr_id, :org_id, :s_id, :m_id, :report_date, :t_id,
+               :work_done, :target_status, :worker_attendance, 'submitted', :sub_at)
         """), {
-            "dr_id": dr_id,
-            "org_id": org_id,
-            "s_id": s_id,
-            "m_id": m_id,
-            "report_date": date_str,
-            "t_id": t_id,
+            "dr_id": dr_id, "org_id": org_id, "s_id": s_id,
+            "m_id": m_id, "report_date": date_str, "t_id": t_id,
             "work_done": progress,
-            "target_status": target_status,
+            "target_status": "tercapai" if not is_libur else "belum",
             "worker_attendance": json.dumps(attendance),
             "sub_at": datetime.datetime.now(datetime.timezone.utc)
         })
@@ -174,21 +157,13 @@ def seed_gapura_timeline(session):
     session.commit()
     print("Successfully seeded Gapura project timeline")
 
+
 @app.on_event("startup")
 def on_startup():
     session = next(get_session())
     try:
-        session.execute(text("""
-            ALTER TABLE app_user DROP CONSTRAINT IF EXISTS app_user_role_check;
-            ALTER TABLE app_user ADD CONSTRAINT app_user_role_check CHECK (role IN ('contractor', 'mandor', 'admin', 'bendahara'));
-            ALTER TABLE project ADD COLUMN IF NOT EXISTS assigned_bendahara_id uuid REFERENCES app_user(id);
-        """))
-        session.commit()
-        print("Successfully updated app_user role check constraint & project columns")
-        
-        # Seed Gapura project timeline
         seed_gapura_timeline(session)
     except Exception as e:
-        print("Failed to run startup migrations:", e)
+        print("Failed to seed Gapura timeline:", e)
     finally:
         session.close()

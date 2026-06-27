@@ -1,8 +1,7 @@
-"""SQLModel mapping ke skema yang dibuat oleh db/migrations/0001_init.sql.
+"""SQLModel mapping ke skema MandorHub v2.
 
-Catatan: DDL kanonik = file SQL (punya trigger immutability & PostGIS yang tak
-bisa di-autogenerate). Model di sini HANYA untuk query layer — kolom geografis
-(geo/gps) sengaja tidak dipetakan supaya tak butuh geoalchemy2.
+Project kini punya bos_id, mandor_id, bendahara_id eksplisit.
+Site adalah entitas internal, 1 per project, tidak perlu diekspos.
 """
 
 import uuid
@@ -16,7 +15,6 @@ class Organization(SQLModel, table=True):
     __tablename__ = "organization"
     id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
     name: str
-    owner_user_id: Optional[uuid.UUID] = None
 
 
 class AppUser(SQLModel, table=True):
@@ -25,7 +23,7 @@ class AppUser(SQLModel, table=True):
     org_id: uuid.UUID
     name: str
     phone: str
-    role: str
+    role: str  # contractor | mandor | admin | bendahara
     is_active: bool = True
 
 
@@ -39,8 +37,13 @@ class Project(SQLModel, table=True):
     status: str = "active"
     start_date: Optional[date] = None
     target_end_date: Optional[date] = None
+    # Penugasan eksplisit
+    bos_id: uuid.UUID
+    mandor_id: uuid.UUID
+    bendahara_id: Optional[uuid.UUID] = None
+    tukang_daily_rate: float = 0.0
+    kuli_daily_rate: float = 0.0
     deleted_at: Optional[datetime] = None
-    assigned_bendahara_id: Optional[uuid.UUID] = None
 
 
 class Site(SQLModel, table=True):
@@ -48,10 +51,9 @@ class Site(SQLModel, table=True):
     id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
     org_id: uuid.UUID
     project_id: uuid.UUID
-    name: str
+    name: str = "Titik Utama"
     address: Optional[str] = None
     geo_radius_m: int = 150
-    assigned_mandor_id: Optional[uuid.UUID] = None
     deleted_at: Optional[datetime] = None
 
 
@@ -65,6 +67,8 @@ class Target(SQLModel, table=True):
     period_type: str = "daily"
     due_date: Optional[date] = None
     status: str = "pending"
+    weight: float = 0.0
+    week_number: int = 1
     deleted_at: Optional[datetime] = None
 
 
@@ -83,8 +87,10 @@ class Issue(SQLModel, table=True):
     updated_at: Optional[datetime] = None
     deleted_at: Optional[datetime] = None
 
+
 from sqlalchemy import Column
 from sqlalchemy.dialects.postgresql import JSONB
+
 
 class DailyReport(SQLModel, table=True):
     __tablename__ = "daily_report"
@@ -102,11 +108,13 @@ class DailyReport(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     deleted_at: Optional[datetime] = None
 
+
 class AppSetting(SQLModel, table=True):
     __tablename__ = "app_setting"
     key: str = Field(primary_key=True)
     value: str
     updated_at: datetime = Field(default_factory=datetime.utcnow)
+
 
 class VisitorLog(SQLModel, table=True):
     __tablename__ = "visitor_log"
@@ -115,12 +123,14 @@ class VisitorLog(SQLModel, table=True):
     user_agent: Optional[str] = None
     path: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
 class FinanceLog(SQLModel, table=True):
     __tablename__ = "finance_log"
     id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
     org_id: uuid.UUID
     project_id: uuid.UUID
-    type: str = "in"  # 'in' or 'out'
+    type: str = "out"   # 'in' or 'out'
     category: str
     amount: float = 0.0
     description: Optional[str] = None

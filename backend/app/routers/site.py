@@ -63,6 +63,7 @@ def get_site_timeline(
     return SiteDetailOut(
         site_id=site.id,
         project=project.name if project else "",
+        project_id=site.project_id,
         name=site.name,
         timeline=timeline
     )

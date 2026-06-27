@@ -11,6 +11,26 @@ def run_migration():
         conn.execute(text("ALTER TABLE app_user DROP CONSTRAINT IF EXISTS app_user_role_check;"))
         conn.execute(text("ALTER TABLE app_user ADD CONSTRAINT app_user_role_check CHECK (role IN ('contractor','mandor','admin','bendahara'));"))
         
+        # Add new columns to project
+        try:
+            conn.execute(text("ALTER TABLE project ADD COLUMN tukang_daily_rate numeric(15,2) DEFAULT 0.0;"))
+        except Exception:
+            pass
+        try:
+            conn.execute(text("ALTER TABLE project ADD COLUMN kuli_daily_rate numeric(15,2) DEFAULT 0.0;"))
+        except Exception:
+            pass
+            
+        # Add new columns to target
+        try:
+            conn.execute(text("ALTER TABLE target ADD COLUMN weight numeric(5,2) DEFAULT 0.0;"))
+        except Exception:
+            pass
+        try:
+            conn.execute(text("ALTER TABLE target ADD COLUMN week_number integer DEFAULT 1;"))
+        except Exception:
+            pass
+        
         conn.execute(text("""
         CREATE TABLE IF NOT EXISTS finance_log (
             id uuid PRIMARY KEY DEFAULT gen_random_uuid(),

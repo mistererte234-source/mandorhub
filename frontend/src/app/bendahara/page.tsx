@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchApi, getToken, logout } from "@/lib/api";
-import { LogOut, Loader2, ArrowDownCircle, ArrowUpCircle, Wallet, Plus, X } from "lucide-react";
+import { LogOut, Loader2, ArrowDownCircle, ArrowUpCircle, Wallet, Plus, X, Calendar, Activity } from "lucide-react";
+import Image from "next/image";
 
 export default function BendaharaDashboard() {
   const router = useRouter();
@@ -11,6 +12,7 @@ export default function BendaharaDashboard() {
   const [projects, setProjects] = useState<any[]>([]);
   const [selectedProject, setSelectedProject] = useState("");
   const [logs, setLogs] = useState<any[]>([]);
+  const [weeklyWages, setWeeklyWages] = useState<any>(null);
   
   const [showAdd, setShowAdd] = useState(false);
   const [newLog, setNewLog] = useState({
@@ -21,6 +23,7 @@ export default function BendaharaDashboard() {
     date: new Date().toISOString().split("T")[0]
   });
   const [isSaving, setIsSaving] = useState(false);
+  const [filterDays, setFilterDays] = useState(7);
 
   useEffect(() => {
     if (!getToken()) {
@@ -45,13 +48,32 @@ export default function BendaharaDashboard() {
   };
 
   useEffect(() => {
-    if (selectedProject) fetchLogs();
-  }, [selectedProject]);
+    if (selectedProject) {
+      fetchLogs();
+      fetchWages();
+    }
+  }, [selectedProject, filterDays]);
 
   const fetchLogs = async () => {
     try {
       const res = await fetchApi(`/finance?project_id=${selectedProject}`);
       setLogs(res);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchWages = async () => {
+    try {
+      const today = new Date();
+      const pastDate = new Date(today);
+      pastDate.setDate(today.getDate() - filterDays);
+      
+      const start = pastDate.toISOString().split('T')[0];
+      const end = today.toISOString().split('T')[0];
+      
+      const res = await fetchApi(`/finance/weekly-wages?project_id=${selectedProject}&start_date=${start}&end_date=${end}`);
+      setWeeklyWages(res);
     } catch (err) {
       console.error(err);
     }
@@ -95,106 +117,170 @@ export default function BendaharaDashboard() {
   const balance = totalIn - totalOut;
 
   return (
-    <>
-      <header className="bg-surface/80 backdrop-blur-md docked full-width top-0 shadow-sm sticky z-40">
-        <div className="flex justify-between items-center px-5 py-4 w-full">
-          <div>
-            <h1 className="font-headline-sm text-lg font-bold text-on-surface tracking-tight flex items-center gap-2">
-              <Wallet className="w-6 h-6 text-primary" /> BENDAHARA
-            </h1>
+    <div className="min-h-screen bg-surface flex flex-col">
+      <header className="bg-surface/70 backdrop-blur-2xl docked full-width top-0 shadow-sm sticky z-40 border-b border-surface-variant/30">
+        <div className="flex justify-between items-center px-6 py-5 w-full">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl shadow-lg border border-surface-variant overflow-hidden bg-white flex items-center justify-center">
+              <Image src="/logo.png" alt="Logo" width={48} height={48} className="object-cover" />
+            </div>
+            <div>
+              <h1 className="font-headline-lg-mobile text-[22px] leading-tight font-black text-on-surface tracking-tight">
+                MandorHub <span className="text-primary">Bendahara</span>
+              </h1>
+              {projects.length > 0 ? (
+                <div className="relative mt-1">
+                  <select 
+                    value={selectedProject}
+                    onChange={(e) => setSelectedProject(e.target.value)}
+                    className="appearance-none font-body-md text-sm text-primary font-bold bg-primary/10 rounded-lg outline-none cursor-pointer pl-3 pr-8 py-1 focus:ring-2 focus:ring-primary/50 transition-all"
+                  >
+                    {projects.map(p => (
+                      <option key={p.id} value={p.id}>{p.name}</option>
+                    ))}
+                  </select>
+                  <ArrowDownCircle className="w-4 h-4 text-primary absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              ) : (
+                <p className="font-body-md text-sm text-on-surface-variant mt-1">
+                  Belum Ada Proyek
+                </p>
+              )}
+            </div>
           </div>
-          <button onClick={logout} className="p-2 rounded-full hover:bg-error-container text-error transition-all">
-            <LogOut className="w-6 h-6" />
+          <button
+            onClick={logout}
+            className="p-2.5 rounded-xl bg-error/10 hover:bg-error/20 text-error active:scale-95 transition-all"
+          >
+            <LogOut className="w-5 h-5" />
           </button>
         </div>
-        
-        {projects.length > 0 && (
-          <div className="px-5 pb-3">
-            <select 
-              className="w-full bg-surface-variant/30 border border-surface-variant rounded-xl px-4 py-3 text-sm font-bold text-on-surface outline-none focus:border-primary transition-colors appearance-none"
-              value={selectedProject}
-              onChange={e => setSelectedProject(e.target.value)}
-            >
-              {projects.map(p => (
-                <option key={p.id} value={p.id}>{p.name}</option>
-              ))}
-            </select>
-          </div>
-        )}
       </header>
 
-      <main className="px-5 py-6 max-w-2xl mx-auto flex flex-col gap-6">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-surface-container-lowest border border-surface-variant rounded-2xl p-4 shadow-sm">
-            <span className="text-xs font-bold uppercase text-on-surface-variant mb-1 block">Saldo Saat Ini</span>
-            <span className={`text-xl font-black ${balance >= 0 ? 'text-primary' : 'text-error'}`}>
-              Rp {balance.toLocaleString('id-ID')}
-            </span>
+      <main className="px-6 py-8 flex-1 max-w-3xl mx-auto w-full flex flex-col gap-6">
+        {!selectedProject ? (
+          <div className="text-center p-12 bg-surface-variant/20 rounded-3xl border border-surface-variant border-dashed">
+            <Wallet className="w-16 h-16 text-primary/40 mx-auto mb-4" />
+            <p className="text-on-surface font-black text-lg mb-2">Pilih Proyek</p>
           </div>
-          <div className="bg-surface-container-lowest border border-surface-variant rounded-2xl p-4 shadow-sm flex flex-col justify-center">
-            <button 
-              onClick={() => setShowAdd(true)}
-              className="w-full bg-primary text-on-primary rounded-xl py-2 text-sm font-bold flex justify-center items-center gap-2 hover:scale-95 transition-transform"
-            >
-              <Plus className="w-4 h-4"/> Catat Transaksi
-            </button>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-3">
-          <h2 className="font-bold text-lg text-on-surface mb-2">Riwayat Transaksi</h2>
-          {logs.length === 0 ? (
-            <div className="text-center py-8 text-on-surface-variant bg-surface-variant/20 rounded-2xl border border-surface-variant border-dashed">
-              Belum ada transaksi.
-            </div>
-          ) : (
-            logs.map(log => (
-              <div key={log.id} className="flex justify-between items-center p-4 bg-surface-container-lowest border border-surface-variant rounded-2xl shadow-sm">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-xl ${log.type === 'in' ? 'bg-[#c3f0c3] text-[#0e520e]' : 'bg-[#ffd9d6] text-[#8c1d18]'}`}>
-                    {log.type === 'in' ? <ArrowDownCircle className="w-5 h-5"/> : <ArrowUpCircle className="w-5 h-5"/>}
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-sm text-on-surface capitalize">{log.category}</h4>
-                    <span className="text-xs text-on-surface-variant">{new Date(log.date).toLocaleDateString('id-ID')} - {log.description || '-'}</span>
-                  </div>
+        ) : (
+          <>
+            {/* Saldo Section */}
+            <div className="bg-surface-container-lowest border border-surface-variant/60 rounded-3xl p-6 shadow-sm relative overflow-hidden group">
+              <div className="absolute right-0 bottom-0 w-32 h-32 bg-primary/5 rounded-tl-full transition-transform group-hover:scale-110 duration-500"/>
+              <div className="flex justify-between items-end relative z-10">
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2 block">Saldo Kas Saat Ini</span>
+                  <span className={`text-4xl font-black ${balance >= 0 ? 'text-primary' : 'text-error'}`}>
+                    Rp {balance.toLocaleString('id-ID')}
+                  </span>
                 </div>
-                <div className={`font-bold text-sm ${log.type === 'in' ? 'text-[#0e520e]' : 'text-error'}`}>
-                  {log.type === 'in' ? '+' : '-'} Rp {log.amount.toLocaleString('id-ID')}
-                </div>
+                <button 
+                  onClick={() => setShowAdd(true)}
+                  className="bg-primary text-on-primary rounded-2xl px-5 py-3 text-sm font-bold flex justify-center items-center gap-2 hover:bg-primary-container hover:text-on-primary-container transition-all shadow-md active:scale-95"
+                >
+                  <Plus className="w-5 h-5"/> Catat
+                </button>
               </div>
-            ))
-          )}
-        </div>
+            </div>
+
+            {/* Estimasi Upah Section */}
+            {weeklyWages && (
+              <div className="bg-[#ffdf99]/20 border border-[#ffdf99] rounded-3xl p-6 shadow-sm">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="font-bold text-lg text-[#5a4300] flex items-center gap-2">
+                    <Activity className="w-5 h-5"/> Estimasi Tagihan Upah
+                  </h3>
+                  <select 
+                    value={filterDays} 
+                    onChange={e => setFilterDays(parseInt(e.target.value))}
+                    className="bg-[#ffdf99]/30 text-[#5a4300] border-none outline-none text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer"
+                  >
+                    <option value={7}>7 Hari</option>
+                    <option value={14}>14 Hari</option>
+                    <option value={30}>30 Hari</option>
+                  </select>
+                </div>
+                
+                <div className="flex flex-col gap-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-[#5a4300] font-medium">Tukang ({weeklyWages.total_tukang_count} HK x Rp {weeklyWages.tukang_rate?.toLocaleString('id-ID')})</span>
+                    <span className="font-bold text-[#5a4300]">Rp {(weeklyWages.total_tukang_count * weeklyWages.tukang_rate).toLocaleString('id-ID')}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-[#5a4300] font-medium">Kuli ({weeklyWages.total_kuli_count} HK x Rp {weeklyWages.kuli_rate?.toLocaleString('id-ID')})</span>
+                    <span className="font-bold text-[#5a4300]">Rp {(weeklyWages.total_kuli_count * weeklyWages.kuli_rate).toLocaleString('id-ID')}</span>
+                  </div>
+                  <div className="border-t border-[#ffdf99]/50 pt-3 mt-1 flex justify-between font-black text-[#5a4300] text-lg">
+                    <span>Total Estimasi</span>
+                    <span>Rp {weeklyWages.total_wage?.toLocaleString('id-ID')}</span>
+                  </div>
+                </div>
+                <p className="text-xs text-[#5a4300]/70 mt-4 leading-relaxed">
+                  *Berdasarkan laporan harian mandor {filterDays} hari terakhir. Gunakan angka ini sebagai acuan menyiapkan kasbon atau pembayaran mingguan.
+                </p>
+              </div>
+            )}
+
+            {/* Riwayat Transaksi */}
+            <div className="flex flex-col gap-4">
+              <h2 className="font-black text-xl text-on-surface mb-2 flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-primary"/> Riwayat Transaksi
+              </h2>
+              {logs.length === 0 ? (
+                <div className="text-center py-12 text-on-surface-variant bg-surface-variant/20 rounded-3xl border border-surface-variant border-dashed">
+                  Belum ada transaksi.
+                </div>
+              ) : (
+                logs.map(log => (
+                  <div key={log.id} className="flex justify-between items-center p-5 bg-surface-container-lowest border border-surface-variant/60 rounded-2xl shadow-sm hover:shadow-md transition-shadow group">
+                    <div className="flex items-center gap-4">
+                      <div className={`p-3 rounded-2xl shadow-inner ${log.type === 'in' ? 'bg-[#c3f0c3]/50 text-[#0e520e]' : 'bg-[#ffd9d6]/50 text-[#8c1d18]'}`}>
+                        {log.type === 'in' ? <ArrowDownCircle className="w-6 h-6"/> : <ArrowUpCircle className="w-6 h-6"/>}
+                      </div>
+                      <div>
+                        <h4 className="font-black text-base text-on-surface capitalize group-hover:text-primary transition-colors">{log.category}</h4>
+                        <span className="text-sm font-medium text-on-surface-variant">{new Date(log.date).toLocaleDateString('id-ID')} {log.description ? `• ${log.description}` : ''}</span>
+                      </div>
+                    </div>
+                    <div className={`font-black text-lg ${log.type === 'in' ? 'text-[#0e520e]' : 'text-[#8c1d18]'}`}>
+                      {log.type === 'in' ? '+' : '-'} Rp {log.amount.toLocaleString('id-ID')}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </>
+        )}
       </main>
 
       {/* Modal Add Transaksi */}
       {showAdd && (
-        <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-surface w-full rounded-t-3xl p-6 shadow-2xl animate-in slide-in-from-bottom-full duration-300 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-surface w-full max-w-lg mx-auto rounded-t-[32px] p-6 shadow-2xl animate-in slide-in-from-bottom-full duration-300 max-h-[90vh] overflow-y-auto border-t border-white/20">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-on-surface">Catat Transaksi</h2>
-              <button onClick={() => setShowAdd(false)} className="p-2 bg-surface-variant rounded-full text-on-surface-variant">
+              <h2 className="text-xl font-bold text-on-surface">Catat Transaksi Baru</h2>
+              <button onClick={() => setShowAdd(false)} className="p-2 bg-surface-variant/50 hover:bg-surface-variant rounded-full text-on-surface-variant transition-colors">
                 <X className="w-5 h-5" />
               </button>
             </div>
             
-            <form onSubmit={handleSaveLog} className="flex flex-col gap-4">
-              <div className="grid grid-cols-2 gap-2 bg-surface-variant/30 p-1 rounded-xl">
-                <button type="button" onClick={()=>setNewLog({...newLog, type: 'in', category: 'modal'})} className={`py-2 rounded-lg text-sm font-bold transition-all ${newLog.type === 'in' ? 'bg-surface text-primary shadow-sm' : 'text-on-surface-variant'}`}>
+            <form onSubmit={handleSaveLog} className="flex flex-col gap-5">
+              <div className="grid grid-cols-2 gap-2 bg-surface-variant/30 p-1.5 rounded-2xl">
+                <button type="button" onClick={()=>setNewLog({...newLog, type: 'in', category: 'modal'})} className={`py-3 rounded-xl text-sm font-bold transition-all ${newLog.type === 'in' ? 'bg-surface text-[#0e520e] shadow-md' : 'text-on-surface-variant'}`}>
                   Uang Masuk
                 </button>
-                <button type="button" onClick={()=>setNewLog({...newLog, type: 'out', category: 'material'})} className={`py-2 rounded-lg text-sm font-bold transition-all ${newLog.type === 'out' ? 'bg-surface text-error shadow-sm' : 'text-on-surface-variant'}`}>
+                <button type="button" onClick={()=>setNewLog({...newLog, type: 'out', category: 'material'})} className={`py-3 rounded-xl text-sm font-bold transition-all ${newLog.type === 'out' ? 'bg-surface text-[#8c1d18] shadow-md' : 'text-on-surface-variant'}`}>
                   Uang Keluar
                 </button>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-on-surface mb-2">Kategori</label>
+                <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Kategori</label>
                 <select 
                   value={newLog.category} 
                   onChange={e => setNewLog({...newLog, category: e.target.value})} 
-                  className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary"
+                  className="w-full bg-surface-container-low border border-surface-variant rounded-2xl px-4 py-3 text-sm font-bold text-on-surface outline-none focus:border-primary transition-colors appearance-none"
                 >
                   {newLog.type === 'in' ? (
                     <>
@@ -205,7 +291,7 @@ export default function BendaharaDashboard() {
                     <>
                       <option value="material">Belanja Material</option>
                       <option value="tukang">Gaji / Kasbon Tukang</option>
-                      <option value="operasional">Operasional (Makan/Bensin)</option>
+                      <option value="operasional">Operasional (Makan/Bensin/dll)</option>
                       <option value="lainnya">Lainnya</option>
                     </>
                   )}
@@ -213,44 +299,44 @@ export default function BendaharaDashboard() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-on-surface mb-2">Jumlah (Rp)</label>
+                <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Jumlah (Rp)</label>
                 <input 
                   type="number" 
                   min="0"
                   required
                   value={newLog.amount}
                   onChange={e => setNewLog({...newLog, amount: e.target.value})}
-                  className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary font-mono text-lg"
+                  className="w-full bg-surface-container-low border border-surface-variant rounded-2xl px-4 py-3 text-on-surface outline-none focus:border-primary font-mono text-xl font-black transition-colors"
                   placeholder="500000"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-on-surface mb-2">Keterangan</label>
+                <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Keterangan (Opsional)</label>
                 <input 
                   type="text" 
                   value={newLog.description}
                   onChange={e => setNewLog({...newLog, description: e.target.value})}
-                  className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary"
-                  placeholder="Beli Semen 10 Sak"
+                  className="w-full bg-surface-container-low border border-surface-variant rounded-2xl px-4 py-3 text-sm font-medium text-on-surface outline-none focus:border-primary transition-colors"
+                  placeholder="Contoh: Beli Semen 10 Sak"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-on-surface mb-2">Tanggal</label>
+                <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Tanggal</label>
                 <input 
                   type="date" 
                   required
                   value={newLog.date}
                   onChange={e => setNewLog({...newLog, date: e.target.value})}
-                  className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary"
+                  className="w-full bg-surface-container-low border border-surface-variant rounded-2xl px-4 py-3 text-sm font-medium text-on-surface outline-none focus:border-primary transition-colors"
                 />
               </div>
 
               <button 
                 type="submit"
                 disabled={isSaving}
-                className="w-full py-4 rounded-xl font-bold text-lg bg-primary text-on-primary hover:bg-primary-container transition-all shadow-md mt-2 disabled:opacity-50"
+                className="w-full py-4 rounded-2xl font-bold text-base bg-primary text-on-primary hover:bg-primary-container transition-all shadow-md mt-2 disabled:opacity-50"
               >
                 {isSaving ? "Menyimpan..." : "Simpan Transaksi"}
               </button>
@@ -258,6 +344,6 @@ export default function BendaharaDashboard() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
