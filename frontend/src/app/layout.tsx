@@ -14,6 +14,7 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://mandorhub.vercel.app"),
   title: "MandorHub",
   description: "B2B SaaS application for construction management.",
   openGraph: {
