@@ -17,9 +17,6 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://mandorhub.vercel.app"),
   title: "MandorHub",
   description: "B2B SaaS application for construction management.",
-  openGraph: {
-    images: ["/og-image.png"],
-  },
 };
 
 import SpyTracker from "@/components/SpyTracker";
