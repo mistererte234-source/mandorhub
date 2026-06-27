@@ -514,14 +514,15 @@ export default function AdminDashboard() {
         </div>
         <div className="px-4 pb-3">
           <div className="flex w-full bg-surface-variant/30 p-1 rounded-2xl gap-1 shadow-inner">
-            {(["proyek", "akun", "pengaturan", "spy"] as TabType[]).map(t => {
+            {(["proyek", "akun", "progress", "pengaturan", "spy"] as TabType[]).map(t => {
               const icons: Record<TabType, React.ReactNode> = {
                 proyek: <Briefcase className="w-4 h-4" />,
                 akun: <UserIcon className="w-4 h-4" />,
+                progress: <Activity className="w-4 h-4" />,
                 pengaturan: <Settings className="w-4 h-4" />,
-                spy: <Activity className="w-4 h-4" />,
+                spy: <ShieldAlert className="w-4 h-4" />,
               };
-              const labels: Record<TabType, string> = { proyek: "Proyek", akun: "Akun", pengaturan: "Pengaturan", spy: "Mata-mata" };
+              const labels: Record<TabType, string> = { proyek: "Proyek", akun: "Akun", progress: "Progress", pengaturan: "Pengaturan", spy: "Mata-mata" };
               return (
                 <button key={t} onClick={() => setTab(t)}
                   className={`flex-1 flex flex-col items-center py-2 px-1 text-[10px] sm:text-xs font-bold rounded-xl transition-all duration-200

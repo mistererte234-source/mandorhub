@@ -180,13 +180,13 @@ export default function ContractorDashboard() {
                <div className="col-span-2 bg-surface-container-lowest border border-surface-variant/60 rounded-3xl p-5 shadow-sm flex flex-col justify-between">
                  <h4 className="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2">Status Kesehatan</h4>
                  <div className="flex h-12 rounded-full overflow-hidden mb-2 shadow-inner">
-                    <div className="bg-secondary-fixed transition-all duration-500 flex items-center justify-center text-xs font-bold text-on-secondary-fixed" style={{width: \`\${(summary.green/Math.max(1, summary.total))*100}%\`}}>
+                    <div className="bg-secondary-fixed transition-all duration-500 flex items-center justify-center text-xs font-bold text-on-secondary-fixed" style={{width: `${(summary.green/Math.max(1, summary.total))*100}%`}}>
                       {summary.green > 0 && summary.green}
                     </div>
-                    <div className="bg-tertiary-fixed transition-all duration-500 flex items-center justify-center text-xs font-bold text-on-tertiary-fixed" style={{width: \`\${(summary.yellow/Math.max(1, summary.total))*100}%\`}}>
+                    <div className="bg-tertiary-fixed transition-all duration-500 flex items-center justify-center text-xs font-bold text-on-tertiary-fixed" style={{width: `${(summary.yellow/Math.max(1, summary.total))*100}%`}}>
                       {summary.yellow > 0 && summary.yellow}
                     </div>
-                    <div className="bg-error transition-all duration-500 flex items-center justify-center text-xs font-bold text-on-error" style={{width: \`\${(summary.red/Math.max(1, summary.total))*100}%\`}}>
+                    <div className="bg-error transition-all duration-500 flex items-center justify-center text-xs font-bold text-on-error" style={{width: `${(summary.red/Math.max(1, summary.total))*100}%`}}>
                       {summary.red > 0 && summary.red}
                     </div>
                  </div>
