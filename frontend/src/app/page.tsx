@@ -324,13 +324,18 @@ Lokasi: ${mainSite.project}
                 </p>
               </div>
             </div>
-            <div className="p-md bg-surface-container-lowest">
+            <div className="p-5 bg-surface-container-lowest">
               <button 
                 onClick={() => setIsLaporOpen(true)}
-                className="w-full bg-primary hover:bg-on-primary-fixed-variant active:scale-[0.98] transition-all duration-200 text-on-primary rounded-xl flex flex-col items-center justify-center py-7 gap-3 shadow-lg group"
+                className="w-full bg-gradient-to-r from-primary to-primary-container hover:from-primary hover:to-primary text-on-primary active:scale-[0.97] transition-all duration-300 rounded-[24px] flex flex-col items-center justify-center py-6 gap-3 shadow-[0_8px_25px_rgba(34,197,94,0.3)] hover:shadow-[0_12px_30px_rgba(34,197,94,0.4)] group overflow-hidden relative"
               >
-                <Camera className="w-12 h-12 group-active:scale-90 transition-transform" />
-                <span className="text-[20px] font-bold tracking-wide uppercase">
+                {/* Subtle shine effect */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[24px]"></div>
+                
+                <div className="bg-white/20 backdrop-blur-md p-4 rounded-full group-hover:scale-110 transition-transform duration-300 shadow-sm relative z-10">
+                  <ClipboardList className="w-8 h-8 text-white drop-shadow-sm" />
+                </div>
+                <span className="font-bold text-xl tracking-tight relative z-10 text-white drop-shadow-sm">
                   Lapor Hari Ini
                 </span>
               </button>
@@ -373,28 +378,39 @@ Lokasi: ${mainSite.project}
         <section className="grid grid-cols-2 gap-4">
           <button 
             onClick={() => setIsIssueOpen(true)}
-            className="bg-error-container text-on-error-container active:scale-95 transition-transform duration-150 rounded-2xl p-md flex flex-col items-center justify-center gap-2 shadow-sm border border-error-container/50 min-h-[104px]"
+            className="group bg-surface-container-lowest/90 backdrop-blur-xl border border-black/5 active:scale-95 transition-all duration-300 rounded-[24px] p-5 flex flex-col items-start justify-between shadow-[0_8px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_rgba(0,0,0,0.06)] min-h-[120px]"
           >
-            <AlertTriangle className="w-8 h-8 text-error" />
-            <span className="text-base font-semibold text-center leading-tight">
+            <div className="w-10 h-10 rounded-full bg-[#ff3b30]/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <AlertTriangle className="w-5 h-5 text-[#ff3b30]" />
+            </div>
+            <span className="text-[15px] font-bold text-on-surface tracking-tight leading-tight">
               Ada Masalah
             </span>
           </button>
-          <button className="bg-secondary-fixed text-on-secondary-fixed active:scale-95 transition-transform duration-150 rounded-2xl p-md flex flex-col items-center justify-center gap-2 shadow-sm border border-secondary-fixed-dim min-h-[104px]">
-            <CheckCircle2 className="w-8 h-8 text-primary" />
-            <span className="text-base font-semibold text-center leading-tight">
+
+          <button className="group bg-surface-container-lowest/90 backdrop-blur-xl border border-black/5 active:scale-95 transition-all duration-300 rounded-[24px] p-5 flex flex-col items-start justify-between shadow-[0_8px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_rgba(0,0,0,0.06)] min-h-[120px]">
+            <div className="w-10 h-10 rounded-full bg-[#34c759]/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <CheckCircle2 className="w-5 h-5 text-[#34c759]" />
+            </div>
+            <span className="text-[15px] font-bold text-on-surface tracking-tight leading-tight">
               Lihat Target
             </span>
           </button>
-          <button className="bg-surface-container text-on-surface active:scale-95 transition-transform duration-150 rounded-2xl p-md flex flex-col items-center justify-center gap-2 shadow-sm border border-surface-variant min-h-[104px]">
-            <Mic className="w-8 h-8 text-surface-tint" />
-            <span className="text-base font-semibold text-center leading-tight">
+
+          <button className="group bg-surface-container-lowest/90 backdrop-blur-xl border border-black/5 active:scale-95 transition-all duration-300 rounded-[24px] p-5 flex flex-col items-start justify-between shadow-[0_8px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_rgba(0,0,0,0.06)] min-h-[120px]">
+            <div className="w-10 h-10 rounded-full bg-[#007aff]/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <Mic className="w-5 h-5 text-[#007aff]" />
+            </div>
+            <span className="text-[15px] font-bold text-on-surface tracking-tight leading-tight">
               Rekam Suara
             </span>
           </button>
-          <button className="bg-tertiary-fixed text-on-tertiary-fixed active:scale-95 transition-transform duration-150 rounded-2xl p-md flex flex-col items-center justify-center gap-2 shadow-sm border border-tertiary-fixed-dim min-h-[104px]">
-            <Package className="w-8 h-8 text-tertiary" />
-            <span className="text-base font-semibold text-center leading-tight">
+
+          <button className="group bg-surface-container-lowest/90 backdrop-blur-xl border border-black/5 active:scale-95 transition-all duration-300 rounded-[24px] p-5 flex flex-col items-start justify-between shadow-[0_8px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_rgba(0,0,0,0.06)] min-h-[120px]">
+            <div className="w-10 h-10 rounded-full bg-[#ff9500]/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <Package className="w-5 h-5 text-[#ff9500]" />
+            </div>
+            <span className="text-[15px] font-bold text-on-surface tracking-tight leading-tight">
               Material Kurang
             </span>
           </button>
