@@ -206,7 +206,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      <div className="mt-8 text-center relative z-10">
+      <div className="mt-8 text-center relative z-10 pb-12">
         <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant flex items-center justify-center gap-1">
           <ShieldAlert className="w-4 h-4" /> Akses aman & terenkripsi
         </p>

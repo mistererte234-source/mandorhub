@@ -40,8 +40,8 @@ export default function RootLayout({
             {children}
             
             {/* Zandev Watermark Footer */}
-            <div className="w-full py-8 mt-4 flex justify-center z-0 relative opacity-80 hover:opacity-100 transition-opacity">
-              <div className="flex items-center gap-2 font-hacker text-[10px] tracking-widest text-primary/70 uppercase px-5 py-2.5 rounded-full glass-panel border border-primary/20 shadow-[0_0_10px_rgba(0,255,65,0.1)] bg-primary/5 backdrop-blur-sm cursor-default">
+            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 opacity-80 hover:opacity-100 transition-opacity pointer-events-none">
+              <div className="flex items-center gap-2 font-hacker text-[10px] tracking-widest text-primary/70 uppercase px-5 py-2.5 rounded-full glass-panel border border-primary/20 shadow-[0_0_10px_rgba(0,255,65,0.1)] bg-background/50 backdrop-blur-sm cursor-default">
                 <span>Design x Code by</span> 
                 <span className="font-black text-primary glow-text">Zandev</span>
               </div>
