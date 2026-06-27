@@ -18,6 +18,10 @@ export async function fetchApi(endpoint: string, options: RequestInit = {}) {
   });
 
   if (!response.ok) {
+    if (response.status === 401 || response.status === 403) {
+      logout();
+      throw new Error("Sesi telah habis, silakan login kembali.");
+    }
     const errorBody = await response.json().catch(() => ({}));
     throw new Error(errorBody.detail || `API Error: ${response.statusText}`);
   }

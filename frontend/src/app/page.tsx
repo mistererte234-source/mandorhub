@@ -191,7 +191,7 @@ Lokasi: ${mainSite.project}
   }, [router]);
 
   useEffect(() => {
-    if (projects.length >= 0) {
+    if (projects.length >= 0 && getToken()) {
       fetchDashboard();
     }
   }, [selectedProject, projects.length]);
@@ -206,6 +206,7 @@ Lokasi: ${mainSite.project}
   };
 
   const fetchDashboard = () => {
+    if (!getToken()) return;
     setLoading(true);
     let url = "/dashboard";
     if (selectedProject) {

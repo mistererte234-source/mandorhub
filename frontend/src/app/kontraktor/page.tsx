@@ -39,13 +39,13 @@ export default function ContractorDashboard() {
   }, [router]);
 
   useEffect(() => {
-    if (projects.length >= 0) {
+    if (projects.length >= 0 && getToken()) {
       fetchDashboard();
     }
   }, [selectedProject, projects.length]);
 
   useEffect(() => {
-    if (tab === "keuangan" && selectedProject) {
+    if (tab === "keuangan" && selectedProject && getToken()) {
       fetchApi(`/finance?project_id=${selectedProject}`).then(setFinances).catch(console.error);
     }
   }, [tab, selectedProject]);
@@ -60,6 +60,7 @@ export default function ContractorDashboard() {
   };
 
   const fetchDashboard = () => {
+    if (!getToken()) return;
     setLoading(true);
     let url = "/dashboard";
     if (selectedProject) {
