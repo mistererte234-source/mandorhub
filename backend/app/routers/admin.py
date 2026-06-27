@@ -310,6 +310,49 @@ def seed_dummy_data(
     return {"message": "Data dummy berhasil ditanamkan!"}
 
 
+@router.post("/migrate-db")
+def migrate_database(
+    admin: AppUser = Depends(get_admin_user),
+    session: Session = Depends(get_session)
+):
+    """Temporary endpoint to migrate production database schema."""
+    try:
+        # Add tukang_daily_rate and kuli_daily_rate to project table if they don't exist
+        session.execute(text("ALTER TABLE project ADD COLUMN IF NOT EXISTS tukang_daily_rate FLOAT DEFAULT 0.0 NOT NULL;"))
+        session.execute(text("ALTER TABLE project ADD COLUMN IF NOT EXISTS kuli_daily_rate FLOAT DEFAULT 0.0 NOT NULL;"))
+        
+        # Add week_number and weight to target table if they don't exist
+        session.execute(text("ALTER TABLE target ADD COLUMN IF NOT EXISTS week_number INTEGER DEFAULT 1 NOT NULL;"))
+        session.execute(text("ALTER TABLE target ADD COLUMN IF NOT EXISTS weight FLOAT DEFAULT 0.0 NOT NULL;"))
+        
+        # Add target_id to daily_report if it doesn't exist
+        session.execute(text("ALTER TABLE daily_report ADD COLUMN IF NOT EXISTS target_id UUID;"))
+        
+        # Create finance_log table if it doesn't exist
+        session.execute(text("""
+        CREATE TABLE IF NOT EXISTS finance_log (
+            id UUID PRIMARY KEY,
+            org_id UUID NOT NULL,
+            project_id UUID NOT NULL,
+            type VARCHAR NOT NULL,
+            category VARCHAR NOT NULL,
+            amount FLOAT NOT NULL,
+            description VARCHAR,
+            date DATE NOT NULL,
+            recorded_by UUID NOT NULL,
+            created_at TIMESTAMP NOT NULL,
+            updated_at TIMESTAMP,
+            deleted_at TIMESTAMP
+        );
+        """))
+        
+        session.commit()
+        return {"message": "Database berhasil dimigrasi! Fitur baru siap digunakan."}
+    except Exception as e:
+        session.rollback()
+        raise HTTPException(status_code=500, detail=f"Gagal migrasi database: {str(e)}")
+
+
 @router.post("/clear-dummy")
 def clear_dummy_data(
     admin: AppUser = Depends(get_admin_user),

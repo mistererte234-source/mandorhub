@@ -249,6 +249,15 @@ export default function AdminDashboard() {
     } catch (err: any) { showToast(err.message, "error"); }
   };
 
+  const handleMigrate = () => setConfirmDialog({
+    msg: "Yakin melakukan migrasi database (update fitur)?",
+    action: async () => {
+      setConfirmDialog(null);
+      try { const r = await fetchApi("/admin/migrate-db", { method: "POST" }); showToast(r.message); }
+      catch (err: any) { showToast(err.message, "error"); }
+    },
+  });
+
   const handleSeed = () => setConfirmDialog({
     msg: "Yakin tanam data dummy?",
     action: async () => {
@@ -743,6 +752,9 @@ export default function AdminDashboard() {
             <div className="bg-surface-container-lowest border border-surface-variant p-5 rounded-2xl">
               <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><Database className="w-5 h-5" /> Manajemen Database</h2>
               <div className="flex flex-col gap-3">
+                <button onClick={handleMigrate} className="w-full bg-primary text-on-primary p-3 rounded-xl font-bold hover:opacity-90 transition-all shadow-md">
+                  🚀 Migrasi Database (Update Fitur Baru)
+                </button>
                 <button onClick={handleSeed} className="w-full bg-secondary-fixed text-on-secondary-fixed p-3 rounded-xl font-bold hover:opacity-90 transition-all">
                   🌱 Tanam Data Dummy
                 </button>
