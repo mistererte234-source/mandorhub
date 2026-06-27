@@ -8,6 +8,12 @@ import Image from "next/image";
 
 export default function BendaharaDashboard() {
   const router = useRouter();
+  const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
+  const showToast = (msg: string, type: "success" | "error" = "success") => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 3500);
+  };
+
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<any[]>([]);
   const [selectedProject, setSelectedProject] = useState("");
@@ -111,11 +117,12 @@ export default function BendaharaDashboard() {
           date: newLog.date
         })
       });
+      showToast("Data keuangan berhasil disimpan!", "success");
       setShowAdd(false);
       setNewLog({...newLog, amount: "", description: ""});
       fetchLogs();
     } catch (err: any) {
-      alert(err.message);
+      showToast(err.message, "error");
     } finally {
       setIsSaving(false);
     }
@@ -370,6 +377,14 @@ export default function BendaharaDashboard() {
               </button>
             </form>
           </div>
+        </div>
+      )}
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className={`fixed bottom-24 left-1/2 -translate-x-1/2 px-6 py-3 rounded-2xl shadow-[0_0_15px_rgba(0,0,0,0.5)] z-50 animate-in fade-in slide-in-from-bottom-5 font-bold text-sm whitespace-nowrap glass-panel font-hacker
+            ${toast.type === "success" ? "border-primary/50 text-primary" : "border-error/50 text-error"}`}>
+            {toast.msg}
         </div>
       )}
     </div>

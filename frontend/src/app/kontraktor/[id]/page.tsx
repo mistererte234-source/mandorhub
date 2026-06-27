@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, use } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { fetchApi, getToken, logout } from "@/lib/api";
 import { ArrowLeft, Loader2, Calendar, AlertTriangle, CheckCircle2, Edit, X, Plus, Target, DollarSign, Settings, LineChart as ChartIcon, CheckSquare } from "lucide-react";
@@ -10,6 +10,13 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 export default function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { id: siteId } = use(params);
+
+  const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
+  const showToast = (msg: string, type: "success" | "error" = "success") => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 3500);
+  };
+
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<"laporan" | "target" | "keuangan" | "pengaturan">("laporan");
@@ -150,7 +157,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       setEditingReport(null);
       fetchTimeline();
     } catch (err: any) {
-      alert("Gagal menyimpan laporan: " + err.message);
+      showToast("Gagal menyimpan laporan: " + err.message, "error");
     } finally {
       setIsSavingReport(false);
     }
@@ -175,10 +182,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
         method: "POST",
         body: JSON.stringify(newTargets)
       });
-      alert("Target mingguan berhasil disimpan!");
+      showToast("Target mingguan berhasil disimpan!", "success");
       fetchTargets(data.project_id);
     } catch (err: any) {
-      alert("Gagal menyimpan target: " + err.message);
+      showToast("Gagal menyimpan target: " + err.message, "error");
     } finally {
       setIsSavingTargets(false);
     }
@@ -196,9 +203,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           kuli_daily_rate: projectRates.kuli_daily_rate
         })
       });
-      alert("Tarif upah berhasil diperbarui!");
+      showToast("Tarif upah berhasil diperbarui!", "success");
     } catch (err: any) {
-      alert("Gagal menyimpan tarif: " + err.message);
+      showToast("Gagal menyimpan tarif: " + err.message, "error");
     } finally {
       setIsSavingRates(false);
     }
@@ -227,8 +234,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     let cumulativeSchedule = 0;
     chartData = targets.map((t) => {
       cumulativeSchedule += t.weight;
-      // In a real app, actual would be derived from reports that completed targets.
-      // Here we approximate actual based on status
       const actual = t.status === "selesai" ? cumulativeSchedule : (t.status === "proses" ? cumulativeSchedule - (t.weight/2) : null);
       return {
         name: `M${t.week_number}`,
@@ -255,7 +260,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           </div>
         </div>
         
-        {/* Modern Tabs */}
         <div className="flex overflow-x-auto no-scrollbar border-b border-surface-variant px-2 mt-1">
           {[
             { id: "laporan", label: "Laporan", icon: <Calendar className="w-4 h-4"/> },
@@ -278,7 +282,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
       <main className="flex-1 px-5 py-6 max-w-3xl mx-auto w-full">
         
-        {/* TAB: LAPORAN (TIMELINE) */}
         {tab === "laporan" && (
           <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
             <h2 className="text-xl font-bold mb-6 text-on-surface flex items-center gap-2">
@@ -351,7 +354,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           </div>
         )}
 
-        {/* TAB: TARGET & PROGRESS */}
         {tab === "target" && (
           <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 flex flex-col gap-8">
             {chartData.length > 0 ? (
@@ -416,7 +418,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           </div>
         )}
 
-        {/* TAB: KEUANGAN */}
         {tab === "keuangan" && (
           <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 flex flex-col gap-5">
              <div className="grid grid-cols-2 gap-4">
@@ -471,7 +472,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           </div>
         )}
 
-        {/* TAB: PENGATURAN (TARIF) */}
         {tab === "pengaturan" && (
           <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
             <div className="glass-panel rounded-3xl p-6 shadow-sm border border-surface-variant/50">
@@ -520,6 +520,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
         )}
 
       </main>
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className={`fixed bottom-24 left-1/2 -translate-x-1/2 px-6 py-3 rounded-2xl shadow-[0_0_15px_rgba(0,0,0,0.5)] z-50 animate-in fade-in slide-in-from-bottom-5 font-bold text-sm whitespace-nowrap glass-panel font-hacker
+            ${toast.type === "success" ? "border-primary/50 text-primary" : "border-error/50 text-error"}`}>
+            {toast.msg}
+        </div>
+      )}
 
       {/* EDIT MODAL LAPORAN */}
       {editingReport && (

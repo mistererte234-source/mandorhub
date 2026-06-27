@@ -23,6 +23,13 @@ import {
 
 export default function ForemanDashboard() {
   const router = useRouter();
+
+  const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
+  const showToast = (msg: string, type: "success" | "error" = "success") => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 3500);
+  };
+
   const [data, setData] = useState<any>(null);
   const [bossPhone, setBossPhone] = useState("628110000001");
   const [loading, setLoading] = useState(true);
@@ -57,7 +64,7 @@ export default function ForemanDashboard() {
 
   const submitReport = async () => {
     if (!workDone) {
-      alert("Harap isi Pekerjaan Selesai");
+      showToast("Harap isi Pekerjaan Selesai", "error");
       return;
     }
 
@@ -108,7 +115,7 @@ ${attendance.filter(a => a.count > 0).map(a => `- ${a.count} ${a.role}${a.names 
       const res = await fetchApi("/dashboard");
       setData(res);
     } catch (error: any) {
-      alert("Gagal mengirim laporan: " + error.message);
+      showToast("Gagal mengirim laporan: " + error.message, "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -116,7 +123,7 @@ ${attendance.filter(a => a.count > 0).map(a => `- ${a.count} ${a.role}${a.names 
 
   const submitIssue = async () => {
     if (!issueDesc) {
-      alert("Harap jelaskan masalahnya");
+      showToast("Harap jelaskan masalahnya", "error");
       return;
     }
 
@@ -168,7 +175,7 @@ Lokasi: ${mainSite.project}
       const res = await fetchApi(url);
       setData(res);
     } catch (error: any) {
-      alert("Gagal melaporkan masalah: " + error.message);
+      showToast("Gagal melaporkan masalah: " + error.message, "error");
     } finally {
       setIsSubmittingIssue(false);
     }
@@ -184,7 +191,7 @@ Lokasi: ${mainSite.project}
       const res = await fetchApi(url);
       setData(res);
     } catch (error: any) {
-      alert("Gagal menyelesaikan masalah: " + error.message);
+      showToast("Gagal menyelesaikan masalah: " + error.message, "error");
     }
   };
 
@@ -465,50 +472,50 @@ Lokasi: ${mainSite.project}
           </div>
 
           <div>
-            <label className="block text-sm font-semibold mb-2 text-on-surface">Tanggal Laporan (Opsional)</label>
+            <label className="block text-[10px] font-bold mb-2 text-primary uppercase tracking-widest">Tanggal Laporan (Opsional)</label>
             <input 
               type="date" 
               value={reportDate}
               onChange={(e) => setReportDate(e.target.value)}
-              className="w-full border border-surface-variant glass-panel p-4 rounded-xl focus:outline-primary mb-4" 
+              className="w-full bg-primary/10 border border-primary/30 rounded-xl p-4 text-lg font-black text-primary font-hacker focus:border-primary focus:shadow-[0_0_15px_rgba(0,255,65,0.25)] focus:bg-primary/20 outline-none transition-all mb-4 glow-text [color-scheme:dark]" 
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold mb-2 text-on-surface">Pekerjaan Selesai</label>
-            <input 
-              type="text" 
+            <label className="block text-[10px] font-bold mb-2 text-primary uppercase tracking-widest">Pekerjaan Selesai</label>
+            <textarea 
               value={workDone}
               onChange={(e) => setWorkDone(e.target.value)}
               placeholder="Cth: Pasang bata merah" 
-              className="w-full border border-surface-variant glass-panel p-4 rounded-xl focus:outline-primary" 
+              className="w-full bg-primary/5 border border-primary/20 p-4 rounded-xl text-primary font-hacker placeholder:text-primary/30 focus:border-primary focus:shadow-[0_0_15px_rgba(0,255,65,0.2)] focus:bg-primary/10 outline-none transition-all" 
+              rows={4}
             />
           </div>
           
           <div>
-            <label className="block text-sm font-semibold mb-2 text-on-surface">Detail Pekerja Hadir</label>
+            <label className="block text-[10px] font-bold mb-2 text-primary uppercase tracking-widest">Detail Pekerja Hadir</label>
             <div className="flex flex-col gap-3">
               {attendance.map((att, idx) => (
-                <div key={idx} className="flex flex-col gap-2 glass-panel p-3 rounded-xl border border-surface-variant">
+                <div key={idx} className="flex flex-col gap-2 glass-panel border border-primary/20 shadow-[0_0_10px_rgba(0,255,65,0.05)] p-3 rounded-xl">
                   <div className="flex items-center gap-3">
                     <input
                       type="text"
                       value={att.role}
                       onChange={(e) => updateAttendance(idx, 'role', e.target.value)}
                       placeholder="Peran (Cth: Tukang)"
-                      className="flex-1 bg-transparent px-1 focus:outline-none text-sm font-bold text-on-surface"
+                      className="flex-1 bg-primary/5 border border-primary/20 rounded-lg px-3 py-2 text-sm font-black text-primary font-hacker uppercase tracking-widest focus:border-primary focus:shadow-[0_0_10px_rgba(0,255,65,0.15)] outline-none transition-all"
                     />
-                    <div className="flex items-center bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-lg overflow-hidden shrink-0">
+                    <div className="flex items-center gap-2 shrink-0">
                       <button 
                         onClick={() => updateAttendance(idx, 'count', Math.max(0, att.count - 1))}
-                        className="w-9 h-9 flex items-center justify-center text-on-surface-variant active:bg-surface-variant transition-colors font-bold"
+                        className="w-8 h-8 flex items-center justify-center rounded-full border border-primary/30 text-primary hover:bg-primary/20 hover:shadow-[0_0_10px_rgba(0,255,65,0.3)] transition-all font-bold"
                       >
                         -
                       </button>
-                      <span className="w-8 text-center font-bold text-primary">{att.count}</span>
+                      <span className="w-8 text-center font-black text-xl text-primary font-hacker glow-text">{att.count}</span>
                       <button 
                         onClick={() => updateAttendance(idx, 'count', att.count + 1)}
-                        className="w-9 h-9 flex items-center justify-center text-on-surface-variant active:bg-surface-variant transition-colors font-bold"
+                        className="w-8 h-8 flex items-center justify-center rounded-full border border-primary/30 text-primary hover:bg-primary/20 hover:shadow-[0_0_10px_rgba(0,255,65,0.3)] transition-all font-bold"
                       >
                         +
                       </button>
@@ -520,7 +527,7 @@ Lokasi: ${mainSite.project}
                       value={att.names}
                       onChange={(e) => updateAttendance(idx, 'names', e.target.value)}
                       placeholder={`Nama ${att.count} ${att.role || 'Pekerja'} (pisahkan koma)`}
-                      className="w-full border border-surface-variant bg-surface-variant/20 px-3 py-2 rounded-lg focus:outline-primary text-xs text-on-surface"
+                      className="w-full bg-primary/5 border border-primary/20 px-3 py-2 rounded-lg focus:border-primary focus:shadow-[0_0_10px_rgba(0,255,65,0.1)] outline-none text-sm text-primary font-hacker placeholder:text-primary/30 transition-all"
                     />
                   )}
                 </div>
@@ -599,4 +606,5 @@ Lokasi: ${mainSite.project}
     </>
   );
 }
+
 

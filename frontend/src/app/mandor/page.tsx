@@ -10,6 +10,12 @@ export default function MandorDashboard() {
   const router = useRouter();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
+
+  const showToast = (msg: string, type: "success" | "error" = "success") => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 3500);
+  };
   
   // Form State
   const [workDone, setWorkDone] = useState("");
@@ -73,7 +79,7 @@ export default function MandorDashboard() {
           worker_attendance: attendance
         })
       });
-      alert("Laporan berhasil dikirim ke server!");
+      showToast("Laporan berhasil dikirim ke server!", "success");
       setWorkDone("");
       setReportDate(new Date().toISOString().split("T")[0]);
       setAttendance([
@@ -82,7 +88,7 @@ export default function MandorDashboard() {
       ]);
       fetchDashboard();
     } catch (err: any) {
-      alert("Gagal mengirim laporan: " + err.message);
+      showToast("Gagal mengirim laporan: " + err.message, "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -182,7 +188,7 @@ export default function MandorDashboard() {
                   <label className="block text-[10px] font-bold text-primary uppercase tracking-widest mb-2">Tanggal Laporan</label>
                   <input 
                     type="date"
-                    className="w-full bg-surface-variant/20 border border-surface-variant/50 rounded-2xl px-4 py-3 text-sm text-on-surface focus:border-primary focus:bg-primary/5 outline-none transition-all font-hacker mb-4"
+                    className="w-full bg-primary/10 border border-primary/30 rounded-2xl px-4 py-3 text-lg font-black text-primary focus:border-primary focus:shadow-[0_0_15px_rgba(0,255,65,0.25)] focus:bg-primary/20 outline-none transition-all font-hacker mb-4 glow-text [color-scheme:dark]"
                     value={reportDate}
                     onChange={(e) => setReportDate(e.target.value)}
                   />
@@ -191,7 +197,7 @@ export default function MandorDashboard() {
                 <div>
                   <label className="block text-[10px] font-bold text-primary uppercase tracking-widest mb-2">Pekerjaan Selesai Hari Ini</label>
                   <textarea 
-                    className="w-full bg-surface-variant/20 border border-surface-variant/50 rounded-2xl px-4 py-3 text-sm text-on-surface focus:border-primary focus:bg-primary/5 outline-none transition-all"
+                    className="w-full bg-primary/5 border border-primary/20 rounded-2xl px-4 py-3 text-sm text-primary font-hacker placeholder:text-primary/30 focus:border-primary focus:shadow-[0_0_15px_rgba(0,255,65,0.2)] focus:bg-primary/10 outline-none transition-all"
                     rows={4}
                     placeholder="Contoh: Pengecoran pondasi 50%..."
                     value={workDone}
@@ -200,17 +206,17 @@ export default function MandorDashboard() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-primary uppercase tracking-widest mb-2">Kehadiran Pekerja</label>
+                  <label className="block text-[10px] font-bold text-primary uppercase tracking-widest mb-2">Detail Pekerja Hadir</label>
                   <div className="flex flex-col gap-3">
                     {attendance.map((att, idx) => (
-                      <div key={idx} className="flex flex-col gap-2 bg-surface-variant/10 p-3 rounded-2xl border border-surface-variant/30">
+                      <div key={idx} className="flex flex-col gap-2 glass-panel border border-primary/20 shadow-[0_0_10px_rgba(0,255,65,0.05)] p-3 rounded-2xl">
                         <div className="flex gap-2">
                           <input
                             type="text"
                             value={att.role}
                             onChange={(e) => updateAttendance(idx, "role", e.target.value)}
                             placeholder="Peran"
-                            className="flex-1 bg-surface-variant/30 border border-surface-variant/50 rounded-xl px-3 py-2 text-sm font-bold text-on-surface outline-none focus:border-primary transition-all"
+                            className="flex-1 bg-primary/5 border border-primary/20 rounded-xl px-3 py-2 text-sm font-black text-primary font-hacker uppercase tracking-widest outline-none focus:border-primary focus:shadow-[0_0_10px_rgba(0,255,65,0.15)] transition-all"
                           />
                           <input
                             type="number"
@@ -218,15 +224,15 @@ export default function MandorDashboard() {
                             value={att.count || ""}
                             onChange={(e) => updateAttendance(idx, "count", parseInt(e.target.value) || 0)}
                             placeholder="Jml"
-                            className="w-20 bg-surface-variant/30 border border-surface-variant/50 rounded-xl px-3 py-2 text-sm font-hacker text-center text-primary outline-none focus:border-primary transition-all glow-text"
+                            className="w-20 bg-primary/10 border border-primary/30 rounded-xl px-3 py-2 text-sm font-black font-hacker text-center text-primary glow-text outline-none focus:border-primary focus:shadow-[0_0_10px_rgba(0,255,65,0.2)] transition-all"
                           />
                         </div>
-                          <input
-                            type="text"
-                            value={att.names}
-                            onChange={(e) => updateAttendance(idx, "names", e.target.value)}
-                            placeholder="Daftar Nama Pekerja (Pisahkan dengan koma)"
-                          className="w-full bg-surface-variant/20 border border-surface-variant/50 rounded-xl px-3 py-2 text-sm text-on-surface outline-none focus:border-primary transition-all"
+                        <input
+                          type="text"
+                          value={att.names}
+                          onChange={(e) => updateAttendance(idx, "names", e.target.value)}
+                          placeholder="Daftar Nama Pekerja (Pisahkan dengan koma)"
+                          className="w-full bg-primary/5 border border-primary/20 rounded-xl px-3 py-2 text-sm font-hacker text-primary placeholder:text-primary/30 outline-none focus:border-primary focus:shadow-[0_0_10px_rgba(0,255,65,0.1)] transition-all"
                         />
                       </div>
                     ))}
@@ -260,6 +266,14 @@ export default function MandorDashboard() {
           </>
         )}
       </main>
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className={`fixed bottom-24 left-1/2 -translate-x-1/2 px-6 py-3 rounded-2xl shadow-[0_0_15px_rgba(0,0,0,0.5)] z-50 animate-in fade-in slide-in-from-bottom-5 font-bold text-sm whitespace-nowrap glass-panel font-hacker
+            ${toast.type === "success" ? "border-primary/50 text-primary" : "border-error/50 text-error"}`}>
+            {toast.msg}
+        </div>
+      )}
     </div>
   );
 }
