@@ -27,8 +27,6 @@ export default function ContractorDashboard() {
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<any[]>([]);
   const [selectedProject, setSelectedProject] = useState<string>("");
-  const [tab, setTab] = useState<"proyek" | "keuangan">("proyek");
-  const [finances, setFinances] = useState<any[]>([]);
 
   useEffect(() => {
     if (!getToken()) {
@@ -43,12 +41,6 @@ export default function ContractorDashboard() {
       fetchDashboard();
     }
   }, [selectedProject, projects.length]);
-
-  useEffect(() => {
-    if (tab === "keuangan" && selectedProject && getToken()) {
-      fetchApi(`/finance?project_id=${selectedProject}`).then(setFinances).catch(console.error);
-    }
-  }, [tab, selectedProject]);
 
   const fetchProjects = async () => {
     try {
@@ -142,25 +134,9 @@ export default function ContractorDashboard() {
           </div>
         </div>
         
-        {/* Tabs */}
-        <div className="flex px-6 gap-6">
-          <button 
-            onClick={() => setTab("proyek")}
-            className={`pb-4 text-sm font-black transition-all border-b-4 ${tab === "proyek" ? "border-primary text-primary" : "border-transparent text-on-surface-variant hover:text-on-surface"}`}
-          >
-            <div className="flex items-center justify-center gap-2"><Briefcase className="w-4 h-4"/> Ringkasan Proyek</div>
-          </button>
-          <button 
-            onClick={() => setTab("keuangan")}
-            className={`pb-4 text-sm font-black transition-all border-b-4 ${tab === "keuangan" ? "border-primary text-primary" : "border-transparent text-on-surface-variant hover:text-on-surface"}`}
-          >
-            <div className="flex items-center justify-center gap-2"><Wallet className="w-4 h-4"/> Laporan Keuangan</div>
-          </button>
-        </div>
       </header>
 
       <main className="px-6 py-8 flex-1 max-w-4xl mx-auto w-full flex flex-col gap-8">
-        {tab === "proyek" && (
           <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 flex flex-col gap-8">
             
             {/* Ringkasan */}
@@ -257,74 +233,6 @@ export default function ContractorDashboard() {
               )}
             </section>
           </div>
-        )}
-
-        {tab === "keuangan" && (
-          <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-            {!selectedProject ? (
-              <div className="text-center p-12 bg-surface-variant/20 rounded-3xl border border-surface-variant border-dashed">
-                <Wallet className="w-16 h-16 text-primary/40 mx-auto mb-4" />
-                <p className="text-on-surface font-black text-lg mb-2">Pilih Proyek Terlebih Dahulu</p>
-                <p className="text-on-surface-variant text-sm max-w-sm mx-auto">Gunakan dropdown di header atas untuk memilih proyek dan melihat rincian laporan keuangan dari Bendahara.</p>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-[#c3f0c3]/20 border border-[#c3f0c3] rounded-3xl p-6 shadow-sm flex flex-col justify-center transition-all hover:bg-[#c3f0c3]/30">
-                    <span className="text-xs font-bold uppercase tracking-wider text-[#0e520e] mb-2 flex items-center gap-2">
-                      <ArrowDownCircle className="w-4 h-4"/> Total Masuk
-                    </span>
-                    <span className="text-2xl font-black text-[#0e520e]">Rp {finances.filter(l => l.type==='in').reduce((s,l)=>s+l.amount, 0).toLocaleString('id-ID')}</span>
-                  </div>
-                  <div className="bg-[#ffd9d6]/20 border border-[#ffd9d6] rounded-3xl p-6 shadow-sm flex flex-col justify-center transition-all hover:bg-[#ffd9d6]/30">
-                    <span className="text-xs font-bold uppercase tracking-wider text-[#8c1d18] mb-2 flex items-center gap-2">
-                      <ArrowUpCircle className="w-4 h-4"/> Total Keluar
-                    </span>
-                    <span className="text-2xl font-black text-[#8c1d18]">Rp {finances.filter(l => l.type==='out').reduce((s,l)=>s+l.amount, 0).toLocaleString('id-ID')}</span>
-                  </div>
-                </div>
-
-                <div className="bg-surface-container-lowest border border-surface-variant/60 rounded-3xl p-6 shadow-sm relative overflow-hidden">
-                  <div className="absolute right-0 bottom-0 w-32 h-32 bg-primary/5 rounded-tl-full"/>
-                  <span className="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2 block relative z-10">Saldo Saat Ini</span>
-                  <span className={`text-4xl font-black relative z-10 ${
-                    finances.reduce((s,l)=>s+(l.type==='in'?l.amount:-l.amount), 0) >= 0 ? 'text-primary' : 'text-error'
-                  }`}>
-                    Rp {finances.reduce((s,l)=>s+(l.type==='in'?l.amount:-l.amount), 0).toLocaleString('id-ID')}
-                  </span>
-                </div>
-
-                <div className="flex flex-col gap-4 mt-4">
-                  <h2 className="font-black text-xl text-on-surface mb-2 flex items-center gap-2">
-                    <Clock className="w-5 h-5 text-primary"/> Riwayat Transaksi
-                  </h2>
-                  {finances.length === 0 ? (
-                    <div className="text-center py-12 text-on-surface-variant bg-surface-variant/20 rounded-3xl border border-surface-variant border-dashed">
-                      Belum ada laporan dari Bendahara.
-                    </div>
-                  ) : (
-                    finances.map(log => (
-                      <div key={log.id} className="flex justify-between items-center p-5 bg-surface-container-lowest border border-surface-variant/60 rounded-2xl shadow-sm hover:shadow-md transition-shadow group">
-                        <div className="flex items-center gap-4">
-                          <div className={`p-3 rounded-2xl shadow-inner ${log.type === 'in' ? 'bg-[#c3f0c3]/50 text-[#0e520e]' : 'bg-[#ffd9d6]/50 text-[#8c1d18]'}`}>
-                            {log.type === 'in' ? <ArrowDownCircle className="w-6 h-6"/> : <ArrowUpCircle className="w-6 h-6"/>}
-                          </div>
-                          <div>
-                            <h4 className="font-black text-base text-on-surface capitalize group-hover:text-primary transition-colors">{log.category}</h4>
-                            <span className="text-sm font-medium text-on-surface-variant">{new Date(log.date).toLocaleDateString('id-ID')} {log.description ? `• ${log.description}` : ''}</span>
-                          </div>
-                        </div>
-                        <div className={`font-black text-lg ${log.type === 'in' ? 'text-[#0e520e]' : 'text-[#8c1d18]'}`}>
-                          {log.type === 'in' ? '+' : '-'} Rp {log.amount.toLocaleString('id-ID')}
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
       </main>
     </div>
   );

@@ -82,6 +82,20 @@ export default function BendaharaDashboard() {
     }
   };
 
+  const handlePayWages = () => {
+    if (!weeklyWages) return;
+    const startStr = new Date(weeklyWages.start_date).toLocaleDateString('id-ID');
+    const endStr = new Date(weeklyWages.end_date).toLocaleDateString('id-ID');
+    setNewLog({
+      ...newLog,
+      type: "out",
+      category: "tukang",
+      amount: weeklyWages.total_wage.toString(),
+      description: `Gaji Tukang & Kuli ${startStr} s/d ${endStr}`
+    });
+    setShowAdd(true);
+  };
+
   const handleSaveLog = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
@@ -189,15 +203,16 @@ export default function BendaharaDashboard() {
 
             {/* Estimasi Upah Section */}
             {weeklyWages && (
-              <div className="bg-[#ffdf99]/20 border border-[#ffdf99] rounded-3xl p-6 shadow-sm">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-bold text-lg text-[#5a4300] flex items-center gap-2">
-                    <Activity className="w-5 h-5"/> Estimasi Tagihan Upah
+              <div className="bg-surface-container-lowest border-2 border-dashed border-[#ffdf99] rounded-3xl p-6 shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-[#ffdf99]/20 rounded-bl-full -z-10" />
+                <div className="flex justify-between items-center mb-5">
+                  <h3 className="font-black text-lg text-[#5a4300] flex items-center gap-2">
+                    <Activity className="w-5 h-5 text-[#d49900]" /> Estimasi Gaji Kuli & Tukang
                   </h3>
                   <select 
                     value={filterDays} 
                     onChange={e => setFilterDays(parseInt(e.target.value))}
-                    className="bg-[#ffdf99]/30 text-[#5a4300] border-none outline-none text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer"
+                    className="bg-[#ffdf99]/30 text-[#5a4300] border-none outline-none text-xs font-bold px-3 py-2 rounded-xl cursor-pointer hover:bg-[#ffdf99]/50 transition-colors"
                   >
                     <option value={7}>7 Hari</option>
                     <option value={14}>14 Hari</option>
@@ -207,21 +222,30 @@ export default function BendaharaDashboard() {
                 
                 <div className="flex flex-col gap-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-[#5a4300] font-medium">Tukang ({weeklyWages.total_tukang_count} HK x Rp {weeklyWages.tukang_rate?.toLocaleString('id-ID')})</span>
+                    <span className="text-[#5a4300] font-medium">Tukang ({weeklyWages.total_tukang_count} Hari Kerja)</span>
                     <span className="font-bold text-[#5a4300]">Rp {(weeklyWages.total_tukang_count * weeklyWages.tukang_rate).toLocaleString('id-ID')}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-[#5a4300] font-medium">Kuli ({weeklyWages.total_kuli_count} HK x Rp {weeklyWages.kuli_rate?.toLocaleString('id-ID')})</span>
+                    <span className="text-[#5a4300] font-medium">Kuli ({weeklyWages.total_kuli_count} Hari Kerja)</span>
                     <span className="font-bold text-[#5a4300]">Rp {(weeklyWages.total_kuli_count * weeklyWages.kuli_rate).toLocaleString('id-ID')}</span>
                   </div>
-                  <div className="border-t border-[#ffdf99]/50 pt-3 mt-1 flex justify-between font-black text-[#5a4300] text-lg">
-                    <span>Total Estimasi</span>
+                  <div className="border-t border-[#ffdf99] pt-4 mt-2 flex justify-between font-black text-[#5a4300] text-xl">
+                    <span>Total Gaji</span>
                     <span>Rp {weeklyWages.total_wage?.toLocaleString('id-ID')}</span>
                   </div>
                 </div>
-                <p className="text-xs text-[#5a4300]/70 mt-4 leading-relaxed">
-                  *Berdasarkan laporan harian mandor {filterDays} hari terakhir. Gunakan angka ini sebagai acuan menyiapkan kasbon atau pembayaran mingguan.
-                </p>
+                
+                <div className="mt-6 flex flex-col gap-2">
+                  <button
+                    onClick={handlePayWages}
+                    className="w-full bg-[#5a4300] text-[#ffdf99] font-bold text-base py-3 rounded-2xl flex justify-center items-center gap-2 hover:bg-[#7a5b00] active:scale-95 transition-all shadow-md"
+                  >
+                    <Wallet className="w-5 h-5" /> Bayar Gaji Ini
+                  </button>
+                  <p className="text-[11px] text-[#5a4300]/70 text-center leading-relaxed font-medium">
+                    *Gaji dihitung dari absensi laporan harian mandor {filterDays} hari terakhir.
+                  </p>
+                </div>
               </div>
             )}
 

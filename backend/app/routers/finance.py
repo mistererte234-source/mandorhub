@@ -89,9 +89,10 @@ def get_weekly_wages(
     for r in reports:
         if r.worker_attendance:
             for w in r.worker_attendance:
-                if w.get('role') == 'tukang':
+                role = str(w.get('role', '')).lower()
+                if role == 'tukang':
                     total_tukang_count += w.get('count', 0)
-                elif w.get('role') == 'kuli':
+                elif role == 'kuli':
                     total_kuli_count += w.get('count', 0)
                     
     tukang_rate = project.tukang_daily_rate or 0
