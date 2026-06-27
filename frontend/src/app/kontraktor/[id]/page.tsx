@@ -17,6 +17,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   // Editing Report
   const [editingReport, setEditingReport] = useState<any>(null);
   const [editWorkDone, setEditWorkDone] = useState("");
+  const [editReportDate, setEditReportDate] = useState("");
   const [editAttendance, setEditAttendance] = useState<{ role: string; count: number; names: string }[]>([]);
   const [isSavingReport, setIsSavingReport] = useState(false);
 
@@ -116,6 +117,11 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   const openEdit = (item: any) => {
     setEditingReport(item);
     setEditWorkDone(item.data?.work_done || item.description || "");
+    try {
+      setEditReportDate(new Date(item.timestamp).toISOString().split("T")[0]);
+    } catch {
+      setEditReportDate("");
+    }
     const att = item.data?.attendance || [];
     if (att.length === 0) {
       setEditAttendance([{ role: "Tukang", count: 0, names: "" }, { role: "Kuli", count: 0, names: "" }]);
@@ -135,7 +141,11 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     try {
       await fetchApi(`/reports/${editingReport.id}`, {
         method: "PUT",
-        body: JSON.stringify({ work_done: editWorkDone, worker_attendance: editAttendance })
+        body: JSON.stringify({ 
+          work_done: editWorkDone, 
+          worker_attendance: editAttendance,
+          report_date: editReportDate || undefined
+        })
       });
       setEditingReport(null);
       fetchTimeline();
@@ -523,6 +533,16 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
             </div>
             
             <div className="flex flex-col gap-6">
+              <div>
+                <label className="block text-sm font-bold text-on-surface mb-2">Tanggal Laporan</label>
+                <input 
+                  type="date"
+                  className="w-full bg-surface-container-low border border-surface-variant rounded-2xl px-4 py-3 text-sm text-on-surface focus:border-primary outline-none transition-colors mb-4"
+                  value={editReportDate}
+                  onChange={(e) => setEditReportDate(e.target.value)}
+                />
+              </div>
+
               <div>
                 <label className="block text-sm font-bold text-on-surface mb-2">Pekerjaan Selesai</label>
                 <textarea 

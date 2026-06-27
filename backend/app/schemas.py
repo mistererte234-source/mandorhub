@@ -173,6 +173,7 @@ class ReportCreate(BaseModel):
 
 class ReportUpdate(BaseModel):
     work_done: Optional[str] = None
+    report_date: Optional[datetime.date] = None
     worker_attendance: list[WorkerAttendanceItem] = []
 
 

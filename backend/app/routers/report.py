@@ -79,6 +79,9 @@ def update_report(
     if payload.work_done is not None:
         report.work_done = payload.work_done
 
+    if payload.report_date is not None:
+        report.report_date = payload.report_date
+
     if payload.worker_attendance is not None:
         attendance_data = [item.model_dump() for item in payload.worker_attendance if item.count > 0]
         report.worker_attendance = attendance_data
