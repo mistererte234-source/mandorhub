@@ -57,7 +57,7 @@ def seed_gapura_timeline(session):
     import uuid as _uuid
 
     project = session.execute(
-        text("SELECT id, org_id, mandor_id FROM project WHERE name ILIKE '%gapura%' AND deleted_at IS NULL LIMIT 1")
+        text("SELECT id, org_id, mandor_id, bos_id FROM project WHERE name ILIKE '%gapura%' AND deleted_at IS NULL LIMIT 1")
     ).fetchone()
     if not project:
         print("Gapura project not found for seeding timeline")
@@ -66,6 +66,7 @@ def seed_gapura_timeline(session):
     p_id    = project[0]
     org_id  = project[1]
     m_id    = project[2]   # langsung dari project.mandor_id
+    bos_id  = project[3]
 
     # Ambil atau buat site untuk proyek ini
     site_row = session.execute(
@@ -82,9 +83,22 @@ def seed_gapura_timeline(session):
     else:
         s_id = site_row[0]
 
-    if not m_id:
-        print("Mandor belum diset di proyek Gapura")
-        return
+    # Jika proyek legacy belum punya bos/mandor, pasang otomatis
+    if not m_id or not bos_id:
+        bos_row = session.execute(text("SELECT id FROM app_user WHERE org_id = :org_id AND role = 'contractor' LIMIT 1"), {"org_id": org_id}).fetchone()
+        mandor_row = session.execute(text("SELECT id FROM app_user WHERE org_id = :org_id AND role = 'mandor' LIMIT 1"), {"org_id": org_id}).fetchone()
+        bendahara_row = session.execute(text("SELECT id FROM app_user WHERE org_id = :org_id AND role = 'bendahara' LIMIT 1"), {"org_id": org_id}).fetchone()
+        
+        if bos_row and mandor_row:
+            bos_id = bos_row[0]
+            m_id = mandor_row[0]
+            bend_id = bendahara_row[0] if bendahara_row else None
+            session.execute(text("UPDATE project SET bos_id = :b, mandor_id = :m, bendahara_id = :bend WHERE id = :p"), 
+                {"b": bos_id, "m": m_id, "bend": bend_id, "p": p_id})
+            session.commit()
+        else:
+            print("Belum ada Bos atau Mandor di Org ini, Gapura tidak bisa di-seed")
+            return
 
     # Hapus data lama agar safe re-run
     session.execute(text("DELETE FROM daily_report WHERE site_id = :s_id"), {"s_id": s_id})
