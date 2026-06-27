@@ -16,6 +16,9 @@ const spaceMono = Space_Mono({
 export const metadata: Metadata = {
   title: "MandorHub",
   description: "B2B SaaS application for construction management.",
+  openGraph: {
+    images: ["/og-image.png"],
+  },
 };
 
 import SpyTracker from "@/components/SpyTracker";
