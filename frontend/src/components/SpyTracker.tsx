@@ -14,8 +14,20 @@ export default function SpyTracker() {
 
     trackedRef.current[pathname] = true;
 
+    // Extract identity from token if exists
+    let identity = "Anonymous";
+    try {
+      const token = localStorage.getItem("mandorhub_token");
+      if (token) {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        identity = `${payload.role || "user"}:${payload.sub || payload.phone || "unknown"}`;
+      }
+    } catch (e) {
+      // Ignore token parsing errors
+    }
+
     // Send silent tracking request
-    const userAgent = navigator.userAgent;
+    const userAgent = `[${identity}] ${navigator.userAgent}`;
     fetchApi("/spy/track", {
       method: "POST",
       body: JSON.stringify({

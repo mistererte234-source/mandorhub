@@ -803,22 +803,32 @@ export default function AdminDashboard() {
                 </div>
               ) : (
                 <div className="flex flex-col gap-4">
-                  {spyLogs.map(log => (
-                    <div key={log.id} className="border-l-4 border-[#00ff41] bg-gradient-to-r from-[#00ff41]/10 to-transparent p-4 rounded-r-xl hover:from-[#00ff41]/20 transition-all group">
-                      <div className="absolute top-0 right-0 p-2 text-[10px] font-bold opacity-30 group-hover:opacity-100">ID: {log.id.split("-")[0]}</div>
+                  {spyLogs.map(log => {
+                    let identity = "ANONYMOUS";
+                    let cleanUa = log.user_agent || "";
+                    const identityMatch = cleanUa.match(/^\[(.*?)\] (.*)/);
+                    if (identityMatch) {
+                      identity = identityMatch[1].toUpperCase();
+                      cleanUa = identityMatch[2];
+                    }
+
+                    return (
+                    <div key={log.id} className="border-l-4 border-[#00ff41] bg-gradient-to-r from-[#00ff41]/10 to-transparent p-4 rounded-r-xl hover:from-[#00ff41]/20 transition-all group relative">
+                      <div className="absolute top-0 right-0 p-2 text-[10px] font-bold opacity-30 group-hover:opacity-100 transition-opacity">ID: {log.id.split("-")[0]}</div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                         {[
+                          { label: "Identity (Role)", val: identity, badge: identity !== "ANONYMOUS" },
                           { label: "Timestamp (WIB)", val: log.created_at },
                           { label: "Source IP", val: log.ip_address },
                           { label: "Location / City", val: log.city || "Unknown", white: true },
                           { label: "ISP / Provider", val: log.isp || "Unknown", white: true },
                           { label: "Device Platform", val: log.browser && log.os ? `${log.browser} on ${log.os} (${log.device_type})` : "Analyzing...", white: true },
                           { label: "Target Vector (Path)", val: log.path, badge: true },
-                        ].map(({ label, val, white, badge }) => (
-                          <div key={label}>
+                        ].map(({ label, val, white, badge }, i) => (
+                          <div key={i}>
                             <span className="text-[#00ff41]/50 text-[10px] block tracking-widest uppercase mb-1">{label}</span>
                             {badge ? (
-                              <span className="font-bold bg-[#00ff41]/20 px-2 py-0.5 rounded text-white inline-block text-sm">{val}</span>
+                              <span className={`font-bold px-2 py-0.5 rounded inline-block text-sm ${identity !== 'ANONYMOUS' && label === 'Identity (Role)' ? 'bg-error/20 text-error border border-error/50' : 'bg-[#00ff41]/20 text-white'}`}>{val}</span>
                             ) : (
                               <span className={`font-bold tracking-wider text-sm ${white ? "text-white" : ""}`}>{val}</span>
                             )}
@@ -827,10 +837,10 @@ export default function AdminDashboard() {
                       </div>
                       <div className="mt-2 pt-2 border-t border-[#00ff41]/20">
                         <span className="text-[#00ff41]/50 text-[10px] block tracking-widest uppercase mb-1">Device Footprint</span>
-                        <span className="text-[10px] bg-black/60 border border-[#00ff41]/30 p-2 rounded block break-all opacity-70 leading-relaxed">{log.user_agent}</span>
+                        <span className="text-[10px] bg-black/60 border border-[#00ff41]/30 p-2 rounded block break-all opacity-70 leading-relaxed font-mono">{cleanUa}</span>
                       </div>
                     </div>
-                  ))}
+                  )})}
                 </div>
               )}
             </div>
