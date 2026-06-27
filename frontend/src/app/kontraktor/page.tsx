@@ -220,10 +220,10 @@ export default function ContractorDashboard() {
                        </div>
                      )}
 
-                     <div className="mt-3 pt-3 border-t border-surface-variant/30 flex justify-between items-center group-hover:border-primary/30 transition-colors">
-                       <span className="text-xs font-bold text-on-surface-variant group-hover:text-primary transition-colors">Lihat Detail Proyek & Laporan Keuangan</span>
-                       <div className="w-8 h-8 rounded-full bg-surface-variant/30 group-hover:bg-primary/10 flex items-center justify-center transition-colors">
-                         <ChevronRight className="w-4 h-4 text-on-surface-variant group-hover:text-primary transition-colors" />
+                     <div className="mt-5 glass-panel border border-primary/30 bg-primary/10 rounded-xl px-4 py-3 flex justify-between items-center group-hover:shadow-[0_0_15px_rgba(0,255,65,0.25)] group-hover:bg-primary/20 transition-all">
+                       <span className="text-[10px] sm:text-xs font-black text-primary font-hacker uppercase tracking-widest glow-text">Lihat Detail Proyek</span>
+                       <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center transition-colors border border-primary/50">
+                         <ChevronRight className="w-3 h-3 text-primary" />
                        </div>
                      </div>
                    </div>
