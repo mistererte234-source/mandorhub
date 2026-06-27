@@ -222,15 +222,16 @@ Lokasi: ${mainSite.project}
           if (p.startsWith("0")) p = "62" + p.substring(1);
           setBossPhone(p.replace(/[^0-9]/g, ""));
         }
+        setLoading(false);
       })
       .catch((err) => {
         console.error("Dashboard error:", err);
-        if (err.message.includes("Not authenticated") || err.message.includes("401")) {
+        if (err.message.includes("Not authenticated") || err.message.includes("401") || err.message.includes("Sesi telah habis")) {
+          // Do NOT setLoading(false), let it redirect
           logout();
+        } else {
+          setLoading(false);
         }
-      })
-      .finally(() => {
-        setLoading(false);
       });
   };
 

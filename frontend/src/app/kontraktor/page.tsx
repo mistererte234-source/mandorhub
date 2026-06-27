@@ -69,15 +69,16 @@ export default function ContractorDashboard() {
     fetchApi(url)
       .then((res) => {
         setData(res);
+        setLoading(false);
       })
       .catch((err) => {
         console.error("Dashboard error:", err);
-        if (err.message.includes("Not authenticated") || err.message.includes("401")) {
+        if (err.message.includes("Not authenticated") || err.message.includes("401") || err.message.includes("Sesi telah habis")) {
+          // Do NOT setLoading(false), let it redirect
           logout();
+        } else {
+          setLoading(false);
         }
-      })
-      .finally(() => {
-        setLoading(false);
       });
   };
 

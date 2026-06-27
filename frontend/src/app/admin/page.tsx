@@ -102,10 +102,13 @@ export default function AdminDashboard() {
       uRes.forEach((u: User) => { ed[u.id] = { name: u.name, phone: u.phone || "" }; });
       setEditData(ed);
       setSpyLogs(sRes);
-    } catch (err: any) {
-      if (err.message?.includes("403")) logout();
-    } finally {
       setLoading(false);
+    } catch (err: any) {
+      if (err.message?.includes("401") || err.message?.includes("403") || err.message?.includes("Sesi telah habis")) {
+        logout();
+      } else {
+        setLoading(false);
+      }
     }
   }, []);
 

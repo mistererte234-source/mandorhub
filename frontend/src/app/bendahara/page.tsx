@@ -40,10 +40,13 @@ export default function BendaharaDashboard() {
       if (pRes.length > 0) {
         setSelectedProject(pRes[0].id);
       }
-    } catch (err: any) {
-      if (err.message.includes("401") || err.message.includes("403")) logout();
-    } finally {
       setLoading(false);
+    } catch (err: any) {
+      if (err.message?.includes("401") || err.message?.includes("403") || err.message?.includes("Sesi telah habis")) {
+        logout();
+      } else {
+        setLoading(false);
+      }
     }
   };
 
