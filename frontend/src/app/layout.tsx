@@ -41,7 +41,7 @@ export default function RootLayout({
             
             {/* Zandev Watermark Footer */}
             <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 opacity-80 hover:opacity-100 transition-opacity">
-              <a href="https://zandev.id" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-hacker text-[10px] tracking-widest text-primary/70 uppercase px-5 py-2.5 rounded-full glass-panel border border-primary/20 shadow-[0_0_10px_rgba(0,255,65,0.1)] bg-background/50 backdrop-blur-sm hover:bg-primary/10 transition-colors">
+              <a href="https://zandev.id" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-hacker text-[10px] tracking-widest text-primary/70 uppercase px-5 py-2.5 rounded-full glass-panel border border-primary/20 shadow-[0_0_10px_rgba(0,255,65,0.1)] bg-background/50 backdrop-blur-sm hover:bg-primary/10 active:bg-primary/30 active:shadow-[0_0_40px_rgba(0,255,65,0.9)] active:scale-95 transition-all duration-300">
                 <span>Design x Code by</span> 
                 <span className="font-black text-primary glow-text">Zandev</span>
               </a>
