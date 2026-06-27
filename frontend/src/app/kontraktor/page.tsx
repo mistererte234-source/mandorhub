@@ -18,7 +18,8 @@ import {
   TrendingUp,
   MapPin,
   CheckCircle2,
-  Clock
+  Clock,
+  ChevronRight
 } from "lucide-react";
 
 export default function ContractorDashboard() {
@@ -218,6 +219,13 @@ export default function ContractorDashboard() {
                          </ul>
                        </div>
                      )}
+
+                     <div className="mt-3 pt-3 border-t border-surface-variant/30 flex justify-between items-center group-hover:border-primary/30 transition-colors">
+                       <span className="text-xs font-bold text-on-surface-variant group-hover:text-primary transition-colors">Lihat Detail Proyek & Laporan Keuangan</span>
+                       <div className="w-8 h-8 rounded-full bg-surface-variant/30 group-hover:bg-primary/10 flex items-center justify-center transition-colors">
+                         <ChevronRight className="w-4 h-4 text-on-surface-variant group-hover:text-primary transition-colors" />
+                       </div>
+                     </div>
                    </div>
                  </Link>
               ))}
