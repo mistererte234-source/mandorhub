@@ -638,37 +638,65 @@ export default function AdminDashboard() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {projects.map(p => (
-                  <div key={p.id} className="glass-panel rounded-2xl p-5 hover:shadow-md transition-shadow">
-                    <h3 className="font-bold text-lg text-on-surface">{p.name}</h3>
-                    <p className="text-xs text-on-surface-variant mb-4">{p.client_name || "Tanpa Klien"}</p>
-                    
-                    <div className="flex justify-between items-end mb-2">
-                      <span className="text-sm font-medium text-on-surface">Progress Aktual</span>
-                      <span className="text-xl font-bold text-primary">{p.progress_percent || 0}%</span>
-                    </div>
-                    
-                    <div className="w-full bg-surface-variant/50 rounded-full h-3 overflow-hidden">
-                      <div 
-                        className="bg-primary h-3 rounded-full transition-all duration-1000 ease-out relative"
-                        style={{ width: `${Math.min(100, p.progress_percent || 0)}%` }}
-                      >
-                        <div className="absolute top-0 left-0 right-0 bottom-0 bg-white/20 animate-pulse" />
+                {projects.map(p => {
+                  const radius = 40;
+                  const circumference = 2 * Math.PI * radius;
+                  const percent = p.progress_percent || 0;
+                  const offset = circumference - (percent / 100) * circumference;
+
+                  return (
+                  <div key={p.id} className="glass-panel rounded-2xl p-5 border border-primary/20 shadow-[0_0_15px_rgba(0,255,65,0.05)] hover:shadow-[0_0_20px_rgba(0,255,65,0.2)] transition-all group">
+                    <div className="flex justify-between items-start mb-6 border-b border-primary/20 pb-4">
+                      <div>
+                        <h3 className="font-black text-lg text-primary tracking-wider uppercase font-hacker glow-text">{p.name}</h3>
+                        <p className="text-[10px] text-primary/70 tracking-widest uppercase font-bold mt-1">CLIENT: {p.client_name || "UNKNOWN"}</p>
                       </div>
                     </div>
                     
-                    <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
-                      <div className="bg-surface-variant/20 p-2 rounded-xl border border-surface-variant">
-                        <span className="opacity-70 block mb-1">Bos</span>
-                        <span className="font-bold">{p.bos_name}</span>
+                    <div className="flex items-center gap-6 mb-6">
+                      <div className="relative w-24 h-24 shrink-0 flex items-center justify-center">
+                        {/* Background Circle */}
+                        <svg className="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                          <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-primary/10" />
+                          {/* Progress Circle */}
+                          <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="8" fill="transparent"
+                            className="text-primary transition-all duration-1000 ease-out drop-shadow-[0_0_8px_rgba(0,255,65,1)]"
+                            strokeDasharray={circumference}
+                            strokeDashoffset={offset}
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                        {/* Percentage Text in Center */}
+                        <div className="flex flex-col items-center justify-center">
+                          <span className="text-2xl font-black text-primary font-hacker glow-text leading-none">{percent}%</span>
+                        </div>
                       </div>
-                      <div className="bg-surface-variant/20 p-2 rounded-xl border border-surface-variant">
-                        <span className="opacity-70 block mb-1">Mandor</span>
-                        <span className="font-bold">{p.mandor_name}</span>
+                      
+                      <div className="flex-1">
+                        <div className="mb-2">
+                          <span className="text-[10px] text-primary/50 tracking-widest uppercase font-bold block mb-1">Status</span>
+                          <span className={`text-sm font-black font-hacker uppercase tracking-widest ${percent === 100 ? 'text-primary glow-text' : percent > 0 ? 'text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]' : 'text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]'}`}>
+                            {percent === 100 ? 'COMPLETE' : percent > 0 ? 'IN PROGRESS' : 'PENDING'}
+                          </span>
+                        </div>
+                        <div className="h-[2px] w-full bg-primary/10 relative overflow-hidden mt-3">
+                           <div className="absolute top-0 left-0 h-full bg-primary" style={{ width: `${percent}%` }} />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-3 text-xs font-hacker">
+                      <div className="bg-primary/5 p-3 rounded-xl border border-primary/20 shadow-[0_0_10px_rgba(0,255,65,0.05)] group-hover:bg-primary/10 transition-colors">
+                        <span className="text-primary/50 uppercase tracking-widest block mb-1 font-bold text-[10px]">BOS</span>
+                        <span className="font-black text-primary glow-text uppercase">{p.bos_name}</span>
+                      </div>
+                      <div className="bg-primary/5 p-3 rounded-xl border border-primary/20 shadow-[0_0_10px_rgba(0,255,65,0.05)] group-hover:bg-primary/10 transition-colors">
+                        <span className="text-primary/50 uppercase tracking-widest block mb-1 font-bold text-[10px]">MANDOR</span>
+                        <span className="font-black text-primary glow-text uppercase">{p.mandor_name}</span>
                       </div>
                     </div>
                   </div>
-                ))}
+                )})}
               </div>
             )}
           </section>
