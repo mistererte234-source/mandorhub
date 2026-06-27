@@ -19,18 +19,32 @@ def create_report(
     # Serialize worker_attendance to list of dicts for JSONB
     attendance_data = [item.model_dump() for item in payload.worker_attendance if item.count > 0]
 
+    r_date = payload.report_date or datetime.date.today()
+    existing = db.query(DailyReport).filter(
+        DailyReport.site_id == payload.site_id,
+        DailyReport.report_date == r_date
+    ).first()
+
+    if existing:
+        existing.worker_attendance = attendance_data
+        existing.work_done = payload.work_done
+        existing.target_status = payload.target_status
+        db.add(existing)
+        db.commit()
+        db.refresh(existing)
+        return existing
+
     report = DailyReport(
         org_id=current_user.org_id,
         site_id=payload.site_id,
         target_id=payload.target_id,
         mandor_id=current_user.id,
-        report_date=payload.report_date or datetime.date.today(),
+        report_date=r_date,
         worker_attendance=attendance_data,
         work_done=payload.work_done,
         target_status=payload.target_status,
         submit_status="submitted",
-        submitted_server_at=datetime.datetime.now(datetime.timezone.utc),
-        locked=True
+        submitted_server_at=datetime.datetime.utcnow(),
     )
 
     db.add(report)
