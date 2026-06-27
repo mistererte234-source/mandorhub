@@ -30,7 +30,7 @@ def get_site_timeline(
             type="report",
             title="Laporan Harian",
             description=r.work_done or "Laporan dikirim",
-            timestamp=r.submitted_server_at or r.created_at,
+            timestamp=datetime.datetime.combine(r.report_date, datetime.time.min) if r.report_date else (r.submitted_server_at or r.created_at),
             data={"attendance": r.worker_attendance}
         ))
 

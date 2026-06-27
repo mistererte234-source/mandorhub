@@ -13,6 +13,10 @@ export default function MandorDashboard() {
   
   // Form State
   const [workDone, setWorkDone] = useState("");
+  const [reportDate, setReportDate] = useState(() => {
+    const d = new Date();
+    return d.toISOString().split("T")[0];
+  });
   const [attendance, setAttendance] = useState<{ role: string; count: number; names: string }[]>([
     { role: "Tukang", count: 0, names: "" },
     { role: "Kuli", count: 0, names: "" }
@@ -65,11 +69,13 @@ export default function MandorDashboard() {
         body: JSON.stringify({
           site_id: site.site_id,
           work_done: workDone,
+          report_date: reportDate,
           worker_attendance: attendance
         })
       });
       alert("Laporan berhasil dikirim ke server!");
       setWorkDone("");
+      setReportDate(new Date().toISOString().split("T")[0]);
       setAttendance([
         { role: "Tukang", count: 0, names: "" },
         { role: "Kuli", count: 0, names: "" }
@@ -172,6 +178,16 @@ export default function MandorDashboard() {
               
               <div className="flex flex-col gap-5">
                 <div>
+                  <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Tanggal Laporan</label>
+                  <input 
+                    type="date"
+                    className="w-full bg-surface-container-low border border-surface-variant rounded-2xl px-4 py-3 text-sm text-on-surface focus:border-primary outline-none transition-colors mb-4"
+                    value={reportDate}
+                    onChange={(e) => setReportDate(e.target.value)}
+                  />
+                </div>
+
+                <div>
                   <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Pekerjaan Selesai Hari Ini</label>
                   <textarea 
                     className="w-full bg-surface-container-low border border-surface-variant rounded-2xl px-4 py-3 text-sm text-on-surface focus:border-primary outline-none transition-colors"
@@ -204,11 +220,11 @@ export default function MandorDashboard() {
                             className="w-20 bg-surface border border-surface-variant rounded-xl px-3 py-2 text-sm font-black text-center text-on-surface outline-none focus:border-primary"
                           />
                         </div>
-                        <input
-                          type="text"
-                          value={att.names}
-                          onChange={(e) => updateAttendance(idx, "names", e.target.value)}
-                          placeholder="Nama (Opsional)"
+                          <input
+                            type="text"
+                            value={att.names}
+                            onChange={(e) => updateAttendance(idx, "names", e.target.value)}
+                            placeholder="Daftar Nama Pekerja (Pisahkan dengan koma)"
                           className="w-full bg-surface border border-surface-variant rounded-xl px-3 py-2 text-sm text-on-surface outline-none focus:border-primary"
                         />
                       </div>
