@@ -163,6 +163,9 @@ def on_startup():
     session = next(get_session())
     try:
         # Auto-migrate production schema
+        session.execute(text("ALTER TABLE project ADD COLUMN IF NOT EXISTS bos_id UUID;"))
+        session.execute(text("ALTER TABLE project ADD COLUMN IF NOT EXISTS mandor_id UUID;"))
+        session.execute(text("ALTER TABLE project ADD COLUMN IF NOT EXISTS bendahara_id UUID;"))
         session.execute(text("ALTER TABLE project ADD COLUMN IF NOT EXISTS tukang_daily_rate FLOAT DEFAULT 0.0 NOT NULL;"))
         session.execute(text("ALTER TABLE project ADD COLUMN IF NOT EXISTS kuli_daily_rate FLOAT DEFAULT 0.0 NOT NULL;"))
         session.execute(text("ALTER TABLE target ADD COLUMN IF NOT EXISTS week_number INTEGER DEFAULT 1 NOT NULL;"))

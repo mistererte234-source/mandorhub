@@ -322,7 +322,10 @@ def migrate_database(
 ):
     """Temporary endpoint to migrate production database schema."""
     try:
-        # Add tukang_daily_rate and kuli_daily_rate to project table if they don't exist
+        # Add missing columns to project table
+        session.execute(text("ALTER TABLE project ADD COLUMN IF NOT EXISTS bos_id UUID;"))
+        session.execute(text("ALTER TABLE project ADD COLUMN IF NOT EXISTS mandor_id UUID;"))
+        session.execute(text("ALTER TABLE project ADD COLUMN IF NOT EXISTS bendahara_id UUID;"))
         session.execute(text("ALTER TABLE project ADD COLUMN IF NOT EXISTS tukang_daily_rate FLOAT DEFAULT 0.0 NOT NULL;"))
         session.execute(text("ALTER TABLE project ADD COLUMN IF NOT EXISTS kuli_daily_rate FLOAT DEFAULT 0.0 NOT NULL;"))
         
