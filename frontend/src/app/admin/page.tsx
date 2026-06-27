@@ -711,13 +711,13 @@ export default function AdminDashboard() {
                             value={editData[u.id]?.phone || ""}
                             onChange={e => setEditData(prev => ({ ...prev, [u.id]: { ...prev[u.id], phone: e.target.value } }))}
                           />
-                          <div className="flex gap-2">
+                          <div className="flex gap-2 shrink-0">
                             <button onClick={() => handleSaveUser(u.id)}
-                              className="flex-1 sm:flex-none bg-primary text-on-primary px-4 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition-all flex items-center gap-1.5">
-                              <Save className="w-4 h-4" /> Simpan
+                              className="flex items-center justify-center w-11 h-11 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all shadow-sm hover:shadow-md" title="Simpan Perubahan">
+                              <Save className="w-4 h-4" />
                             </button>
                             <button onClick={() => handleDeleteUser(u.id, u.name)}
-                              className="bg-error/10 hover:bg-error/20 text-error px-3 rounded-xl transition-colors" title="Nonaktifkan">
+                              className="flex items-center justify-center w-11 h-11 rounded-full bg-error/10 text-error hover:bg-error hover:text-white transition-all shadow-sm hover:shadow-md" title="Nonaktifkan">
                               <Trash2 className="w-4 h-4" />
                             </button>
                           </div>
