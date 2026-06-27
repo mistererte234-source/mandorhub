@@ -121,8 +121,8 @@ export default function MandorDashboard() {
       <header className="bg-surface/50 backdrop-blur-2xl docked full-width top-0 shadow-sm sticky z-40 border-b border-primary/20">
         <div className="flex justify-between items-center px-6 py-4 w-full">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl shadow-[0_0_15px_rgba(0,255,65,0.3)] border border-primary/50 overflow-hidden bg-black flex items-center justify-center p-1">
-              <Image src="/logo.png" alt="Logo" width={40} height={40} className="object-contain filter invert" />
+            <div className="w-10 h-10 flex items-center justify-center p-1">
+              <Image src="/logo.png" alt="Logo" width={40} height={40} className="object-contain logo-transparent" />
             </div>
             <div>
               <h1 className="font-headline-sm text-lg font-black text-on-surface tracking-tight leading-tight">

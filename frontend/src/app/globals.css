@@ -166,3 +166,9 @@ body {
 .animate-intro {
   animation: dropAndBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
+
+/* Magic class to make white background logo transparent and fit the dark theme */
+.logo-transparent {
+  filter: invert(1) hue-rotate(180deg) brightness(1.5);
+  mix-blend-mode: screen;
+}

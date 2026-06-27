@@ -138,8 +138,8 @@ export default function BendaharaDashboard() {
       <header className="bg-surface/70 backdrop-blur-2xl docked full-width top-0 shadow-sm sticky z-40 border-b border-surface-variant/30">
         <div className="flex justify-between items-center px-6 py-5 w-full">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl shadow-[0_0_15px_rgba(0,255,65,0.3)] border border-primary/50 overflow-hidden bg-black flex items-center justify-center p-1">
-              <Image src="/logo.png" alt="Logo" width={48} height={48} className="object-contain filter invert" />
+            <div className="w-12 h-12 flex items-center justify-center p-1">
+              <Image src="/logo.png" alt="Logo" width={48} height={48} className="object-contain logo-transparent" />
             </div>
             <div>
               <h1 className="font-headline-lg-mobile text-[22px] leading-tight font-black text-on-surface tracking-tight">

@@ -272,8 +272,8 @@ Lokasi: ${mainSite.project}
       <header className="bg-surface/80 backdrop-blur-md docked full-width top-0 shadow-sm sticky z-40">
         <div className="flex justify-between items-center px-5 py-4 w-full border-b border-surface-variant/50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full shadow-sm border border-surface-variant overflow-hidden bg-white flex items-center justify-center">
-              <Image src="/logo.png" alt="Logo" width={40} height={40} className="object-cover" />
+            <div className="w-10 h-10 flex items-center justify-center p-1">
+              <Image src="/logo.png" alt="Logo" width={40} height={40} className="object-contain logo-transparent" />
             </div>
             <div>
               <h1 className="font-headline-lg-mobile text-[22px] leading-[28px] font-bold text-primary tracking-tight">
