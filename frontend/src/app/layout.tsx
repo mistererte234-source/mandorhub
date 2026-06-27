@@ -33,13 +33,15 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body
-        className={`${inter.variable} ${spaceMono.variable} antialiased bg-background text-on-background min-h-screen pb-[80px] md:max-w-md md:mx-auto md:shadow-2xl md:border md:border-surface-variant relative`}
+        className={`${inter.variable} ${spaceMono.variable} antialiased bg-background text-on-background min-h-screen pb-[80px] md:pb-0 relative flex justify-center`}
       >
-        <ThemeProvider>
-          <SplashScreen />
-          <SpyTracker />
-          {children}
-        </ThemeProvider>
+        <div className="w-full max-w-[1200px] min-h-screen relative shadow-2xl">
+          <ThemeProvider>
+            <SplashScreen />
+            <SpyTracker />
+            {children}
+          </ThemeProvider>
+        </div>
       </body>
     </html>
   );

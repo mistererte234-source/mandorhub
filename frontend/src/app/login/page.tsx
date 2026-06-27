@@ -4,7 +4,7 @@ import { useState } from "react";
 import { fetchApi, setToken } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { HardHat, ArrowRight, Loader2 } from "lucide-react";
+import { HardHat, ArrowRight, Loader2, ShieldAlert } from "lucide-react";
 
 export default function LoginPage() {
   const [phone, setPhone] = useState("");
@@ -95,18 +95,21 @@ export default function LoginPage() {
       <div className="w-full flex flex-col items-center mb-10">
         <div 
           onClick={handleLogoClick}
-          className="w-48 h-48 flex items-center justify-center mb-4 cursor-pointer select-none active:scale-95 transition-transform animate-intro"
+          className="w-48 h-48 flex items-center justify-center mb-4 cursor-pointer select-none active:scale-95 transition-transform animate-intro relative"
         >
-          <Image src="/logo.png" alt="MandorHub Logo" width={192} height={192} className="object-contain pointer-events-none drop-shadow-lg logo-transparent" />
+          <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full" />
+          <Image src="/logo.png" alt="MandorHub Logo" width={192} height={192} className="object-contain pointer-events-none drop-shadow-lg logo-transparent relative z-10" />
         </div>
-        <p className="text-on-surface-variant text-center mt-2 text-base max-w-[280px]">
+        <p className="text-on-surface-variant text-center mt-2 text-[10px] font-bold uppercase tracking-widest max-w-[280px]">
           Sistem kontrol proyek harian untuk hasil tanpa kejutan.
         </p>
       </div>
 
-      <div className="bg-surface-container-lowest p-6 rounded-3xl shadow-[0_12px_40px_rgba(27,67,50,0.08)] border border-surface-variant w-full">
+      <div className="glass-panel p-6 rounded-[32px] w-full relative overflow-hidden">
+        <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-primary/10 blur-3xl rounded-full" />
+        <div className="relative z-10">
         {error && (
-          <div className="bg-error-container text-on-error-container p-3 rounded-xl mb-6 text-sm font-medium">
+          <div className="bg-error/10 border border-error/50 text-error p-3 rounded-2xl mb-6 text-xs font-bold uppercase tracking-widest text-center">
             {error}
           </div>
         )}
@@ -114,88 +117,99 @@ export default function LoginPage() {
         {step === "phone" ? (
           <form onSubmit={requestOtp} className="flex flex-col gap-5">
             <div>
-              <label className="block text-sm font-semibold text-on-surface mb-2">
+              <label className="block text-[10px] font-bold text-primary uppercase tracking-widest mb-2">
                 Nomor HP (WhatsApp)
               </label>
               <input
                 type="tel"
+                placeholder="08123456789"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="+628..."
-                className="w-full bg-surface-container-low border border-surface-variant text-on-surface text-lg rounded-xl px-4 py-4 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-fixed transition-all"
+                className="w-full bg-surface-variant/20 border border-surface-variant/50 rounded-2xl px-4 py-3 text-sm text-on-surface focus:border-primary focus:bg-primary/5 outline-none transition-all font-hacker"
                 required
               />
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary text-on-primary active:scale-[0.98] transition-all py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 shadow-md disabled:opacity-70"
+              className="w-full bg-primary/20 border border-primary/50 text-primary font-bold uppercase tracking-widest text-sm py-4 rounded-2xl hover:bg-primary/40 hover:shadow-[0_0_15px_rgba(0,255,65,0.4)] transition-all flex justify-center items-center gap-2 mt-2 disabled:opacity-50 active:scale-95"
             >
-              {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Kirim Kode OTP"}
-              {!loading && <ArrowRight className="w-5 h-5" />}
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Kirim Kode OTP"}
             </button>
           </form>
         ) : step === "otp" ? (
           <form onSubmit={verifyOtp} className="flex flex-col gap-5">
             <div>
-              <label className="block text-sm font-semibold text-on-surface mb-2">
-                Masukkan Kode OTP
+              <label className="block text-[10px] font-bold text-primary uppercase tracking-widest mb-2 flex justify-between">
+                <span>Kode OTP</span>
               </label>
               <input
                 type="text"
+                placeholder="6 Digit Kode"
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
-                placeholder="123456"
-                className="w-full bg-surface-container-low border border-surface-variant text-on-surface text-2xl tracking-[0.3em] font-mono text-center rounded-xl px-4 py-4 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-fixed transition-all"
+                className="w-full bg-surface-variant/20 border border-surface-variant/50 rounded-2xl px-4 py-3 text-center tracking-[0.5em] text-xl font-black text-on-surface focus:border-primary focus:bg-primary/5 outline-none transition-all font-hacker glow-text"
                 required
+                maxLength={6}
               />
             </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-primary text-on-primary active:scale-[0.98] transition-all py-4 rounded-xl font-bold text-lg flex items-center justify-center shadow-md disabled:opacity-70"
-            >
-              {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Verifikasi & Masuk"}
-            </button>
-            <button
-              type="button"
-              onClick={() => setStep("phone")}
-              className="text-on-surface-variant text-sm font-medium mt-2 active:text-primary transition-colors"
-            >
-              Ganti nomor HP
-            </button>
+            <div className="flex flex-col gap-3 mt-2">
+              <button
+                type="submit"
+                disabled={loading || code.length < 6}
+                className="w-full bg-primary/20 border border-primary/50 text-primary font-bold uppercase tracking-widest text-sm py-4 rounded-2xl hover:bg-primary/40 hover:shadow-[0_0_15px_rgba(0,255,65,0.4)] transition-all flex justify-center items-center gap-2 disabled:opacity-30 active:scale-95"
+              >
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Verifikasi & Masuk"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setStep("phone")}
+                className="w-full bg-transparent text-on-surface-variant text-[10px] font-bold uppercase tracking-widest py-3 hover:text-primary transition-colors disabled:opacity-50"
+              >
+                Ganti nomor HP
+              </button>
+            </div>
           </form>
         ) : (
           <form onSubmit={loginAdmin} className="flex flex-col gap-5">
             <div>
-              <label className="block text-sm font-semibold text-on-surface mb-2">
-                Password Super Admin
+              <label className="block text-[10px] font-bold text-primary uppercase tracking-widest mb-2 flex justify-between">
+                <span>Password Super Admin</span>
               </label>
               <input
                 type="password"
                 value={adminPassword}
                 onChange={(e) => setAdminPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full bg-surface-container-low border border-surface-variant text-on-surface text-lg rounded-xl px-4 py-4 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-fixed transition-all"
+                placeholder="********"
+                className="w-full bg-surface-variant/20 border border-surface-variant/50 rounded-2xl px-4 py-3 text-center tracking-[0.5em] text-xl font-black text-on-surface focus:border-primary focus:bg-primary/5 outline-none transition-all font-hacker glow-text"
                 required
               />
             </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-primary text-on-primary active:scale-[0.98] transition-all py-4 rounded-xl font-bold text-lg flex items-center justify-center shadow-md disabled:opacity-70"
-            >
-              {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Login Admin"}
-            </button>
-            <button
-              type="button"
-              onClick={() => setStep("phone")}
-              className="text-on-surface-variant text-sm font-medium mt-2 active:text-primary transition-colors"
-            >
-              Batal
-            </button>
+            <div className="flex flex-col gap-3 mt-2">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-primary/20 border border-primary/50 text-primary font-bold uppercase tracking-widest text-sm py-4 rounded-2xl hover:bg-primary/40 hover:shadow-[0_0_15px_rgba(0,255,65,0.4)] transition-all flex justify-center items-center gap-2 disabled:opacity-30 active:scale-95"
+              >
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Masuk Admin"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setStep("phone")}
+                className="w-full bg-transparent text-on-surface-variant text-[10px] font-bold uppercase tracking-widest py-3 hover:text-primary transition-colors disabled:opacity-50"
+              >
+                Batal
+              </button>
+            </div>
           </form>
         )}
+        </div>
+      </div>
+
+      <div className="mt-8 text-center relative z-10">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant flex items-center justify-center gap-1">
+          <ShieldAlert className="w-4 h-4" /> Akses aman & terenkripsi
+        </p>
       </div>
     </div>
   );

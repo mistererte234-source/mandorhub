@@ -325,31 +325,31 @@ export default function AdminDashboard() {
               <div>
                 <label className="block text-sm font-semibold mb-2">Nama Proyek</label>
                 <input value={editProjectForm.name} onChange={e => setEditProjectForm({...editProjectForm, name: e.target.value})}
-                  className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary" />
+                  className="w-full bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary" />
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-2">Klien</label>
                 <input value={editProjectForm.client_name} onChange={e => setEditProjectForm({...editProjectForm, client_name: e.target.value})}
-                  className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary" placeholder="Nama klien..." />
+                  className="w-full bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary" placeholder="Nama klien..." />
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-2">Bos</label>
                 <select value={editProjectForm.bos_id} onChange={e => setEditProjectForm({...editProjectForm, bos_id: e.target.value})}
-                  className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary">
+                  className="w-full bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary">
                   {bosUsers.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-2">Mandor</label>
                 <select value={editProjectForm.mandor_id} onChange={e => setEditProjectForm({...editProjectForm, mandor_id: e.target.value})}
-                  className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary">
+                  className="w-full bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary">
                   {mandorUsers.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-2">Bendahara <span className="font-normal text-on-surface-variant">(Opsional)</span></label>
                 <select value={editProjectForm.bendahara_id} onChange={e => setEditProjectForm({...editProjectForm, bendahara_id: e.target.value})}
-                  className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary">
+                  className="w-full bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary">
                   <option value="">-- Tidak Ada --</option>
                   {bendaharaUsers.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
                 </select>
@@ -357,7 +357,7 @@ export default function AdminDashboard() {
               <div>
                 <label className="block text-sm font-semibold mb-2">Status</label>
                 <select value={editProjectForm.status} onChange={e => setEditProjectForm({...editProjectForm, status: e.target.value})}
-                  className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary">
+                  className="w-full bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary">
                   <option value="active">Aktif</option>
                   <option value="paused">Ditunda</option>
                   <option value="done">Selesai</option>
@@ -384,16 +384,16 @@ export default function AdminDashboard() {
               <div>
                 <label className="block text-sm font-semibold mb-2">Nama Proyek *</label>
                 <input required value={newProject.name} onChange={e => setNewProject({...newProject, name: e.target.value})}
-                  className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary"
+                  className="w-full bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary"
                   placeholder="Contoh: Ruko Pak Budi..." />
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-2">Nama Klien</label>
                 <input value={newProject.client_name} onChange={e => setNewProject({...newProject, client_name: e.target.value})}
-                  className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary"
+                  className="w-full bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary"
                   placeholder="Contoh: PT. ABC..." />
               </div>
-              <div className="rounded-2xl border border-surface-variant bg-surface-container-lowest p-4">
+              <div className="rounded-2xl border border-surface-variant glass-panel p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <UserPlus className="w-4 h-4 text-primary" />
                   <h4 className="font-bold text-on-surface">Buat Akun Bos</h4>
@@ -402,7 +402,7 @@ export default function AdminDashboard() {
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wide text-on-surface-variant mb-1.5">Nama Bos *</label>
                     <input required value={newProject.bos.name} onChange={e => setNewProject({...newProject, bos: {...newProject.bos, name: e.target.value}})}
-                      className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary"
+                      className="w-full bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary"
                       placeholder="Contoh: Pak Hari Sulis" />
                   </div>
                   <div>
@@ -410,14 +410,14 @@ export default function AdminDashboard() {
                     <div className="relative">
                       <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant" />
                       <input required inputMode="tel" value={newProject.bos.phone} onChange={e => setNewProject({...newProject, bos: {...newProject.bos, phone: e.target.value}})}
-                        className="w-full bg-surface-container-low border border-surface-variant rounded-xl pl-10 pr-4 py-3 text-on-surface outline-none focus:border-primary"
+                        className="w-full bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-xl pl-10 pr-4 py-3 text-on-surface outline-none focus:border-primary"
                         placeholder="08xxxxxxxxxx" />
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-surface-variant bg-surface-container-lowest p-4">
+              <div className="rounded-2xl border border-surface-variant glass-panel p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <UserPlus className="w-4 h-4 text-primary" />
                   <h4 className="font-bold text-on-surface">Buat Akun Mandor</h4>
@@ -426,7 +426,7 @@ export default function AdminDashboard() {
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wide text-on-surface-variant mb-1.5">Nama Mandor *</label>
                     <input required value={newProject.mandor.name} onChange={e => setNewProject({...newProject, mandor: {...newProject.mandor, name: e.target.value}})}
-                      className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary"
+                      className="w-full bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary"
                       placeholder="Contoh: Pak Agus" />
                   </div>
                   <div>
@@ -434,14 +434,14 @@ export default function AdminDashboard() {
                     <div className="relative">
                       <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant" />
                       <input required inputMode="tel" value={newProject.mandor.phone} onChange={e => setNewProject({...newProject, mandor: {...newProject.mandor, phone: e.target.value}})}
-                        className="w-full bg-surface-container-low border border-surface-variant rounded-xl pl-10 pr-4 py-3 text-on-surface outline-none focus:border-primary"
+                        className="w-full bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-xl pl-10 pr-4 py-3 text-on-surface outline-none focus:border-primary"
                         placeholder="08xxxxxxxxxx" />
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-surface-variant bg-surface-container-lowest p-4">
+              <div className="rounded-2xl border border-surface-variant glass-panel p-4">
                 <div className="flex items-center justify-between gap-3 mb-3">
                   <div className="flex items-center gap-2">
                     <UserPlus className="w-4 h-4 text-primary" />
@@ -453,7 +453,7 @@ export default function AdminDashboard() {
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wide text-on-surface-variant mb-1.5">Nama Bendahara</label>
                     <input value={newProject.bendahara.name} onChange={e => setNewProject({...newProject, bendahara: {...newProject.bendahara, name: e.target.value}})}
-                      className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary"
+                      className="w-full bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary"
                       placeholder="Contoh: Bu Rina" />
                   </div>
                   <div>
@@ -461,7 +461,7 @@ export default function AdminDashboard() {
                     <div className="relative">
                       <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant" />
                       <input inputMode="tel" value={newProject.bendahara.phone} onChange={e => setNewProject({...newProject, bendahara: {...newProject.bendahara, phone: e.target.value}})}
-                        className="w-full bg-surface-container-low border border-surface-variant rounded-xl pl-10 pr-4 py-3 text-on-surface outline-none focus:border-primary"
+                        className="w-full bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-xl pl-10 pr-4 py-3 text-on-surface outline-none focus:border-primary"
                         placeholder="08xxxxxxxxxx" />
                     </div>
                   </div>
@@ -487,19 +487,19 @@ export default function AdminDashboard() {
               <div>
                 <label className="block text-sm font-semibold mb-2">Nama</label>
                 <input required value={newUser.name} onChange={e => setNewUser({...newUser, name: e.target.value})}
-                  className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary"
+                  className="w-full bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary"
                   placeholder="Nama lengkap..." />
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-2">Nomor HP (WhatsApp)</label>
                 <input required value={newUser.phone} onChange={e => setNewUser({...newUser, phone: e.target.value})}
-                  className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary"
+                  className="w-full bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary"
                   placeholder="08xxxxxxxxxx" />
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-2">Role</label>
                 <select value={newUser.role} onChange={e => setNewUser({...newUser, role: e.target.value})}
-                  className="w-full bg-surface-container-low border border-surface-variant rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary">
+                  className="w-full bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-xl px-4 py-3 text-on-surface outline-none focus:border-primary">
                   <option value="mandor">Mandor</option>
                   <option value="contractor">Bos / Kontraktor</option>
                   <option value="bendahara">Bendahara</option>
@@ -525,7 +525,7 @@ export default function AdminDashboard() {
           </button>
         </div>
         <div className="px-4 pb-3">
-          <div className="flex w-full bg-surface-variant/30 p-1 rounded-2xl gap-1 shadow-inner">
+          <div className="flex w-full glass-panel p-1 rounded-2xl gap-1 shadow-inner">
             {(["proyek", "akun", "progress", "pengaturan", "spy"] as TabType[]).map(t => {
               const icons: Record<TabType, React.ReactNode> = {
                 proyek: <Briefcase className="w-4 h-4" />,
@@ -564,7 +564,7 @@ export default function AdminDashboard() {
             </div>
 
             {projects.length === 0 ? (
-              <div className="text-center py-16 text-on-surface-variant bg-surface-container-lowest rounded-3xl border border-surface-variant">
+              <div className="text-center py-16 text-on-surface-variant glass-panel rounded-3xl border border-surface-variant">
                 <Briefcase className="w-12 h-12 mx-auto mb-3 opacity-40" />
                 <p className="font-medium">Belum ada proyek.</p>
                 <p className="text-sm mt-1 opacity-60">Klik &ldquo;Tambah&rdquo; untuk membuat proyek pertama.</p>
@@ -584,7 +584,7 @@ export default function AdminDashboard() {
                   </thead>
                   <tbody className="divide-y divide-surface-variant/50">
                     {projects.map(p => (
-                      <tr key={p.id} className="bg-surface-container-lowest hover:bg-surface-container transition-colors group">
+                      <tr key={p.id} className="glass-panel hover:bg-surface-variant/20 transition-colors group">
                         <td className="px-4 py-3">
                           <div className="font-bold text-on-surface">{p.name}</div>
                           {p.client_name && <div className="text-xs text-on-surface-variant mt-0.5">{p.client_name}</div>}
@@ -632,14 +632,14 @@ export default function AdminDashboard() {
             </div>
 
             {projects.length === 0 ? (
-              <div className="text-center py-16 text-on-surface-variant bg-surface-container-lowest rounded-3xl border border-surface-variant">
+              <div className="text-center py-16 text-on-surface-variant glass-panel rounded-3xl border border-surface-variant">
                 <Activity className="w-12 h-12 mx-auto mb-3 opacity-40" />
                 <p className="font-medium">Belum ada proyek.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {projects.map(p => (
-                  <div key={p.id} className="bg-surface-container-lowest border border-surface-variant rounded-2xl p-5 hover:shadow-md transition-shadow">
+                  <div key={p.id} className="glass-panel rounded-2xl p-5 hover:shadow-md transition-shadow">
                     <h3 className="font-bold text-lg text-on-surface">{p.name}</h3>
                     <p className="text-xs text-on-surface-variant mb-4">{p.client_name || "Tanpa Klien"}</p>
                     
@@ -658,11 +658,11 @@ export default function AdminDashboard() {
                     </div>
                     
                     <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
-                      <div className="bg-surface-container p-2 rounded-xl border border-surface-variant">
+                      <div className="bg-surface-variant/20 p-2 rounded-xl border border-surface-variant">
                         <span className="opacity-70 block mb-1">Bos</span>
                         <span className="font-bold">{p.bos_name}</span>
                       </div>
-                      <div className="bg-surface-container p-2 rounded-xl border border-surface-variant">
+                      <div className="bg-surface-variant/20 p-2 rounded-xl border border-surface-variant">
                         <span className="opacity-70 block mb-1">Mandor</span>
                         <span className="font-bold">{p.mandor_name}</span>
                       </div>
@@ -697,16 +697,16 @@ export default function AdminDashboard() {
                   </h3>
                   <div className="flex flex-col gap-3">
                     {roleUsers.map(u => (
-                      <div key={u.id} className="bg-surface-container-lowest border border-surface-variant p-4 rounded-2xl">
+                      <div key={u.id} className="glass-panel p-4 rounded-2xl">
                         <div className="flex flex-col sm:flex-row gap-2">
                           <input
-                            className="flex-1 min-w-0 bg-surface-container-low border border-surface-variant px-3 py-2.5 rounded-xl text-on-surface text-sm outline-none focus:border-primary"
+                            className="flex-1 min-w-0 bg-surface-variant/20 border border-surface-variant/50 font-hacker px-3 py-2.5 rounded-xl text-on-surface font-hacker outline-none focus:border-primary"
                             placeholder="Nama"
                             value={editData[u.id]?.name || ""}
                             onChange={e => setEditData(prev => ({ ...prev, [u.id]: { ...prev[u.id], name: e.target.value } }))}
                           />
                           <input
-                            className="flex-1 min-w-0 bg-surface-container-low border border-surface-variant px-3 py-2.5 rounded-xl text-on-surface text-sm outline-none focus:border-primary"
+                            className="flex-1 min-w-0 bg-surface-variant/20 border border-surface-variant/50 font-hacker px-3 py-2.5 rounded-xl text-on-surface font-hacker outline-none focus:border-primary"
                             placeholder="Nomor HP (WhatsApp)"
                             value={editData[u.id]?.phone || ""}
                             onChange={e => setEditData(prev => ({ ...prev, [u.id]: { ...prev[u.id], phone: e.target.value } }))}
@@ -734,7 +734,7 @@ export default function AdminDashboard() {
         {/* ══════════════ TAB: PENGATURAN ══════════════ */}
         {tab === "pengaturan" && (
           <section className="flex flex-col gap-5 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <div className="bg-surface-container-lowest border border-surface-variant p-5 rounded-2xl">
+            <div className="glass-panel p-5 rounded-2xl">
               <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><Paintbrush className="w-5 h-5" /> Tema Visual</h2>
               <div className="grid grid-cols-2 gap-3">
                 {[
@@ -752,7 +752,7 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <div className="bg-surface-container-lowest border border-surface-variant p-5 rounded-2xl">
+            <div className="glass-panel p-5 rounded-2xl">
               <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><Database className="w-5 h-5" /> Manajemen Database</h2>
               <div className="flex flex-col gap-3">
                 <button onClick={handleMigrate} className="w-full bg-primary text-on-primary p-3 rounded-xl font-bold hover:opacity-90 transition-all shadow-md">
@@ -767,11 +767,11 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <div className="bg-surface-container-lowest border border-surface-variant p-5 rounded-2xl">
+            <div className="glass-panel p-5 rounded-2xl">
               <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><ShieldAlert className="w-5 h-5" /> Password Super Admin</h2>
               <input type="password" placeholder="Password baru..." value={newAdminPassword}
                 onChange={e => setNewAdminPassword(e.target.value)}
-                className="w-full mb-3 bg-surface-container-low border border-surface-variant px-4 py-3 rounded-xl outline-none focus:border-primary text-on-surface" />
+                className="w-full mb-3 bg-surface-variant/20 border border-surface-variant/50 font-hacker px-4 py-3 rounded-xl outline-none focus:border-primary text-on-surface" />
               <button onClick={handleSavePassword} className="w-full bg-primary text-on-primary p-3 rounded-xl font-bold hover:opacity-90 transition-all">
                 Ubah Password
               </button>
@@ -840,3 +840,4 @@ export default function AdminDashboard() {
     </>
   );
 }
+

@@ -310,7 +310,7 @@ Lokasi: ${mainSite.project}
 
       <main className="px-5 py-6 flex flex-col gap-6">
         {mainSite ? (
-          <section className="bg-surface-container-lowest rounded-2xl shadow-[0_4px_20px_rgba(27,67,50,0.08)] border border-surface-variant overflow-hidden">
+          <section className="glass-panel rounded-2xl glass-panel overflow-hidden">
             <div className="p-4 border-b border-surface-variant flex justify-between items-start bg-surface-bright">
               <div>
                 <span className="inline-flex items-center gap-1 text-sm font-medium bg-secondary-fixed text-on-secondary-fixed px-2.5 py-1 rounded-md mb-3 shadow-sm">
@@ -325,7 +325,7 @@ Lokasi: ${mainSite.project}
                 </p>
               </div>
             </div>
-            <div className="p-5 bg-surface-container-lowest">
+            <div className="p-5 glass-panel">
               <button 
                 onClick={() => setIsLaporOpen(true)}
                 className="w-full bg-gradient-to-r from-primary to-primary-container hover:from-primary hover:to-primary text-on-primary active:scale-[0.97] transition-all duration-300 rounded-[24px] flex flex-col items-center justify-center py-6 gap-3 shadow-[0_8px_25px_rgba(34,197,94,0.3)] hover:shadow-[0_12px_30px_rgba(34,197,94,0.4)] group overflow-hidden relative"
@@ -343,7 +343,7 @@ Lokasi: ${mainSite.project}
             </div>
           </section>
         ) : (
-          <div className="p-6 text-center text-on-surface-variant bg-surface-container rounded-2xl">
+          <div className="p-6 text-center text-on-surface-variant bg-surface-variant/20 rounded-2xl">
             Tidak ada proyek yang ditugaskan kepada Anda hari ini.
           </div>
         )}
@@ -379,7 +379,7 @@ Lokasi: ${mainSite.project}
         <section className="grid grid-cols-2 gap-4">
           <button 
             onClick={() => setIsIssueOpen(true)}
-            className="group bg-surface-container-lowest/90 backdrop-blur-xl border border-black/5 active:scale-95 transition-all duration-300 rounded-[24px] p-5 flex flex-col items-start justify-between shadow-[0_8px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_rgba(0,0,0,0.06)] min-h-[120px]"
+            className="group glass-panel/90 backdrop-blur-xl border border-black/5 active:scale-95 transition-all duration-300 rounded-[24px] p-5 flex flex-col items-start justify-between shadow-[0_8px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_rgba(0,0,0,0.06)] min-h-[120px]"
           >
             <div className="w-10 h-10 rounded-full bg-[#ff3b30]/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
               <AlertTriangle className="w-5 h-5 text-[#ff3b30]" />
@@ -389,7 +389,7 @@ Lokasi: ${mainSite.project}
             </span>
           </button>
 
-          <button className="group bg-surface-container-lowest/90 backdrop-blur-xl border border-black/5 active:scale-95 transition-all duration-300 rounded-[24px] p-5 flex flex-col items-start justify-between shadow-[0_8px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_rgba(0,0,0,0.06)] min-h-[120px]">
+          <button className="group glass-panel/90 backdrop-blur-xl border border-black/5 active:scale-95 transition-all duration-300 rounded-[24px] p-5 flex flex-col items-start justify-between shadow-[0_8px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_rgba(0,0,0,0.06)] min-h-[120px]">
             <div className="w-10 h-10 rounded-full bg-[#34c759]/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
               <CheckCircle2 className="w-5 h-5 text-[#34c759]" />
             </div>
@@ -398,7 +398,7 @@ Lokasi: ${mainSite.project}
             </span>
           </button>
 
-          <button className="group bg-surface-container-lowest/90 backdrop-blur-xl border border-black/5 active:scale-95 transition-all duration-300 rounded-[24px] p-5 flex flex-col items-start justify-between shadow-[0_8px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_rgba(0,0,0,0.06)] min-h-[120px]">
+          <button className="group glass-panel/90 backdrop-blur-xl border border-black/5 active:scale-95 transition-all duration-300 rounded-[24px] p-5 flex flex-col items-start justify-between shadow-[0_8px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_rgba(0,0,0,0.06)] min-h-[120px]">
             <div className="w-10 h-10 rounded-full bg-[#007aff]/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
               <Mic className="w-5 h-5 text-[#007aff]" />
             </div>
@@ -407,7 +407,7 @@ Lokasi: ${mainSite.project}
             </span>
           </button>
 
-          <button className="group bg-surface-container-lowest/90 backdrop-blur-xl border border-black/5 active:scale-95 transition-all duration-300 rounded-[24px] p-5 flex flex-col items-start justify-between shadow-[0_8px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_rgba(0,0,0,0.06)] min-h-[120px]">
+          <button className="group glass-panel/90 backdrop-blur-xl border border-black/5 active:scale-95 transition-all duration-300 rounded-[24px] p-5 flex flex-col items-start justify-between shadow-[0_8px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_rgba(0,0,0,0.06)] min-h-[120px]">
             <div className="w-10 h-10 rounded-full bg-[#ff9500]/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
               <Package className="w-5 h-5 text-[#ff9500]" />
             </div>
@@ -425,9 +425,9 @@ Lokasi: ${mainSite.project}
             </h3>
 
             {otherSites.map((site: any, idx: number) => (
-              <div key={idx} className="bg-surface-container-lowest rounded-2xl p-md shadow-sm border border-surface-variant flex items-center justify-between active:bg-surface-container-low transition-colors min-h-[80px]">
+              <div key={idx} className="glass-panel rounded-2xl p-md shadow-sm border border-surface-variant flex items-center justify-between active:bg-surface-variant/20-low transition-colors min-h-[80px]">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-surface-container-high rounded-full flex items-center justify-center text-surface-tint shrink-0">
+                  <div className="w-12 h-12 bg-surface-variant/20-high rounded-full flex items-center justify-center text-surface-tint shrink-0">
                     <Building2 className="w-6 h-6" />
                   </div>
                   <div>
@@ -470,7 +470,7 @@ Lokasi: ${mainSite.project}
               type="date" 
               value={reportDate}
               onChange={(e) => setReportDate(e.target.value)}
-              className="w-full border border-surface-variant bg-surface-container-lowest p-4 rounded-xl focus:outline-primary mb-4" 
+              className="w-full border border-surface-variant glass-panel p-4 rounded-xl focus:outline-primary mb-4" 
             />
           </div>
 
@@ -481,7 +481,7 @@ Lokasi: ${mainSite.project}
               value={workDone}
               onChange={(e) => setWorkDone(e.target.value)}
               placeholder="Cth: Pasang bata merah" 
-              className="w-full border border-surface-variant bg-surface-container-lowest p-4 rounded-xl focus:outline-primary" 
+              className="w-full border border-surface-variant glass-panel p-4 rounded-xl focus:outline-primary" 
             />
           </div>
           
@@ -489,7 +489,7 @@ Lokasi: ${mainSite.project}
             <label className="block text-sm font-semibold mb-2 text-on-surface">Detail Pekerja Hadir</label>
             <div className="flex flex-col gap-3">
               {attendance.map((att, idx) => (
-                <div key={idx} className="flex flex-col gap-2 bg-surface-container-lowest p-3 rounded-xl border border-surface-variant">
+                <div key={idx} className="flex flex-col gap-2 glass-panel p-3 rounded-xl border border-surface-variant">
                   <div className="flex items-center gap-3">
                     <input
                       type="text"
@@ -498,7 +498,7 @@ Lokasi: ${mainSite.project}
                       placeholder="Peran (Cth: Tukang)"
                       className="flex-1 bg-transparent px-1 focus:outline-none text-sm font-bold text-on-surface"
                     />
-                    <div className="flex items-center bg-surface-container-low border border-surface-variant rounded-lg overflow-hidden shrink-0">
+                    <div className="flex items-center bg-surface-variant/20 border border-surface-variant/50 font-hacker rounded-lg overflow-hidden shrink-0">
                       <button 
                         onClick={() => updateAttendance(idx, 'count', Math.max(0, att.count - 1))}
                         className="w-9 h-9 flex items-center justify-center text-on-surface-variant active:bg-surface-variant transition-colors font-bold"
@@ -520,7 +520,7 @@ Lokasi: ${mainSite.project}
                       value={att.names}
                       onChange={(e) => updateAttendance(idx, 'names', e.target.value)}
                       placeholder={`Nama ${att.count} ${att.role || 'Pekerja'} (pisahkan koma)`}
-                      className="w-full border border-surface-variant bg-surface-container px-3 py-2 rounded-lg focus:outline-primary text-xs text-on-surface"
+                      className="w-full border border-surface-variant bg-surface-variant/20 px-3 py-2 rounded-lg focus:outline-primary text-xs text-on-surface"
                     />
                   )}
                 </div>
@@ -564,7 +564,7 @@ Lokasi: ${mainSite.project}
             <select 
               value={issueType}
               onChange={(e) => setIssueType(e.target.value)}
-              className="w-full border border-surface-variant bg-surface-container-lowest p-4 rounded-xl focus:outline-primary appearance-none"
+              className="w-full border border-surface-variant glass-panel p-4 rounded-xl focus:outline-primary appearance-none"
             >
               <option value="material">Material Kurang / Habis</option>
               <option value="pekerja">Kekurangan Pekerja / Mogok</option>
@@ -582,7 +582,7 @@ Lokasi: ${mainSite.project}
               onChange={(e) => setIssueDesc(e.target.value)}
               placeholder="Cth: Semen Holcim habis dari kemarin, supplier belum kirim." 
               rows={4}
-              className="w-full border border-surface-variant bg-surface-container-lowest p-4 rounded-xl focus:outline-primary resize-none" 
+              className="w-full border border-surface-variant glass-panel p-4 rounded-xl focus:outline-primary resize-none" 
             />
           </div>
 
@@ -599,3 +599,4 @@ Lokasi: ${mainSite.project}
     </>
   );
 }
+
