@@ -29,6 +29,7 @@ export default function ForemanDashboard() {
   const [isLaporOpen, setIsLaporOpen] = useState(false);
   const [workDone, setWorkDone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [reportDate, setReportDate] = useState("");
 
   // State for Ada Masalah
   const [isIssueOpen, setIsIssueOpen] = useState(false);
@@ -71,7 +72,8 @@ export default function ForemanDashboard() {
           role: a.role,
           count: a.count,
           names: a.names
-        }))
+        })),
+        ...(reportDate ? { report_date: reportDate } : {})
       };
 
       await fetchApi("/reports", {
@@ -83,6 +85,7 @@ export default function ForemanDashboard() {
 
       const text = `*Laporan Harian: ${mainSite.name}*
 Lokasi: ${mainSite.project}
+📅 Tanggal: ${reportDate || 'Hari Ini'}
 👷 Pekerjaan: ${workDone}
 
 👥 *Absensi:*
@@ -94,6 +97,7 @@ ${attendance.filter(a => a.count > 0).map(a => `- ${a.count} ${a.role}${a.names 
       window.open(waUrl, "_blank");
       
       setWorkDone("");
+      setReportDate("");
       setAttendance([
         { role: "Tukang", count: 0, names: "" },
         { role: "Kuli", count: 0, names: "" },
@@ -427,6 +431,16 @@ Lokasi: ${mainSite.project}
                  Isi daftar hadir dan pekerjaan di bawah ini lalu klik Kirim. Anda akan otomatis dialihkan ke WhatsApp Bos untuk mengirim foto lapangan!
                </p>
              </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-on-surface">Tanggal Laporan (Opsional)</label>
+            <input 
+              type="date" 
+              value={reportDate}
+              onChange={(e) => setReportDate(e.target.value)}
+              className="w-full border border-surface-variant bg-surface-container-lowest p-4 rounded-xl focus:outline-primary mb-4" 
+            />
           </div>
 
           <div>

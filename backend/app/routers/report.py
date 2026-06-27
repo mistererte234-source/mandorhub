@@ -24,7 +24,7 @@ def create_report(
         site_id=payload.site_id,
         target_id=payload.target_id,
         mandor_id=current_user.id,
-        report_date=datetime.date.today(),
+        report_date=payload.report_date or datetime.date.today(),
         worker_attendance=attendance_data,
         work_done=payload.work_done,
         target_status=payload.target_status,
