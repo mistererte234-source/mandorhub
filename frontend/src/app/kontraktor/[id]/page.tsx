@@ -189,7 +189,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     if (!data?.project_id) return;
     setIsSavingRates(true);
     try {
-      await fetchApi(`/projects/${data.project_id}`, {
+      await fetchApi(`/projects/${data.project_id}/rates`, {
         method: "PATCH",
         body: JSON.stringify({
           tukang_daily_rate: projectRates.tukang_daily_rate,
