@@ -162,6 +162,30 @@ def seed_gapura_timeline(session):
 def on_startup():
     session = next(get_session())
     try:
+        # Auto-migrate production schema
+        session.execute(text("ALTER TABLE project ADD COLUMN IF NOT EXISTS tukang_daily_rate FLOAT DEFAULT 0.0 NOT NULL;"))
+        session.execute(text("ALTER TABLE project ADD COLUMN IF NOT EXISTS kuli_daily_rate FLOAT DEFAULT 0.0 NOT NULL;"))
+        session.execute(text("ALTER TABLE target ADD COLUMN IF NOT EXISTS week_number INTEGER DEFAULT 1 NOT NULL;"))
+        session.execute(text("ALTER TABLE target ADD COLUMN IF NOT EXISTS weight FLOAT DEFAULT 0.0 NOT NULL;"))
+        session.execute(text("ALTER TABLE daily_report ADD COLUMN IF NOT EXISTS target_id UUID;"))
+        session.execute(text("""
+        CREATE TABLE IF NOT EXISTS finance_log (
+            id UUID PRIMARY KEY,
+            org_id UUID NOT NULL,
+            project_id UUID NOT NULL,
+            type VARCHAR NOT NULL,
+            category VARCHAR NOT NULL,
+            amount FLOAT NOT NULL,
+            description VARCHAR,
+            date DATE NOT NULL,
+            recorded_by UUID NOT NULL,
+            created_at TIMESTAMP NOT NULL,
+            updated_at TIMESTAMP,
+            deleted_at TIMESTAMP
+        );
+        """))
+        session.commit()
+        
         seed_gapura_timeline(session)
     except Exception as e:
         print("Failed to seed Gapura timeline:", e)

@@ -72,81 +72,86 @@ def create_project(
     session: Session = Depends(get_session)
 ):
     org_id = admin.org_id
-
-    # ── Buat Bos baru ──────────────────────────────────────────────────────
-    # Cek duplikat phone di org
-    existing_bos = session.exec(
-        select(AppUser).where(AppUser.phone == body.bos.phone, AppUser.org_id == org_id)
-    ).first()
-    if existing_bos:
-        if existing_bos.role != "contractor":
-            raise HTTPException(status_code=400, detail=f"Nomor {body.bos.phone} sudah dipakai oleh {existing_bos.name} ({existing_bos.role})")
-        bos = existing_bos   # pakai yang sudah ada jika sama role
-    else:
-        bos = AppUser(id=uuid.uuid4(), org_id=org_id, name=body.bos.name,
-                      phone=body.bos.phone, role="contractor", is_active=True)
-        session.add(bos)
-
-    # ── Buat Mandor baru ───────────────────────────────────────────────────
-    existing_mandor = session.exec(
-        select(AppUser).where(AppUser.phone == body.mandor.phone, AppUser.org_id == org_id)
-    ).first()
-    if existing_mandor:
-        if existing_mandor.role != "mandor":
-            raise HTTPException(status_code=400, detail=f"Nomor {body.mandor.phone} sudah dipakai oleh {existing_mandor.name} ({existing_mandor.role})")
-        mandor = existing_mandor
-    else:
-        mandor = AppUser(id=uuid.uuid4(), org_id=org_id, name=body.mandor.name,
-                         phone=body.mandor.phone, role="mandor", is_active=True)
-        session.add(mandor)
-
-    # ── Buat Bendahara baru (opsional) ─────────────────────────────────────
-    bendahara = None
-    if body.bendahara:
-        existing_bend = session.exec(
-            select(AppUser).where(AppUser.phone == body.bendahara.phone, AppUser.org_id == org_id)
+    try:
+        # ── Buat Bos baru ──────────────────────────────────────────────────────
+        # Cek duplikat phone di org
+        existing_bos = session.exec(
+            select(AppUser).where(AppUser.phone == body.bos.phone, AppUser.org_id == org_id)
         ).first()
-        if existing_bend:
-            if existing_bend.role != "bendahara":
-                raise HTTPException(status_code=400, detail=f"Nomor {body.bendahara.phone} sudah dipakai oleh {existing_bend.name} ({existing_bend.role})")
-            bendahara = existing_bend
+        if existing_bos:
+            if existing_bos.role != "contractor":
+                raise HTTPException(status_code=400, detail=f"Nomor {body.bos.phone} sudah dipakai oleh {existing_bos.name} ({existing_bos.role})")
+            bos = existing_bos   # pakai yang sudah ada jika sama role
         else:
-            bendahara = AppUser(id=uuid.uuid4(), org_id=org_id, name=body.bendahara.name,
-                                phone=body.bendahara.phone, role="bendahara", is_active=True)
-            session.add(bendahara)
+            bos = AppUser(id=uuid.uuid4(), org_id=org_id, name=body.bos.name,
+                          phone=body.bos.phone, role="contractor", is_active=True)
+            session.add(bos)
 
-    # Flush dulu agar ID user tersedia sebelum buat project
-    session.flush()
+        # ── Buat Mandor baru ───────────────────────────────────────────────────
+        existing_mandor = session.exec(
+            select(AppUser).where(AppUser.phone == body.mandor.phone, AppUser.org_id == org_id)
+        ).first()
+        if existing_mandor:
+            if existing_mandor.role != "mandor":
+                raise HTTPException(status_code=400, detail=f"Nomor {body.mandor.phone} sudah dipakai oleh {existing_mandor.name} ({existing_mandor.role})")
+            mandor = existing_mandor
+        else:
+            mandor = AppUser(id=uuid.uuid4(), org_id=org_id, name=body.mandor.name,
+                             phone=body.mandor.phone, role="mandor", is_active=True)
+            session.add(mandor)
 
-    # ── Buat Proyek ────────────────────────────────────────────────────────
-    p_id = uuid.uuid4()
-    new_project = Project(
-        id=p_id,
-        org_id=org_id,
-        name=body.name,
-        client_name=body.client_name,
-        bos_id=bos.id,
-        mandor_id=mandor.id,
-        bendahara_id=bendahara.id if bendahara else None,
-        status="active"
-    )
-    new_site = Site(id=uuid.uuid4(), org_id=org_id, project_id=p_id, name="Titik Utama")
+        # ── Buat Bendahara baru (opsional) ─────────────────────────────────────
+        bendahara = None
+        if body.bendahara:
+            existing_bend = session.exec(
+                select(AppUser).where(AppUser.phone == body.bendahara.phone, AppUser.org_id == org_id)
+            ).first()
+            if existing_bend:
+                if existing_bend.role != "bendahara":
+                    raise HTTPException(status_code=400, detail=f"Nomor {body.bendahara.phone} sudah dipakai oleh {existing_bend.name} ({existing_bend.role})")
+                bendahara = existing_bend
+            else:
+                bendahara = AppUser(id=uuid.uuid4(), org_id=org_id, name=body.bendahara.name,
+                                    phone=body.bendahara.phone, role="bendahara", is_active=True)
+                session.add(bendahara)
 
-    session.add(new_project)
-    session.add(new_site)
-    session.commit()
+        # Flush dulu agar ID user tersedia sebelum buat project
+        session.flush()
 
-    return AdminProjectOut(
-        id=new_project.id,
-        name=new_project.name,
-        client_name=new_project.client_name,
-        status=new_project.status,
-        bos_id=bos.id, bos_name=bos.name, bos_phone=bos.phone,
-        mandor_id=mandor.id, mandor_name=mandor.name, mandor_phone=mandor.phone,
-        bendahara_id=bendahara.id if bendahara else None,
-        bendahara_name=bendahara.name if bendahara else None,
-        bendahara_phone=bendahara.phone if bendahara else None,
-    )
+        # ── Buat Proyek ────────────────────────────────────────────────────────
+        p_id = uuid.uuid4()
+        new_project = Project(
+            id=p_id,
+            org_id=org_id,
+            name=body.name,
+            client_name=body.client_name,
+            bos_id=bos.id,
+            mandor_id=mandor.id,
+            bendahara_id=bendahara.id if bendahara else None,
+            status="active"
+        )
+        new_site = Site(id=uuid.uuid4(), org_id=org_id, project_id=p_id, name="Titik Utama")
+
+        session.add(new_project)
+        session.add(new_site)
+        session.commit()
+
+        return AdminProjectOut(
+            id=new_project.id,
+            name=new_project.name,
+            client_name=new_project.client_name,
+            status=new_project.status,
+            bos_id=bos.id, bos_name=bos.name, bos_phone=bos.phone,
+            mandor_id=mandor.id, mandor_name=mandor.name, mandor_phone=mandor.phone,
+            bendahara_id=bendahara.id if bendahara else None,
+            bendahara_name=bendahara.name if bendahara else None,
+            bendahara_phone=bendahara.phone if bendahara else None,
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        session.rollback()
+        raise HTTPException(status_code=500, detail=f"DB Error saat simpan proyek: {str(e)}")
 
 
 @router.patch("/projects/{project_id}", response_model=AdminProjectOut)
