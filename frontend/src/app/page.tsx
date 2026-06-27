@@ -18,6 +18,7 @@ import {
   PencilRuler,
   LogOut,
   Loader2,
+  ClipboardList,
 } from "lucide-react";
 
 export default function ForemanDashboard() {
