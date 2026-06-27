@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchApi, logout, getToken } from "@/lib/api";
 import BottomSheet from "@/components/BottomSheet";
+import GlassLoader from "@/components/GlassLoader";
 import Image from "next/image";
 import {
   Bell,
@@ -209,43 +210,56 @@ Lokasi: ${mainSite.project}
     }
   };
 
-  const fetchDashboard = () => {
-    if (!getToken()) return;
-    setLoading(true);
-    let url = "/dashboard";
-    if (selectedProject) {
-      url += `?project_id=${selectedProject}`;
-    }
+  const fetchDashboard = async () => {
+  if (!getToken()) return;
+  
+  setLoading(true);
+  
+  // Buat timeout 10 detik
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-    Promise.all([fetchApi(url), fetchApi("/users")])
-      .then(([dashRes, usersRes]) => {
-        setData(dashRes);
-        const boss = usersRes.find((u: any) => u.role === "contractor");
-        if (boss && boss.phone) {
-          let p = boss.phone;
-          if (p.startsWith("0")) p = "62" + p.substring(1);
-          setBossPhone(p.replace(/[^0-9]/g, ""));
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Dashboard error:", err);
-        if (err.message.includes("Not authenticated") || err.message.includes("401") || err.message.includes("Sesi telah habis")) {
-          // Do NOT setLoading(false), let it redirect
-          logout();
-        } else {
-          setLoading(false);
-        }
-      });
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-surface">
-        <Loader2 className="w-10 h-10 text-primary animate-spin" />
-      </div>
-    );
+  let url = "/dashboard";
+  if (selectedProject) {
+    url += `?project_id=${selectedProject}`;
   }
+
+  try {
+    const [dashRes, usersRes] = await Promise.all([
+      fetchApi(url, { signal: controller.signal }),
+      fetchApi("/users", { signal: controller.signal })
+    ]);
+
+    setData(dashRes);
+    
+    // Update nomor bos untuk WA
+    const boss = usersRes.find((u: any) => u.role === "contractor");
+    if (boss?.phone) {
+      let p = boss.phone.replace(/[^0-9]/g, "");
+      if (p.startsWith("0")) p = "62" + p.substring(1);
+      setBossPhone(p);
+    }
+  } catch (err: any) {
+    console.error("Dashboard fetch error:", err);
+    
+    if (err.name === "AbortError") {
+      alert("⏰ Timeout: Server agak lambat. Coba refresh halaman.");
+    } else if (err.message?.includes("401") || err.message?.includes("authenticated") || err.message?.includes("Sesi")) {
+      logout();
+    } else {
+      console.error("Error lain:", err);
+      // Tetap tampilkan dashboard kosong supaya tidak stuck
+      setData({ sites: [] });
+    }
+  } finally {
+    clearTimeout(timeoutId);
+    setLoading(false);
+  }
+};
+
+ if (loading) {
+  return <GlassLoader />;
+}
 
   // If no data or user isn't assigned to any site, just use fallback
   const sites = data?.sites || [];
