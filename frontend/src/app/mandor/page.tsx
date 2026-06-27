@@ -118,22 +118,22 @@ export default function MandorDashboard() {
 
   return (
     <div className="min-h-screen bg-surface flex flex-col">
-      <header className="bg-surface/80 backdrop-blur-xl docked full-width top-0 shadow-sm sticky z-40 border-b border-surface-variant/30">
+      <header className="bg-surface/50 backdrop-blur-2xl docked full-width top-0 shadow-sm sticky z-40 border-b border-primary/20">
         <div className="flex justify-between items-center px-6 py-4 w-full">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl shadow-sm border border-surface-variant overflow-hidden bg-white flex items-center justify-center">
-              <Image src="/logo.png" alt="Logo" width={40} height={40} className="object-cover" />
+            <div className="w-10 h-10 rounded-2xl shadow-[0_0_15px_rgba(0,255,65,0.3)] border border-primary/50 overflow-hidden bg-black flex items-center justify-center p-1">
+              <Image src="/logo.png" alt="Logo" width={40} height={40} className="object-contain filter invert" />
             </div>
             <div>
               <h1 className="font-headline-sm text-lg font-black text-on-surface tracking-tight leading-tight">
-                MandorHub <span className="text-primary">Mandor</span>
+                MandorHub <span className="text-primary glow-text">Mandor</span>
               </h1>
-              <p className="text-xs text-on-surface-variant font-bold uppercase tracking-widest">{data?.summary?.total > 0 ? site?.project : "Tidak ada proyek"}</p>
+              <p className="text-[10px] text-primary font-bold uppercase tracking-widest">{data?.summary?.total > 0 ? site?.project : "Tidak ada proyek"}</p>
             </div>
           </div>
           <button
             onClick={logout}
-            className="p-2.5 rounded-xl bg-error/10 hover:bg-error/20 text-error active:scale-95 transition-all"
+            className="p-2.5 rounded-xl bg-error/10 hover:bg-error/20 text-error hover:shadow-[0_0_10px_rgba(255,42,95,0.3)] active:scale-95 transition-all"
           >
             <LogOut className="w-5 h-5" />
           </button>
@@ -149,22 +149,23 @@ export default function MandorDashboard() {
           <>
             {/* Target Card */}
             {targets.length > 0 && (
-              <div className="bg-primary-container/20 border border-primary-container rounded-3xl p-5 shadow-sm">
-                <h3 className="font-black text-primary mb-3 text-sm uppercase tracking-wider flex items-center gap-2">
+              <div className="glass-panel border-primary/50 rounded-[24px] p-5 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 blur-xl rounded-bl-full -z-10" />
+                <h3 className="font-black text-primary mb-3 text-xs uppercase tracking-widest flex items-center gap-2 glow-text">
                   <CheckSquare className="w-4 h-4"/> Target Mingguan
                 </h3>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 relative z-10">
                   {targets.map((t, idx) => (
-                    <div key={idx} className="flex items-center justify-between bg-surface-container-lowest p-3 rounded-2xl shadow-sm">
+                    <div key={idx} className="flex items-center justify-between bg-surface-variant/30 border border-surface-variant/50 p-3 rounded-2xl">
                       <div>
-                        <p className="font-bold text-sm text-on-surface">M{t.week_number}: {t.title}</p>
+                        <p className="font-bold text-sm text-on-surface"><span className="font-hacker text-primary">M{t.week_number}</span>: {t.title}</p>
                       </div>
-                      <span className={`text-xs font-black px-2 py-1 rounded-lg ${
-                        t.status === 'selesai' ? 'bg-[#c3f0c3] text-[#0e520e]' : 
-                        t.status === 'proses' ? 'bg-[#ffdf99] text-[#5a4300]' : 
-                        'bg-surface-variant text-on-surface-variant'
+                      <span className={`text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-widest ${
+                        t.status === 'selesai' ? 'bg-[#00ff41]/20 text-[#00ff41] border border-[#00ff41]/30' : 
+                        t.status === 'proses' ? 'bg-[#ffea00]/20 text-[#ffea00] border border-[#ffea00]/30' : 
+                        'bg-surface-variant/50 text-on-surface-variant'
                       }`}>
-                        {t.status.toUpperCase()}
+                        {t.status}
                       </span>
                     </div>
                   ))}
@@ -173,24 +174,24 @@ export default function MandorDashboard() {
             )}
 
             {/* Form Laporan */}
-            <div className="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-surface-variant/60">
-              <h2 className="font-black text-xl mb-5 text-on-surface">Buat Laporan Harian</h2>
+            <div className="glass-panel rounded-[32px] p-6">
+              <h2 className="font-black text-xl mb-5 text-on-surface flex items-center gap-2">Buat Laporan Harian</h2>
               
               <div className="flex flex-col gap-5">
                 <div>
-                  <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Tanggal Laporan</label>
+                  <label className="block text-[10px] font-bold text-primary uppercase tracking-widest mb-2">Tanggal Laporan</label>
                   <input 
                     type="date"
-                    className="w-full bg-surface-container-low border border-surface-variant rounded-2xl px-4 py-3 text-sm text-on-surface focus:border-primary outline-none transition-colors mb-4"
+                    className="w-full bg-surface-variant/20 border border-surface-variant/50 rounded-2xl px-4 py-3 text-sm text-on-surface focus:border-primary focus:bg-primary/5 outline-none transition-all font-hacker mb-4"
                     value={reportDate}
                     onChange={(e) => setReportDate(e.target.value)}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Pekerjaan Selesai Hari Ini</label>
+                  <label className="block text-[10px] font-bold text-primary uppercase tracking-widest mb-2">Pekerjaan Selesai Hari Ini</label>
                   <textarea 
-                    className="w-full bg-surface-container-low border border-surface-variant rounded-2xl px-4 py-3 text-sm text-on-surface focus:border-primary outline-none transition-colors"
+                    className="w-full bg-surface-variant/20 border border-surface-variant/50 rounded-2xl px-4 py-3 text-sm text-on-surface focus:border-primary focus:bg-primary/5 outline-none transition-all"
                     rows={4}
                     placeholder="Contoh: Pengecoran pondasi 50%..."
                     value={workDone}
@@ -199,17 +200,17 @@ export default function MandorDashboard() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Kehadiran Pekerja</label>
+                  <label className="block text-[10px] font-bold text-primary uppercase tracking-widest mb-2">Kehadiran Pekerja</label>
                   <div className="flex flex-col gap-3">
                     {attendance.map((att, idx) => (
-                      <div key={idx} className="flex flex-col gap-2 bg-surface-container-low p-3 rounded-2xl border border-surface-variant/50">
+                      <div key={idx} className="flex flex-col gap-2 bg-surface-variant/10 p-3 rounded-2xl border border-surface-variant/30">
                         <div className="flex gap-2">
                           <input
                             type="text"
                             value={att.role}
                             onChange={(e) => updateAttendance(idx, "role", e.target.value)}
                             placeholder="Peran"
-                            className="flex-1 bg-surface border border-surface-variant rounded-xl px-3 py-2 text-sm font-bold text-on-surface outline-none focus:border-primary"
+                            className="flex-1 bg-surface-variant/30 border border-surface-variant/50 rounded-xl px-3 py-2 text-sm font-bold text-on-surface outline-none focus:border-primary transition-all"
                           />
                           <input
                             type="number"
@@ -217,7 +218,7 @@ export default function MandorDashboard() {
                             value={att.count || ""}
                             onChange={(e) => updateAttendance(idx, "count", parseInt(e.target.value) || 0)}
                             placeholder="Jml"
-                            className="w-20 bg-surface border border-surface-variant rounded-xl px-3 py-2 text-sm font-black text-center text-on-surface outline-none focus:border-primary"
+                            className="w-20 bg-surface-variant/30 border border-surface-variant/50 rounded-xl px-3 py-2 text-sm font-hacker text-center text-primary outline-none focus:border-primary transition-all glow-text"
                           />
                         </div>
                           <input
@@ -225,13 +226,13 @@ export default function MandorDashboard() {
                             value={att.names}
                             onChange={(e) => updateAttendance(idx, "names", e.target.value)}
                             placeholder="Daftar Nama Pekerja (Pisahkan dengan koma)"
-                          className="w-full bg-surface border border-surface-variant rounded-xl px-3 py-2 text-sm text-on-surface outline-none focus:border-primary"
+                          className="w-full bg-surface-variant/20 border border-surface-variant/50 rounded-xl px-3 py-2 text-sm text-on-surface outline-none focus:border-primary transition-all"
                         />
                       </div>
                     ))}
                     <button 
                       onClick={() => setAttendance([...attendance, { role: "", count: 0, names: "" }])}
-                      className="py-3 mt-1 border-2 border-dashed border-primary/40 rounded-2xl text-primary text-sm font-bold hover:bg-primary/5 transition-colors flex items-center justify-center gap-2"
+                      className="py-3 mt-1 border border-primary/30 bg-primary/5 rounded-2xl text-primary text-[10px] uppercase tracking-widest font-bold hover:bg-primary/20 hover:border-primary transition-all flex items-center justify-center gap-2"
                     >
                       <Plus className="w-4 h-4"/> Tambah Baris
                     </button>
@@ -242,7 +243,7 @@ export default function MandorDashboard() {
                   <button 
                     onClick={submitReport}
                     disabled={isSubmitting || !workDone}
-                    className="flex-1 py-4 rounded-2xl font-bold text-base bg-primary text-on-primary hover:bg-primary-container transition-all shadow-md disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="flex-1 py-4 rounded-2xl font-bold text-sm uppercase tracking-widest bg-primary/20 border border-primary/50 text-primary hover:bg-primary/40 hover:shadow-[0_0_15px_rgba(0,255,65,0.4)] transition-all disabled:opacity-30 flex items-center justify-center gap-2 active:scale-95"
                   >
                     <Send className="w-5 h-5"/> Kirim App
                   </button>

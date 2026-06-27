@@ -7,8 +7,9 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 
   useEffect(() => {
     setMounted(true);
-    const savedTheme = localStorage.getItem("mandorhub-theme") || "theme-default";
-    document.documentElement.className = savedTheme;
+    // Force Hacker Theme permanently as per UI Revamp
+    localStorage.setItem("mandorhub-theme", "theme-hacker");
+    document.documentElement.className = "theme-hacker";
   }, []);
 
   if (!mounted) {

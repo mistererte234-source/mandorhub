@@ -70,17 +70,23 @@ def main():
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token
         }
-        try:
-            res = requests.post('https://mandorhub.vercel.app/api/reports', json=payload, headers=req_headers)
-            if res.status_code == 200 or res.status_code == 201:
-                print(f"Report for {report_date} created: {work_done}")
-                success += 1
-            else:
-                print(f"Failed to create report for {report_date}: {res.status_code} - {res.text}")
-                break
-        except Exception as e:
-            print(f"Exception for {report_date}: {e}")
-            break
+        
+        for attempt in range(3):
+            try:
+                res = requests.post('https://mandorhub.vercel.app/api/reports', json=payload, headers=req_headers)
+                if res.status_code == 200 or res.status_code == 201:
+                    print(f"Report for {report_date} created: {work_done}")
+                    success += 1
+                    break
+                else:
+                    if attempt == 2:
+                        print(f"Failed to create report for {report_date}: {res.status_code} - {res.text}")
+                    time.sleep(2)
+            except Exception as e:
+                if attempt == 2:
+                    print(f"Exception for {report_date}: {e}")
+                time.sleep(2)
+        time.sleep(0.5)
             
     print(f"Done! Created {success} reports.")
 

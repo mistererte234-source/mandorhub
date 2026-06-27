@@ -46,26 +46,26 @@
   --on-error-container: #93000a;
 }
 
-/* Hacker Theme (Dark Mode) */
+/* Hacker Theme (Dark Mode) - iOS Glassmorphism Blend */
 .theme-hacker {
   --primary: #00ff41;
   --on-primary: #000000;
-  --primary-container: #008f11;
+  --primary-container: #003b0f;
   --on-primary-container: #00ff41;
   
-  --surface: #111111;
-  --on-surface: #00ff41;
-  --surface-variant: #222222;
-  --on-surface-variant: #008f11;
+  --surface: #0a0a0a;
+  --on-surface: #ffffff;
+  --surface-variant: #1a1a1a;
+  --on-surface-variant: #888888;
   
   --surface-container-lowest: #000000;
-  --surface-container-low: #1a1a1a;
+  --surface-container-low: #111111;
   
-  --background: #0d0d0d;
-  --on-background: #00ff41;
+  --background: #000000;
+  --on-background: #ffffff;
   
-  --error: #ff003c;
-  --error-container: #4a000f;
+  --error: #ff2a5f;
+  --error-container: #3d0010;
   --on-error-container: #ff99a8;
 }
 
@@ -118,18 +118,51 @@
 body {
   background-color: var(--background);
   color: var(--on-background);
-  font-family: var(--font-sans);
+  font-family: var(--font-inter);
   min-height: max(884px, 100dvh);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.5s ease, color 0.5s ease;
+  /* subtle hacker grid background */
+  background-image: linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+  linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+  background-size: 30px 30px;
 }
 
+/* Typography Utilities */
+.font-hacker {
+  font-family: var(--font-mono);
+  letter-spacing: -0.05em;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: rgba(17, 17, 17, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 255, 65, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.glass-panel:hover {
+  border-color: rgba(0, 255, 65, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(0, 255, 65, 0.1), inset 0 0 0 1px rgba(0, 255, 65, 0.2);
+}
+
+.glow-text {
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+}
+
+.glow-box {
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.15);
+}
+
+/* Animations */
 @keyframes dropAndBounce {
-  0% { transform: translateY(-100px) scale(0.8); opacity: 0; }
-  60% { transform: translateY(15px) scale(1.1); opacity: 1; }
-  80% { transform: translateY(-5px) scale(0.95); opacity: 1; }
+  0% { transform: translateY(-50px) scale(0.9); opacity: 0; filter: blur(10px); }
+  60% { transform: translateY(10px) scale(1.02); opacity: 1; filter: blur(0); }
+  80% { transform: translateY(-2px) scale(0.98); opacity: 1; }
   100% { transform: translateY(0) scale(1); opacity: 1; }
 }
 
 .animate-intro {
-  animation: dropAndBounce 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation: dropAndBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }

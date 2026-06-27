@@ -138,8 +138,8 @@ export default function BendaharaDashboard() {
       <header className="bg-surface/70 backdrop-blur-2xl docked full-width top-0 shadow-sm sticky z-40 border-b border-surface-variant/30">
         <div className="flex justify-between items-center px-6 py-5 w-full">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl shadow-lg border border-surface-variant overflow-hidden bg-white flex items-center justify-center">
-              <Image src="/logo.png" alt="Logo" width={48} height={48} className="object-cover" />
+            <div className="w-12 h-12 rounded-2xl shadow-[0_0_15px_rgba(0,255,65,0.3)] border border-primary/50 overflow-hidden bg-black flex items-center justify-center p-1">
+              <Image src="/logo.png" alt="Logo" width={48} height={48} className="object-contain filter invert" />
             </div>
             <div>
               <h1 className="font-headline-lg-mobile text-[22px] leading-tight font-black text-on-surface tracking-tight">
@@ -183,18 +183,18 @@ export default function BendaharaDashboard() {
         ) : (
           <>
             {/* Saldo Section */}
-            <div className="bg-surface-container-lowest border border-surface-variant/60 rounded-3xl p-6 shadow-sm relative overflow-hidden group">
-              <div className="absolute right-0 bottom-0 w-32 h-32 bg-primary/5 rounded-tl-full transition-transform group-hover:scale-110 duration-500"/>
+            <div className="glass-panel rounded-[24px] p-6 relative overflow-hidden group">
+              <div className="absolute right-0 bottom-0 w-32 h-32 bg-primary/20 blur-2xl rounded-tl-full transition-transform group-hover:scale-150 duration-700"/>
               <div className="flex justify-between items-end relative z-10">
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2 block">Saldo Kas Saat Ini</span>
-                  <span className={`text-4xl font-black ${balance >= 0 ? 'text-primary' : 'text-error'}`}>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">Saldo Kas Saat Ini</span>
+                  <span className={`text-4xl font-hacker glow-text ${balance >= 0 ? 'text-primary' : 'text-error'}`}>
                     Rp {balance.toLocaleString('id-ID')}
                   </span>
                 </div>
                 <button 
                   onClick={() => setShowAdd(true)}
-                  className="bg-primary text-on-primary rounded-2xl px-5 py-3 text-sm font-bold flex justify-center items-center gap-2 hover:bg-primary-container hover:text-on-primary-container transition-all shadow-md active:scale-95"
+                  className="bg-primary/20 border border-primary/50 text-primary rounded-2xl px-5 py-3 text-sm font-bold flex justify-center items-center gap-2 hover:bg-primary/40 hover:shadow-[0_0_15px_rgba(0,255,65,0.4)] transition-all active:scale-95"
                 >
                   <Plus className="w-5 h-5"/> Catat
                 </button>
@@ -203,47 +203,48 @@ export default function BendaharaDashboard() {
 
             {/* Estimasi Upah Section */}
             {weeklyWages && (
-              <div className="bg-surface-container-lowest border-2 border-dashed border-[#ffdf99] rounded-3xl p-6 shadow-sm relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-[#ffdf99]/20 rounded-bl-full -z-10" />
-                <div className="flex justify-between items-center mb-5">
-                  <h3 className="font-black text-lg text-[#5a4300] flex items-center gap-2">
-                    <Activity className="w-5 h-5 text-[#d49900]" /> Estimasi Gaji Kuli & Tukang
+              <div className="glass-panel border-warning/50 rounded-[24px] p-6 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-warning/20 blur-xl rounded-bl-full -z-10" />
+                <div className="flex justify-between items-center mb-5 relative z-10">
+                  <h3 className="font-black text-lg text-warning flex items-center gap-2 glow-text" style={{'--tw-text-opacity': 1, color: '#ffea00'} as any}>
+                    <Activity className="w-5 h-5" /> Estimasi Gaji Kuli & Tukang
                   </h3>
                   <select 
                     value={filterDays} 
                     onChange={e => setFilterDays(parseInt(e.target.value))}
-                    className="bg-[#ffdf99]/30 text-[#5a4300] border-none outline-none text-xs font-bold px-3 py-2 rounded-xl cursor-pointer hover:bg-[#ffdf99]/50 transition-colors"
+                    className="bg-warning/10 text-warning border border-warning/30 outline-none text-[10px] font-bold px-3 py-2 rounded-xl cursor-pointer hover:bg-warning/20 transition-colors uppercase tracking-widest"
+                    style={{color: '#ffea00'}}
                   >
-                    <option value={7}>7 Hari</option>
-                    <option value={14}>14 Hari</option>
-                    <option value={30}>30 Hari</option>
+                    <option value={7} className="bg-surface text-on-surface">7 Hari</option>
+                    <option value={14} className="bg-surface text-on-surface">14 Hari</option>
+                    <option value={30} className="bg-surface text-on-surface">30 Hari</option>
                   </select>
                 </div>
                 
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3 relative z-10">
                   <div className="flex justify-between text-sm">
-                    <span className="text-[#5a4300] font-medium">Tukang ({weeklyWages.total_tukang_count} Hari Kerja)</span>
-                    <span className="font-bold text-[#5a4300]">Rp {(weeklyWages.total_tukang_count * weeklyWages.tukang_rate).toLocaleString('id-ID')}</span>
+                    <span className="text-on-surface-variant font-medium">Tukang (<span className="font-hacker text-primary">{weeklyWages.total_tukang_count}</span> Hari Kerja)</span>
+                    <span className="font-hacker text-primary">Rp {(weeklyWages.total_tukang_count * weeklyWages.tukang_rate).toLocaleString('id-ID')}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-[#5a4300] font-medium">Kuli ({weeklyWages.total_kuli_count} Hari Kerja)</span>
-                    <span className="font-bold text-[#5a4300]">Rp {(weeklyWages.total_kuli_count * weeklyWages.kuli_rate).toLocaleString('id-ID')}</span>
+                    <span className="text-on-surface-variant font-medium">Kuli (<span className="font-hacker text-primary">{weeklyWages.total_kuli_count}</span> Hari Kerja)</span>
+                    <span className="font-hacker text-primary">Rp {(weeklyWages.total_kuli_count * weeklyWages.kuli_rate).toLocaleString('id-ID')}</span>
                   </div>
-                  <div className="border-t border-[#ffdf99] pt-4 mt-2 flex justify-between font-black text-[#5a4300] text-xl">
-                    <span>Total Gaji</span>
-                    <span>Rp {weeklyWages.total_wage?.toLocaleString('id-ID')}</span>
+                  <div className="border-t border-warning/30 pt-4 mt-2 flex justify-between font-black text-warning text-xl items-center" style={{color: '#ffea00'}}>
+                    <span className="text-[12px] uppercase tracking-widest">Total Gaji</span>
+                    <span className="font-hacker glow-text text-2xl">Rp {weeklyWages.total_wage?.toLocaleString('id-ID')}</span>
                   </div>
                 </div>
                 
-                <div className="mt-6 flex flex-col gap-2">
+                <div className="mt-6 flex flex-col gap-2 relative z-10">
                   <button
                     onClick={handlePayWages}
-                    className="w-full bg-[#5a4300] text-[#ffdf99] font-bold text-base py-3 rounded-2xl flex justify-center items-center gap-2 hover:bg-[#7a5b00] active:scale-95 transition-all shadow-md"
+                    className="w-full bg-[#ffea00]/20 border border-[#ffea00]/50 text-[#ffea00] font-bold text-base py-3 rounded-2xl flex justify-center items-center gap-2 hover:bg-[#ffea00]/40 hover:shadow-[0_0_15px_rgba(255,234,0,0.3)] active:scale-95 transition-all"
                   >
                     <Wallet className="w-5 h-5" /> Bayar Gaji Ini
                   </button>
-                  <p className="text-[11px] text-[#5a4300]/70 text-center leading-relaxed font-medium">
-                    *Gaji dihitung dari absensi laporan harian mandor {filterDays} hari terakhir.
+                  <p className="text-[10px] text-on-surface-variant text-center leading-relaxed font-medium uppercase tracking-widest mt-1">
+                    *Gaji dihitung dari absensi laporan mandor <span className="font-hacker text-primary">{filterDays}</span> hari terakhir.
                   </p>
                 </div>
               </div>

@@ -142,37 +142,37 @@ export default function ContractorDashboard() {
             
             {/* Ringkasan */}
             <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-               <div className="bg-surface-container-lowest border border-surface-variant/60 p-5 rounded-3xl flex flex-col shadow-sm relative overflow-hidden group">
-                 <div className="absolute -right-4 -top-4 w-16 h-16 bg-primary/5 rounded-full group-hover:scale-150 transition-transform duration-500"/>
+               <div className="glass-panel p-5 rounded-[24px] flex flex-col relative overflow-hidden group">
+                 <div className="absolute -right-4 -top-4 w-16 h-16 bg-primary/20 blur-xl rounded-full group-hover:scale-150 group-hover:bg-primary/40 transition-all duration-700"/>
                  <Activity className="w-6 h-6 text-primary mb-3 relative z-10" />
-                 <h3 className="text-3xl font-black text-on-surface relative z-10">{summary.total}</h3>
-                 <p className="text-xs font-bold uppercase tracking-wider text-on-surface-variant relative z-10">Proyek Aktif</p>
+                 <h3 className="text-4xl font-black text-on-surface relative z-10 font-hacker glow-text">{summary.total}</h3>
+                 <p className="text-[10px] font-bold uppercase tracking-widest text-primary relative z-10">Proyek Aktif</p>
                </div>
                
-               <div className="bg-[#ffd9d6]/30 border border-[#ffd9d6] p-5 rounded-3xl flex flex-col shadow-sm relative overflow-hidden group">
-                 <div className="absolute -right-4 -top-4 w-16 h-16 bg-[#ba1a1a]/5 rounded-full group-hover:scale-150 transition-transform duration-500"/>
-                 <AlertTriangle className="w-6 h-6 text-[#ba1a1a] mb-3 relative z-10" />
-                 <h3 className="text-3xl font-black text-[#ba1a1a] relative z-10">{summary.open_issues}</h3>
-                 <p className="text-xs font-bold uppercase tracking-wider text-[#93000a] relative z-10">Isu Terbuka</p>
+               <div className="glass-panel p-5 rounded-[24px] flex flex-col relative overflow-hidden group">
+                 <div className="absolute -right-4 -top-4 w-16 h-16 bg-error/20 blur-xl rounded-full group-hover:scale-150 group-hover:bg-error/40 transition-all duration-700"/>
+                 <AlertTriangle className="w-6 h-6 text-error mb-3 relative z-10" />
+                 <h3 className="text-4xl font-black text-error relative z-10 font-hacker glow-text">{summary.open_issues}</h3>
+                 <p className="text-[10px] font-bold uppercase tracking-widest text-error relative z-10">Isu Terbuka</p>
                </div>
 
-               <div className="col-span-2 bg-surface-container-lowest border border-surface-variant/60 rounded-3xl p-5 shadow-sm flex flex-col justify-between">
-                 <h4 className="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2">Status Kesehatan</h4>
-                 <div className="flex h-12 rounded-full overflow-hidden mb-2 shadow-inner">
-                    <div className="bg-secondary-fixed transition-all duration-500 flex items-center justify-center text-xs font-bold text-on-secondary-fixed" style={{width: `${(summary.green/Math.max(1, summary.total))*100}%`}}>
+               <div className="col-span-2 glass-panel rounded-[24px] p-5 flex flex-col justify-between">
+                 <h4 className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-2">Status Kesehatan</h4>
+                 <div className="flex h-12 rounded-full overflow-hidden mb-2 bg-surface-variant/30 border border-surface-variant/50">
+                    <div className="bg-[#00ff41] transition-all duration-500 flex items-center justify-center text-xs font-black text-black font-hacker" style={{width: `${(summary.green/Math.max(1, summary.total))*100}%`}}>
                       {summary.green > 0 && summary.green}
                     </div>
-                    <div className="bg-tertiary-fixed transition-all duration-500 flex items-center justify-center text-xs font-bold text-on-tertiary-fixed" style={{width: `${(summary.yellow/Math.max(1, summary.total))*100}%`}}>
+                    <div className="bg-[#ffea00] transition-all duration-500 flex items-center justify-center text-xs font-black text-black font-hacker" style={{width: `${(summary.yellow/Math.max(1, summary.total))*100}%`}}>
                       {summary.yellow > 0 && summary.yellow}
                     </div>
-                    <div className="bg-error transition-all duration-500 flex items-center justify-center text-xs font-bold text-on-error" style={{width: `${(summary.red/Math.max(1, summary.total))*100}%`}}>
+                    <div className="bg-[#ff2a5f] transition-all duration-500 flex items-center justify-center text-xs font-black text-white font-hacker" style={{width: `${(summary.red/Math.max(1, summary.total))*100}%`}}>
                       {summary.red > 0 && summary.red}
                     </div>
                  </div>
-                 <div className="flex justify-between text-[10px] font-bold text-on-surface-variant">
-                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-secondary-fixed"/> Aman</span>
-                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-tertiary-fixed"/> Perhatian</span>
-                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-error"/> Kritis</span>
+                 <div className="flex justify-between text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">
+                    <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-[#00ff41] shadow-[0_0_8px_#00ff41]"/> Aman</span>
+                    <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-[#ffea00] shadow-[0_0_8px_#ffea00]"/> Perhatian</span>
+                    <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-[#ff2a5f] shadow-[0_0_8px_#ff2a5f]"/> Kritis</span>
                  </div>
                </div>
             </section>
@@ -180,28 +180,28 @@ export default function ContractorDashboard() {
             {/* Daftar Proyek Lengkap */}
             <section className="flex flex-col gap-4">
               <h2 className="text-xl font-black text-on-surface mb-2 tracking-tight flex items-center gap-2">
-                <MapPin className="w-6 h-6 text-primary"/> Titik Lokasi Proyek
+                <MapPin className="w-6 h-6 text-primary glow-text"/> Titik Lokasi Proyek
               </h2>
               
               {sites.map((site: any) => (
                  <Link key={site.site_id} href={`/kontraktor/${site.site_id}`} className="block group">
-                   <div className="bg-surface-container-lowest hover:bg-surface-container-low transition-all duration-300 rounded-3xl p-6 shadow-sm border border-surface-variant/60 flex flex-col gap-4 cursor-pointer active:scale-[0.98] group-hover:shadow-md relative overflow-hidden">
-                     
+                   <div className="glass-panel hover:bg-surface-variant/20 transition-all duration-500 rounded-[32px] p-6 flex flex-col gap-4 cursor-pointer active:scale-[0.98] relative overflow-hidden">
+                     <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl group-hover:bg-primary/20 transition-colors duration-500 rounded-full" />
                      <div className="flex justify-between items-start z-10 relative">
                        <div className="flex-1">
-                         <span className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 bg-primary/10 text-primary rounded-lg mb-3">
+                         <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-3 py-1.5 bg-primary/20 border border-primary/30 text-primary rounded-xl mb-3 tracking-widest uppercase">
                            <Briefcase className="w-3 h-3"/> {site.project}
                          </span>
                          <h3 className="text-xl font-black text-on-surface mb-1 group-hover:text-primary transition-colors">{site.name}</h3>
                          <p className="text-sm text-on-surface-variant font-medium flex items-center gap-2">
-                           <span className="w-6 h-6 rounded-full bg-surface-variant/50 flex items-center justify-center text-[10px] font-black">M</span> 
+                           <span className="w-6 h-6 rounded-full bg-surface-variant/50 flex items-center justify-center text-[10px] font-black border border-surface-variant">M</span> 
                            {site.mandor || "Mandor Belum Ditugaskan"}
                          </p>
                        </div>
-                       <span className={`text-xs font-black px-4 py-2 rounded-xl shadow-sm border uppercase tracking-wider
-                        ${site.status === 'green' ? 'bg-[#c3f0c3] text-[#0e520e] border-[#c3f0c3]' : 
-                          site.status === 'red' ? 'bg-[#ffd9d6] text-[#8c1d18] border-[#ffd9d6]' : 
-                          'bg-[#ffdf99] text-[#5a4300] border-[#ffdf99]'}`}
+                       <span className={`text-[10px] font-black px-4 py-2 rounded-xl border uppercase tracking-widest
+                        ${site.status === 'green' ? 'bg-[#00ff41]/10 text-[#00ff41] border-[#00ff41]/30 shadow-[0_0_10px_rgba(0,255,65,0.2)]' : 
+                          site.status === 'red' ? 'bg-[#ff2a5f]/10 text-[#ff2a5f] border-[#ff2a5f]/30 shadow-[0_0_10px_rgba(255,42,95,0.2)]' : 
+                          'bg-[#ffea00]/10 text-[#ffea00] border-[#ffea00]/30 shadow-[0_0_10px_rgba(255,234,0,0.2)]'}`}
                       >
                         {site.status_label}
                       </span>
