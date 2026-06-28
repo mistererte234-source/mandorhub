@@ -73,11 +73,12 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     try {
       const res = await fetchApi(`/finance?project_id=${projectId}`);
       setFinances(res);
-      // Fetch all-time wages to match the timeline
+      // Fetch wages for 6 working days
       const today = new Date();
-      const allTimeStart = new Date("2020-01-01");
+      const pastWeek = new Date(today);
+      pastWeek.setDate(today.getDate() - 6);
       
-      const start = allTimeStart.toISOString().split('T')[0];
+      const start = pastWeek.toISOString().split('T')[0];
       const end = today.toISOString().split('T')[0];
       
       const wages = await fetchApi(`/finance/weekly-wages?project_id=${projectId}&start_date=${start}&end_date=${end}`);
@@ -431,7 +432,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
               
               {weeklyWages && (
                 <div className="glass-panel rounded-3xl p-5 shadow-[0_0_15px_rgba(0,255,65,0.05)] border border-primary/20">
-                  <h3 className="font-bold text-lg mb-4 text-primary">Estimasi Upah Keseluruhan</h3>
+                  <h3 className="font-bold text-lg mb-4 text-primary">Estimasi Upah 6 Hari Kerja</h3>
                   <div className="flex flex-col gap-3">
                     <div className="flex justify-between text-sm">
                       <span className="text-on-surface-variant font-hacker">Tukang ({weeklyWages.total_tukang_count} HK x Rp {weeklyWages.tukang_rate?.toLocaleString('id-ID')})</span>

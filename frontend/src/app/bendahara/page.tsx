@@ -29,7 +29,7 @@ export default function BendaharaDashboard() {
     date: new Date().toISOString().split("T")[0]
   });
   const [isSaving, setIsSaving] = useState(false);
-  const [filterDays, setFilterDays] = useState(7);
+  const [filterDays, setFilterDays] = useState(6);
 
   useEffect(() => {
     if (!getToken()) {
