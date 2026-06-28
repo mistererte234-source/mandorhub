@@ -77,14 +77,17 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       
       const today = new Date();
       
-      // Current week (Sunday to Saturday)
-      const currentSunday = new Date(today);
-      currentSunday.setDate(today.getDate() - today.getDay());
-      const currentSaturday = new Date(currentSunday);
-      currentSaturday.setDate(currentSunday.getDate() + 6);
+      // Current week (Monday to Sunday)
+      const day = today.getDay();
+      const diffToMonday = today.getDate() - day + (day === 0 ? -6 : 1);
+      const currentMonday = new Date(today);
+      currentMonday.setDate(diffToMonday);
       
-      const startWeekly = currentSunday.toISOString().split('T')[0];
-      const endWeekly = currentSaturday.toISOString().split('T')[0];
+      const currentSunday = new Date(currentMonday);
+      currentSunday.setDate(currentMonday.getDate() + 6);
+      
+      const startWeekly = currentMonday.toISOString().split('T')[0];
+      const endWeekly = currentSunday.toISOString().split('T')[0];
       const wWages = await fetchApi(`/finance/weekly-wages?project_id=${projectId}&start_date=${startWeekly}&end_date=${endWeekly}`);
       setWeeklyWages(wWages);
       
@@ -444,7 +447,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {weeklyWages && (
                     <div className="glass-panel rounded-3xl p-5 shadow-[0_0_15px_rgba(0,255,65,0.05)] border border-primary/20">
-                      <h3 className="font-bold text-base mb-4 text-primary">Upah Minggu Ini (Min-Sab)</h3>
+                      <h3 className="font-bold text-base mb-4 text-primary">Upah Minggu Ini (Sen-Min)</h3>
                       <div className="flex flex-col gap-3">
                         <div className="flex justify-between text-sm">
                           <span className="text-on-surface-variant font-hacker">Tukang ({weeklyWages.total_tukang_count} HK)</span>
