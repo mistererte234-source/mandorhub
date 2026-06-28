@@ -36,6 +36,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   // Finance
   const [finances, setFinances] = useState<any[]>([]);
   const [weeklyWages, setWeeklyWages] = useState<any>(null);
+  const [wageDays, setWageDays] = useState(6);
   
   // Settings (Rates)
   const [projectRates, setProjectRates] = useState<{ tukang_daily_rate: number; kuli_daily_rate: number }>({
@@ -69,14 +70,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     }
   };
 
-  const fetchFinance = async (projectId: string) => {
+  const fetchFinance = async (projectId: string, days: number = 6) => {
     try {
       const res = await fetchApi(`/finance?project_id=${projectId}`);
       setFinances(res);
-      // Fetch wages for 6 working days
+      // Fetch wages for specified working days
       const today = new Date();
       const pastWeek = new Date(today);
-      pastWeek.setDate(today.getDate() - 6);
+      pastWeek.setDate(today.getDate() - days);
       
       const start = pastWeek.toISOString().split('T')[0];
       const end = today.toISOString().split('T')[0];
@@ -112,12 +113,12 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     fetchTimeline().then((res) => {
       if (res && res.project_id) {
         fetchTargets(res.project_id);
-        fetchFinance(res.project_id);
+        fetchFinance(res.project_id, wageDays);
         fetchProjectDetails(res.project_id);
       }
       setLoading(false);
     });
-  }, [siteId, router]);
+  }, [siteId, router, wageDays]);
 
   // Handle Edit Report
   const openEdit = (item: any) => {
@@ -432,7 +433,15 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
               
               {weeklyWages && (
                 <div className="glass-panel rounded-3xl p-5 shadow-[0_0_15px_rgba(0,255,65,0.05)] border border-primary/20">
-                  <h3 className="font-bold text-lg mb-4 text-primary">Estimasi Upah 6 Hari Kerja</h3>
+                  <h3 className="font-bold text-lg mb-4 text-primary flex items-center gap-2">
+                    Estimasi Upah 
+                    <input type="number" min="1" max="30" 
+                      className="w-12 bg-transparent border-b border-primary/50 text-center font-bold text-primary outline-none focus:border-primary px-1"
+                      value={wageDays} 
+                      onChange={(e) => setWageDays(parseInt(e.target.value) || 6)}
+                    />
+                    Hari Kerja
+                  </h3>
                   <div className="flex flex-col gap-3">
                     <div className="flex justify-between text-sm">
                       <span className="text-on-surface-variant font-hacker">Tukang ({weeklyWages.total_tukang_count} HK x Rp {weeklyWages.tukang_rate?.toLocaleString('id-ID')})</span>
