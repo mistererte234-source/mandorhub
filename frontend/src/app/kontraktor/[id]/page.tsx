@@ -36,7 +36,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   // Finance
   const [finances, setFinances] = useState<any[]>([]);
   const [weeklyWages, setWeeklyWages] = useState<any>(null);
-  const [wageDays, setWageDays] = useState(6);
+  const [allTimeWages, setAllTimeWages] = useState<any>(null);
   
   // Settings (Rates)
   const [projectRates, setProjectRates] = useState<{ tukang_daily_rate: number; kuli_daily_rate: number }>({
@@ -70,20 +70,29 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     }
   };
 
-  const fetchFinance = async (projectId: string, days: number = 6) => {
+  const fetchFinance = async (projectId: string) => {
     try {
       const res = await fetchApi(`/finance?project_id=${projectId}`);
       setFinances(res);
-      // Fetch wages for specified working days
+      
       const today = new Date();
-      const pastWeek = new Date(today);
-      pastWeek.setDate(today.getDate() - days);
       
-      const start = pastWeek.toISOString().split('T')[0];
-      const end = today.toISOString().split('T')[0];
+      // Current week (Sunday to Saturday)
+      const currentSunday = new Date(today);
+      currentSunday.setDate(today.getDate() - today.getDay());
+      const currentSaturday = new Date(currentSunday);
+      currentSaturday.setDate(currentSunday.getDate() + 6);
       
-      const wages = await fetchApi(`/finance/weekly-wages?project_id=${projectId}&start_date=${start}&end_date=${end}`);
-      setWeeklyWages(wages);
+      const startWeekly = currentSunday.toISOString().split('T')[0];
+      const endWeekly = currentSaturday.toISOString().split('T')[0];
+      const wWages = await fetchApi(`/finance/weekly-wages?project_id=${projectId}&start_date=${startWeekly}&end_date=${endWeekly}`);
+      setWeeklyWages(wWages);
+      
+      // All-time wages
+      const allTimeStart = new Date("2020-01-01").toISOString().split('T')[0];
+      const allTimeEnd = today.toISOString().split('T')[0];
+      const aWages = await fetchApi(`/finance/weekly-wages?project_id=${projectId}&start_date=${allTimeStart}&end_date=${allTimeEnd}`);
+      setAllTimeWages(aWages);
     } catch (err) {
       console.error(err);
     }
@@ -113,12 +122,12 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     fetchTimeline().then((res) => {
       if (res && res.project_id) {
         fetchTargets(res.project_id);
-        fetchFinance(res.project_id, wageDays);
+        fetchFinance(res.project_id);
         fetchProjectDetails(res.project_id);
       }
       setLoading(false);
     });
-  }, [siteId, router, wageDays]);
+  }, [siteId, router]);
 
   // Handle Edit Report
   const openEdit = (item: any) => {
@@ -431,31 +440,47 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                 </div>
               </div>
               
-              {weeklyWages && (
-                <div className="glass-panel rounded-3xl p-5 shadow-[0_0_15px_rgba(0,255,65,0.05)] border border-primary/20">
-                  <h3 className="font-bold text-lg mb-4 text-primary flex items-center gap-2">
-                    Estimasi Upah 
-                    <input type="number" min="1" max="30" 
-                      className="w-12 bg-transparent border-b border-primary/50 text-center font-bold text-primary outline-none focus:border-primary px-1"
-                      value={wageDays} 
-                      onChange={(e) => setWageDays(parseInt(e.target.value) || 6)}
-                    />
-                    Hari Kerja
-                  </h3>
-                  <div className="flex flex-col gap-3">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-on-surface-variant font-hacker">Tukang ({weeklyWages.total_tukang_count} HK x Rp {weeklyWages.tukang_rate?.toLocaleString('id-ID')})</span>
-                      <span className="font-bold font-hacker text-on-surface">Rp {(weeklyWages.total_tukang_count * weeklyWages.tukang_rate).toLocaleString('id-ID')}</span>
+              {(weeklyWages || allTimeWages) && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {weeklyWages && (
+                    <div className="glass-panel rounded-3xl p-5 shadow-[0_0_15px_rgba(0,255,65,0.05)] border border-primary/20">
+                      <h3 className="font-bold text-base mb-4 text-primary">Upah Minggu Ini (Min-Sab)</h3>
+                      <div className="flex flex-col gap-3">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-on-surface-variant font-hacker">Tukang ({weeklyWages.total_tukang_count} HK)</span>
+                          <span className="font-bold font-hacker text-on-surface">Rp {(weeklyWages.total_tukang_count * weeklyWages.tukang_rate).toLocaleString('id-ID')}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-on-surface-variant font-hacker">Kuli ({weeklyWages.total_kuli_count} HK)</span>
+                          <span className="font-bold font-hacker text-on-surface">Rp {(weeklyWages.total_kuli_count * weeklyWages.kuli_rate).toLocaleString('id-ID')}</span>
+                        </div>
+                        <div className="border-t border-surface-variant/50 pt-4 mt-2 flex justify-between font-black text-primary font-hacker text-base glow-text">
+                          <span>TOTAL</span>
+                          <span>Rp {weeklyWages.total_wage?.toLocaleString('id-ID')}</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-on-surface-variant font-hacker">Kuli ({weeklyWages.total_kuli_count} HK x Rp {weeklyWages.kuli_rate?.toLocaleString('id-ID')})</span>
-                      <span className="font-bold font-hacker text-on-surface">Rp {(weeklyWages.total_kuli_count * weeklyWages.kuli_rate).toLocaleString('id-ID')}</span>
+                  )}
+
+                  {allTimeWages && (
+                    <div className="glass-panel rounded-3xl p-5 shadow-[0_0_15px_rgba(0,255,65,0.05)] border border-primary/20 bg-primary/5">
+                      <h3 className="font-bold text-base mb-4 text-primary">Total Upah Keseluruhan</h3>
+                      <div className="flex flex-col gap-3">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-on-surface-variant font-hacker">Tukang ({allTimeWages.total_tukang_count} HK)</span>
+                          <span className="font-bold font-hacker text-on-surface">Rp {(allTimeWages.total_tukang_count * allTimeWages.tukang_rate).toLocaleString('id-ID')}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-on-surface-variant font-hacker">Kuli ({allTimeWages.total_kuli_count} HK)</span>
+                          <span className="font-bold font-hacker text-on-surface">Rp {(allTimeWages.total_kuli_count * allTimeWages.kuli_rate).toLocaleString('id-ID')}</span>
+                        </div>
+                        <div className="border-t border-surface-variant/50 pt-4 mt-2 flex justify-between font-black text-primary font-hacker text-base glow-text">
+                          <span>TOTAL</span>
+                          <span>Rp {allTimeWages.total_wage?.toLocaleString('id-ID')}</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="border-t border-surface-variant/50 pt-4 mt-2 flex justify-between font-black text-primary font-hacker text-lg glow-text">
-                      <span className="tracking-widest uppercase text-sm flex items-center">Total Estimasi Upah</span>
-                      <span>Rp {weeklyWages.total_wage?.toLocaleString('id-ID')}</span>
-                    </div>
-                  </div>
+                  )}
                 </div>
               )}
 
