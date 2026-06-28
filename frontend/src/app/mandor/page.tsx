@@ -17,12 +17,15 @@ export default function MandorDashboard() {
     setTimeout(() => setToast(null), 3500);
   };
   
+  const getLocalDateString = () => {
+    const d = new Date();
+    const tzOffset = d.getTimezoneOffset() * 60000;
+    return new Date(d.getTime() - tzOffset).toISOString().split("T")[0];
+  };
+
   // Form State
   const [workDone, setWorkDone] = useState("");
-  const [reportDate, setReportDate] = useState(() => {
-    const d = new Date();
-    return d.toISOString().split("T")[0];
-  });
+  const [reportDate, setReportDate] = useState(getLocalDateString());
   const [attendance, setAttendance] = useState<{ role: string; count: number; names: string }[]>([
     { role: "Tukang", count: 0, names: "" },
     { role: "Kuli", count: 0, names: "" }
@@ -81,7 +84,7 @@ export default function MandorDashboard() {
       });
       showToast("Laporan berhasil dikirim ke server!", "success");
       setWorkDone("");
-      setReportDate(new Date().toISOString().split("T")[0]);
+      setReportDate(getLocalDateString());
       setAttendance([
         { role: "Tukang", count: 0, names: "" },
         { role: "Kuli", count: 0, names: "" }
