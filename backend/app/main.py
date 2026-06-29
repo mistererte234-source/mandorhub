@@ -203,8 +203,8 @@ def on_startup():
         """))
         session.commit()
         
-        seed_gapura_timeline(session)
+        # Removed seed_gapura_timeline(session) to prevent wiping user data on server restart
     except Exception as e:
-        print("Failed to seed Gapura timeline:", e)
+        print("Failed to run startup scripts:", e)
     finally:
         session.close()
