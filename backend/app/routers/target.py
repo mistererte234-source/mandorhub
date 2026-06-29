@@ -41,27 +41,37 @@ def create_targets(
     if not site:
         raise HTTPException(status_code=404, detail="Site tidak ditemukan")
 
-    # Delete existing weekly targets for this site to replace them
-    existing = session.exec(select(Target).where(Target.site_id == site.id, Target.period_type == "weekly")).all()
-    for e in existing:
-        session.delete(e)
-    
-    session.commit()
+    from datetime import datetime
+    # Get existing weekly targets
+    existing = session.exec(select(Target).where(Target.site_id == site.id, Target.period_type == "weekly", Target.deleted_at == None)).all()
+    existing_map = {e.week_number: e for e in existing}
 
     created_targets = []
     for t in targets:
-        nt = Target(
-            id=uuid.uuid4(),
-            org_id=user.org_id,
-            site_id=site.id,
-            title=t.title,
-            period_type="weekly",
-            week_number=t.week_number,
-            weight=t.weight,
-            status="pending"
-        )
-        session.add(nt)
+        if t.week_number in existing_map:
+            nt = existing_map[t.week_number]
+            nt.title = t.title
+            nt.weight = t.weight
+            session.add(nt)
+            del existing_map[t.week_number]
+        else:
+            nt = Target(
+                id=uuid.uuid4(),
+                org_id=user.org_id,
+                site_id=site.id,
+                title=t.title,
+                period_type="weekly",
+                week_number=t.week_number,
+                weight=t.weight,
+                status="pending"
+            )
+            session.add(nt)
         created_targets.append(nt)
+    
+    # Soft delete any targets that were removed
+    for e in existing_map.values():
+        e.deleted_at = datetime.utcnow()
+        session.add(e)
     
     session.commit()
     return {"message": "Targets updated", "count": len(created_targets)}
@@ -81,7 +91,7 @@ def get_targets(
     if not site:
         return []
 
-    targets = session.exec(select(Target).where(Target.site_id == site.id, Target.period_type == "weekly").order_by(Target.week_number)).all()
+    targets = session.exec(select(Target).where(Target.site_id == site.id, Target.period_type == "weekly", Target.deleted_at == None).order_by(Target.week_number)).all()
     
     return [
         TargetOut(
